@@ -7,39 +7,52 @@ using SharedModels.GameComponents;
 
 namespace ServerLogic.Games.GameComponents
 {
-    class Deck
+    public class Deck
     {
-        List<Card> deck;
+        public List<Card> deck;
+        private Random rand = new Random();
 
         public Deck()
         {
             deck = new List<Card>();
 
-            for(int i = 0; i < 13; i++)
+            for(int i = 1; i < 14; i++)
             {
                 CardRank rank = (CardRank)i;
                 for(int j = 0; j < 4; j++)
                 {
                     Card card = new Card((CardSuit)j, rank);
-                    s
+                    
                     deck.Add(card);
                 }
             }
 
-            Shuffle(deck);
+            Shuffle();
+            Shuffle();
+            Shuffle();
+
+            foreach(var card in deck)
+            {
+                Console.Out.Write(card.Rank + " of " + card.Suit + "\n");
+            }
         }
 
-        public static void Shuffle<Card>(this List<Card> deck, Random rand)
+        public void Shuffle()
         {
             for (var i = 0; i < deck.Count; i++)
-                Swap(deck, i, rand.Next(i, deck.Count));
+                Swap(i, rand.Next(i, deck.Count));
         }
-
-        public static void Swap<Card>(this List<Card> deck, int i, int j)
+        
+        public void Swap(int i, int j)
         {
             var t = deck[i];
             deck[i] = deck[j];
             deck[j] = t;
+        }
+
+        public int Count()
+        {
+            return deck.Count();
         }
     }
 }

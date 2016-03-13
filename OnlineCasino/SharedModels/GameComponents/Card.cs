@@ -9,13 +9,18 @@ namespace SharedModels.GameComponents
 {
     public class Card
     {
-        CardSuit Suit;
-        CardRank Rank;
+        public CardSuit Suit;
+        public CardRank Rank;
 
         public Card(CardSuit suit, CardRank rank)
         {
             this.Suit = suit;
             this.Rank = rank;
+        }
+
+        public CardSuit getCardSuit()
+        {
+            return this.Suit;
         }
     }
 }
