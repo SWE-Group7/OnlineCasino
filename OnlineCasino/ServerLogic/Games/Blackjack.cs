@@ -7,6 +7,11 @@ using System.Threading.Tasks;
 
 namespace ServerLogic.Games
 {
+    public enum BlackjackStates {
+        //flags for states
+        betting, dealing,UserPlaying,GainsorLoses
+
+    }
     class Blackjack : Game
     {
         private List<BlackjackPlayer> blackjackPlayers = null;
