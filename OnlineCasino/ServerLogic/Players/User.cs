@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ServerLogic
 {
-    class User
+    class User //sign or register
     {
         public int UserID;
         public string Username;
@@ -16,8 +16,21 @@ namespace ServerLogic
 
         public User()
         {
+         
+        }
+        public User(int userid, string username, string pwd, string email, double money) {
+            //set user info to the class user info variables
+
 
         }
+        public void GetUser() { //returns user info. all at once.
+
+
+        }
+        public int Get_UserID(){ return UserID; }
+
+
+    
 
        
 

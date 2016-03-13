@@ -8,6 +8,7 @@ namespace ServerLogic.Players
 {
     class BlackjackPlayer : Player
     {
+        //cards user holding or things associated with player
         
     }
 }

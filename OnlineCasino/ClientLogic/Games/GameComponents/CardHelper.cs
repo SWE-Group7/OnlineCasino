@@ -16,7 +16,5 @@ namespace ClientLogic.Games.GameComponents
             return null;
         }
 
-        
-
     }
 }

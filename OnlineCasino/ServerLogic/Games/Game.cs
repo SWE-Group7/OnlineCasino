@@ -6,13 +6,24 @@ using System.Threading.Tasks;
 
 namespace ServerLogic
 {
+    //outside class but within namespace define states.
+    public enum GameStates
+    {
+
+        //created flags for states...based on enum understanding
+        waiting = 00,
+        playing = 01,
+        finializing = 10,
+    }
+
     public abstract class Game
     {
-        List<Player> Players;
+        protected List<Player> Players;
 
         public Game()
-        {
+        {  //instantiate when game start requested
             Players = new List<Player>();
         }
     }
+   
 }
