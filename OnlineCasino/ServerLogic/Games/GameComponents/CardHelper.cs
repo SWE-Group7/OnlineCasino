@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 
 
-namespace ServerLogic.Games.GamePieces
+namespace ServerLogic.Games.GameComponents
 {
     public static class CardHelper
     {
