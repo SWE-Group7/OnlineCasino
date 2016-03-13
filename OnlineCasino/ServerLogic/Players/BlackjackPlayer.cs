@@ -8,6 +8,5 @@ namespace ServerLogic.Players
 {
     class BlackjackPlayer : Player
     {
-        
     }
 }

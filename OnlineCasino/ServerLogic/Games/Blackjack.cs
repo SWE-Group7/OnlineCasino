@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ServerLogic.Players;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,16 @@ namespace ServerLogic.Games
 {
     class Blackjack : Game
     {
+        private List<BlackjackPlayer> blackjackPlayers = null;
+        public List<BlackjackPlayer> BlackjackPlayers
+        {
+            get
+            {
+                if(blackjackPlayers == null)
+                    blackjackPlayers = Players.OfType<BlackjackPlayer>().ToList();
+                
+                return blackjackPlayers;
+            }
+        }
     }
 }
