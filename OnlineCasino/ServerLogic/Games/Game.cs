@@ -18,7 +18,7 @@ namespace ServerLogic
 
     public abstract class Game
     {
-        List<Player> Players;
+        protected List<Player> Players;
 
         public Game()
         {  //instantiate when game start requested

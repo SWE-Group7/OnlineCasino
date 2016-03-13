@@ -47,11 +47,17 @@
     <Compile Include="Players\BlackjackPlayer.cs" />
     <Compile Include="Players\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="User.cs" />
+    <Compile Include="Players\User.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Connection\" />
     <Folder Include="EntityFrameworks\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharedModels\SharedModels.csproj">
+      <Project>{7fdae663-98d2-4e4f-bfe6-670b29b24af4}</Project>
+      <Name>SharedModels</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
