@@ -13,7 +13,7 @@ namespace ServerLogic
 
         public Player()
         {
-
+            //base class. Abstract
         }
     }
 }
