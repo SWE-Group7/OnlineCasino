@@ -30,11 +30,14 @@ namespace ServerLogic.Games.GameComponents
             Shuffle();
             Shuffle();
             Shuffle();
+        }
 
-            foreach(var card in deck)
-            {
-                Console.Out.Write(card.Rank + " of " + card.Suit + "\n");
-            }
+        //Just returns the top card, does not deal it from the deck
+        //Mainly for testing purposes
+        public Card getTop()
+        {
+            Card card = deck[0];
+            return card;
         }
 
         public void Shuffle()
@@ -53,6 +56,38 @@ namespace ServerLogic.Games.GameComponents
         public int Count()
         {
             return deck.Count();
+        }
+
+        public Card DealCard()
+        {
+            Card dealt;
+            dealt = deck[0];
+            deck.RemoveAt(0);
+
+            return dealt;
+        }
+
+        //Adds card back into deck if it does not already exist
+        //Adds to bottom of deck
+        public void AddCard(Card card)
+        {
+            bool contain = deck.Exists(cards => cards == card);
+            if (contain == true)
+                Console.Out.Write("The " + card.Rank + " of " + card.Suit + " is already in the deck\n");
+            else
+            {
+                deck.Add(card);
+                Console.Out.Write(card.Rank + " of " + card.Suit + " added\n");
+            }
+        }
+
+        //Prints out list of the deck
+        public void PrintDeck()
+        {
+            foreach (var card in deck)
+            {
+                Console.Out.Write(card.Rank + " of " + card.Suit + "\n");
+            }
         }
     }
 }

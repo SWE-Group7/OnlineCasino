@@ -13,10 +13,15 @@ namespace ServerTest
         static void Main(string[] args)
         {
             Deck d = new Deck();
+            d.PrintDeck();
             Console.Out.Write(d.Count() + "\n");
-            d.DealCard();
+            Card card = d.getTop();
+            d.AddCard(card);
+            card = d.DealCard();
+            d.PrintDeck();
             Console.Out.Write(d.Count() + "\n");
-            d.DealCard();
+            d.AddCard(card);
+            d.PrintDeck();
             Console.Out.Write(d.Count() + "\n");
             Console.Read();
         }
