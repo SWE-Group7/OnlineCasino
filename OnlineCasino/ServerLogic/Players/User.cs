@@ -18,16 +18,12 @@ namespace ServerLogic
         {
          
         }
-        public User(int userid, string username, string pwd, string email, double money) {
+        public User(string username, string pwd, string email, double money) {
             //set user info to the class user info variables
 
 
         }
-        public void GetUser() { //returns user info. all at once.
-
-
-        }
-        public int Get_UserID(){ return UserID; }
+       
 
 
     

@@ -9,11 +9,10 @@ namespace ServerLogic
     //outside class but within namespace define states.
     public enum GameStates
     {
-
         //created flags for states...based on enum understanding
-        waiting = 00,
-        playing = 01,
-        finializing = 10,
+        Waiting,
+        Playing,
+        Finializing,
     }
 
     public abstract class Game
