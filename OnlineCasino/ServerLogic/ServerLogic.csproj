@@ -54,6 +54,10 @@
     <Folder Include="EntityFrameworks\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ConsoleApplication1\Intermediate.csproj">
+      <Project>{9bc55116-f1b3-4aee-ab44-28d63bebae37}</Project>
+      <Name>Intermediate</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SharedModels\SharedModels.csproj">
       <Project>{7fdae663-98d2-4e4f-bfe6-670b29b24af4}</Project>
       <Name>SharedModels</Name>
