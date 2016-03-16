@@ -19,8 +19,8 @@ namespace ServerLogic.Games
         private List<Card> Dealer;//keeps track of dealer hand
          
         //enum variables to define states within the game
-        BlackjackStates current_bjack_state;
-        //GameStates current_game_state;
+        BlackjackStates Bjackstate;
+       GameStates gamestate;
 
 
         private List<BlackjackPlayer> blackjackPlayers = null;
@@ -37,11 +37,12 @@ namespace ServerLogic.Games
         }
 
         //methods that can be called to set states and get states. Get states will be used to verify if ok for a new player to join
-        public void set_Game_State(GameStates state) { state=GameStates.Waiting; }
-        public void set_Bjack_State(BlackjackStates bjackstate) { current_bjack_state = bjackstate; }
+        public void set_Game_State(GameStates state) { state = gamestate;  }
 
-        public BlackjackStates get_Bjack_State() { return current_bjack_state; }
-        public GameStates get_Game_State() { return ??; }
+        public void set_Bjack_State(BlackjackStates bjackstate) { bjackstate = Bjackstate; }
+
+        public BlackjackStates get_Bjack_State() { return Bjackstate; }
+        public GameStates get_Game_State() { return gamestate; }
 
         //goes through steps dicussed as a group
         public void TheGame()
@@ -66,7 +67,7 @@ namespace ServerLogic.Games
                 player.IndicateBet();
             }
 
-            //wait fo all bets or 30sec
+            //wait for all bets or 30sec
 
 
             //step4:deal cards blackjack state changes to dealing.  CHECK DEALER HAND AND IF 21 GAMEOVER EVERYONE LOST
@@ -76,15 +77,18 @@ namespace ServerLogic.Games
 
                 Card card1 = shuffled_deck.DealCard();
                 Card card2 = shuffled_deck.DealCard();
-                //
-
+                player.DealtCards(card1);
+                player.DealtCards(card2);
+          
             }
 
             //Dealer gets cards and is checked for 21 
             Card dealercard1 = shuffled_deck.DealCard();
             Card dealercard2 = shuffled_deck.DealCard();
             Dealer.Add(shuffled_deck.DealCard()); Dealer.Add(shuffled_deck.DealCard());
-            //use Hayden's CardHelper class to add cards and return bumerical value
+            //use Hayden's class to calculate numerical value
+            int DealerAmount = CardHelper.CountHand(Dealer);
+
 
         
             //step5: each player hits or stays  bjack state is now userplayig
@@ -99,7 +103,7 @@ namespace ServerLogic.Games
 
 
           //step6:dealer hits until 17 or over
-                while (DealerAmount => 17 && DealerAmount < 21) {
+                while (DealerAmount >= 17 && DealerAmount < 21) {
                     Dealer.Add(shuffled_deck.DealCard());
                     DealerAmount=/*get amount from Hayden's cardhelper class */
                 }
@@ -114,7 +118,8 @@ namespace ServerLogic.Games
           
                 }
 
-              //step8:Round Over
+                //step8:Round Over game state set to waiting again
+                set_Game_State(GameStates.Waiting);
 
             }
 

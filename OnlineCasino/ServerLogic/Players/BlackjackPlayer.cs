@@ -4,9 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ServerLogic.Games;
-using SharedModels.GameComponents;
-
+using Intermediate.Communications;
 
 namespace ServerLogic.Players
 {
@@ -14,7 +12,7 @@ namespace ServerLogic.Players
     {
         BlackjackPlayerStatus PlayerStatus;
         float UserBet;
-
+        List<Card> Cards = new List<Card>();
         //cards user holding or things associated with player
 
         public bool SetUserBet(float amount)
@@ -48,17 +46,20 @@ namespace ServerLogic.Players
         {
             List<Card> CardsCopy = new List<Card>();
 
-            foreach(Card C in Cards)
+            foreach (Card C in Cards)
             {
                 CardsCopy.Add(new Card(C.Suit, C.Rank));
             }
 
             return CardsCopy;
         }
-        public 
+
+        public void DealtCards(Card card) {
+            Cards.Add(card);
+        }
     }
-        
-    enum BlackjackPlayerStatus 
+
+    enum BlackjackPlayerStatus
     {
         Waiting,
         Betting,
