@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ServerLogic.Games.GameComponents;
 
 namespace ServerLogic.Games
 {
@@ -43,11 +44,12 @@ namespace ServerLogic.Games
         {
             //step1: wait for players.  Game state set to waiting
             set_Game_State(GameStates.Waiting);
-               /*SERVER CHECKS FOR CONNECTIONS 
-                 while(connections being made){gamestate=waiting}*/
+            /*SERVER CHECKS FOR CONNECTIONS 
+              while(connections being made){gamestate=waiting}*/
 
 
             //step2: Get deck...get from Hayden's Deck class!!
+            Deck deck = new Deck();
 
             //step3: Let players bet  Set Bjack state to betting and game state to playing
             set_Bjack_State(BlackjackStates.Betting);

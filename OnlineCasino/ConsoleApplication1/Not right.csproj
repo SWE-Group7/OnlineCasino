@@ -43,6 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Communications\BlackjackClient.cs" />
+    <Compile Include="Communications\BlackjackServer.cs" />
     <Compile Include="Communications\Client.cs" />
     <Compile Include="Communications\Server.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
