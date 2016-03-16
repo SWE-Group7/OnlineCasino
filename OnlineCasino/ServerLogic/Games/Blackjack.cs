@@ -76,9 +76,8 @@ namespace ServerLogic.Games
 
                 Card card1 = shuffled_deck.DealCard();
                 Card card2 = shuffled_deck.DealCard();
-                player.DealCard(card1);
-                player.DealCard(card2);
-       
+                //
+
             }
 
             //Dealer gets cards and is checked for 21 
@@ -94,29 +93,29 @@ namespace ServerLogic.Games
             foreach (BlackjackPlayer player in blackjackPlayers) {
                 Boolean done = false;
                 do {
-                    player.IndicatePlay(); //will probably want the method to return true or false to know where or not the loop continues
+                    player.IndicatePlaying(); //will probably want the method to return true or false to know where or not the loop continues
                 } while (done == false);
                 //wait for player or 30sec
 
 
-                //step6:dealer hits until 17 or over
+          //step6:dealer hits until 17 or over
                 while (DealerAmount => 17 && DealerAmount < 21) {
                     Dealer.Add(shuffled_deck.DealCard());
                     DealerAmount=/*get amount from Hayden's cardhelper class */
                 }
 
-                //setp7: Winnings are distributed  if over 21 no winnings
+         //setp7: Winnings are distributed  if over 21 no winnings
                 foreach (BlackjackPlayer players in blackjackPlayers)
                 {
                     //add players hand and compare to dealers hand
                     if (PlayersHand > DealerAmount) { /*distribute winnings*/}
                     else if (PlayersHand < DealerAmount) { /*take bet amount*/}
                     else { /*player takes only what he/she be. No more no less*/}
-
-                }
           
+                }
+
               //step8:Round Over
-               
+
             }
 
         }
