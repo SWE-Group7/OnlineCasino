@@ -11,6 +11,7 @@ namespace ServerLogic
         User CurrentUser;
         float CurrentBalance;
 
+
         public Player()
         {
             //base class. Abstract

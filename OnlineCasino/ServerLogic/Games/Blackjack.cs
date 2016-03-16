@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ServerLogic.Games.GameComponents;
+using SharedModels.GameComponents;
+
 
 namespace ServerLogic.Games
 {
@@ -13,9 +16,11 @@ namespace ServerLogic.Games
 
     class Blackjack : Game
     {
+        private List<Card> Dealer;//keeps track of dealer hand
+         
         //enum variables to define states within the game
         BlackjackStates current_bjack_state;
-        GameStates current_game_state;
+        //GameStates current_game_state;
 
 
         private List<BlackjackPlayer> blackjackPlayers = null;
@@ -32,22 +37,24 @@ namespace ServerLogic.Games
         }
 
         //methods that can be called to set states and get states. Get states will be used to verify if ok for a new player to join
-        public void set_Game_State(GameStates state) { current_game_state = state; }
+        public void set_Game_State(GameStates state) { state=GameStates.Waiting; }
         public void set_Bjack_State(BlackjackStates bjackstate) { current_bjack_state = bjackstate; }
 
         public BlackjackStates get_Bjack_State() { return current_bjack_state; }
-        public GameStates get_Game_State() { return current_game_state; }
+        public GameStates get_Game_State() { return ??; }
 
         //goes through steps dicussed as a group
         public void TheGame()
         {
             //step1: wait for players.  Game state set to waiting
             set_Game_State(GameStates.Waiting);
-               /*SERVER CHECKS FOR CONNECTIONS 
-                 while(connections being made){gamestate=waiting}*/
+            /*SERVER CHECKS FOR CONNECTIONS 
+              while(connections being made){gamestate=waiting}*/
 
 
             //step2: Get deck...get from Hayden's Deck class!!
+            Deck shuffled_deck = new Deck();
+
 
             //step3: Let players bet  Set Bjack state to betting and game state to playing
             set_Bjack_State(BlackjackStates.Betting);
@@ -56,43 +63,60 @@ namespace ServerLogic.Games
             //iterate through the list of players and ask for their bet amount
             foreach (BlackjackPlayer player in blackjackPlayers){
                Console.Write("place your bet");
-               float user_bet = float.Parse(Console.ReadLine());
-                //where does user bet go??
-                player.set_User_Bet(user_bet);//User_bet in BlackjackPlayer.cs
+                player.IndicateBet();
             }
+
+            //wait fo all bets or 30sec
+
 
             //step4:deal cards blackjack state changes to dealing.  CHECK DEALER HAND AND IF 21 GAMEOVER EVERYONE LOST
             set_Bjack_State(BlackjackStates.Dealing);
-            foreach (BlackjackPlayer blackjackplay in blackjackPlayers) {
+        
+            foreach (BlackjackPlayer player in blackjackPlayers) {
 
-                /* Deckclassobj obj= new Deckclassobj;
-                   card1=obj.DealCardfunc;
-                   card2=obj.DealCardfunc;
-                blackjackplay.Someuserhandlist=card1 + card2*/
+                Card card1 = shuffled_deck.DealCard();
+                Card card2 = shuffled_deck.DealCard();
+                player.DealCard(card1);
+                player.DealCard(card2);
+       
             }
 
+            //Dealer gets cards and is checked for 21 
+            Card dealercard1 = shuffled_deck.DealCard();
+            Card dealercard2 = shuffled_deck.DealCard();
+            Dealer.Add(shuffled_deck.DealCard()); Dealer.Add(shuffled_deck.DealCard());
+            //use Hayden's CardHelper class to add cards and return bumerical value
+
+        
             //step5: each player hits or stays  bjack state is now userplayig
             set_Bjack_State(BlackjackStates.UserPlaying);
 
-            foreach (BlackjackPlayer theplayers in blackjackPlayers) {
+            foreach (BlackjackPlayer player in blackjackPlayers) {
                 Boolean done = false;
-                do { Console.Write("hit or stay??");
-                    string userchoice = Console.ReadLine();
-
-                    if (userchoice == "hit") { /* add to userhand list */}
-                    else done = true;
-
+                do {
+                    player.IndicatePlay(); //will probably want the method to return true or false to know where or not the loop continues
                 } while (done == false);
+                //wait for player or 30sec
 
-          //step6:dealer hits until 17 or over
-             //is dealer considered another player or will dealer class be needed??
 
-         //setp7: Winnings are distributed  if over 21 no winnings
+                //step6:dealer hits until 17 or over
+                while (DealerAmount => 17 && DealerAmount < 21) {
+                    Dealer.Add(shuffled_deck.DealCard());
+                    DealerAmount=/*get amount from Hayden's cardhelper class */
+                }
+
+                //setp7: Winnings are distributed  if over 21 no winnings
+                foreach (BlackjackPlayer players in blackjackPlayers)
+                {
+                    //add players hand and compare to dealers hand
+                    if (PlayersHand > DealerAmount) { /*distribute winnings*/}
+                    else if (PlayersHand < DealerAmount) { /*take bet amount*/}
+                    else { /*player takes only what he/she be. No more no less*/}
+
+                }
           
-
-          
-
-
+              //step8:Round Over
+               
             }
 
         }
