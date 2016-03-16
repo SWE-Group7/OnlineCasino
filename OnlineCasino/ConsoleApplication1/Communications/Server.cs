@@ -6,78 +6,78 @@ using System.Threading.Tasks;
 
 namespace Intermediate.Communications
 {
-    class Server
+    public static class Server
     {
-        public void SetConnection()
+        public static void SetConnection()
         {
 
         }
 
-        public void SetTable(int tableNumber)
+        public static void SetTable(int tableNumber)
         {
 
         }
 
-        public void SetGameBalance(int Balance)
+        public static void SetGameBalance(int Balance)
         {
 
         }
 
-        public void SetSeat(int seatNumber)
+        public static void SetSeat(int seatNumber)
         {
 
         }
 
-        public void SetPlayers()
+        public static void SetPlayers()
         {
 
         }
 
-        public void StartGame()
+        public static void StartGame()
         {
 
         }
 
-        public void DealCards()
+        public static void DealCards()
         {
             //Deals out cards from the deck to the players and dealer
         }
 
-        public bool CheckTurn()
+        public static bool CheckTurn()
         {
             bool turn = true;
             return turn;
         }
 
-        public void NextTurn()
+        public static void NextTurn()
         {
             //Sets to next player's turn after Stay()
         }
 
-        public void ShowDealer()
+        public static void ShowDealer()
         {
             //not sure if this should actually be in the server or done in the client
             //Shows dealer hand
         }
 
-        public bool CheckWin()
+        public static bool CheckWin()
         {
             bool win = false;
             return win;
         }
 
-        public int AdjastGameBalance()
+        public static int AdjustGameBalance()
         {
             var gameBalance = 0;
             return gameBalance;
         }
 
-        public void SetBalance(int balance)
+        public static void SetBalance(int balance)
         {
 
         }
 
-        public void EndConnection()
+        public static void EndConnection()
         {
 
         }
