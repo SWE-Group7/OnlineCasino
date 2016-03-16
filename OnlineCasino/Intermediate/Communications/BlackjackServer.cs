@@ -4,20 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SharedModels.GameComponents;
-using ServerLogic.Games;
+using ServerLogic;
 
 namespace Intermediate.Communications
 {
     class BlackjackServer : Server
     {
-        public void DealCards(Card card, int seatNumber)
+        public void DealCards(Card card, BlackjackPlayer player)
         {
             //Sends card from server to client with specific seat number
-        }
-
-        public void getState(BlackjackStates state)
-        {
-            //Send to client
         }
     }
 }
