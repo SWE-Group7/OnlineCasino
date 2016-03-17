@@ -3,16 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ServerLogic.Games.GameComponents;
-using SharedModels.GameComponents;
+using Intermediate.Communications;
 
-namespace ServerTest
+namespace IntermediateTest
 {
     class Program
     {
         static void Main(string[] args)
         {
-
         }
     }
 }
