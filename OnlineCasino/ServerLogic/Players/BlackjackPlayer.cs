@@ -48,8 +48,10 @@ namespace ServerLogic.Players
         {
             Status = BlackjackPlayerStatus.Betting;
             CurrentUser.Client.IndicateBetting();
+
             Console.Out.Write("Place Bet: ");
             String bet = Console.ReadLine();
+
             if (bet != null)
             {
                 UserBet = float.Parse(bet);
