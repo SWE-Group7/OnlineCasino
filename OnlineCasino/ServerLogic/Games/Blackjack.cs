@@ -55,15 +55,15 @@ namespace ServerLogic.Games
                 {
                Console.Write("place your bet");
                     player.IndicateBet();
-                }
+            }
             
                 WaitForBets(); //wait for all bets or 30sec
 
             //step4:deal cards blackjack state changes to dealing.  CHECK DEALER HAND AND IF 21 GAMEOVER EVERYONE LOST
                 BlackjackState = BlackjackStates.Dealing;
         
-                foreach (BlackjackPlayer player in Players) {
-
+                foreach (BlackjackPlayer player in Players)
+                {
                     Card card1 = deck.DealCard();
                     Card card2 = deck.DealCard();
                     player.DealCard(card1);
@@ -85,12 +85,28 @@ namespace ServerLogic.Games
 
                 foreach (BlackjackPlayer player in Players)
                 {
-                   /* Boolean done = false;
-                    do {
-                        player.IndicatePlaying();
-                    } while (done == false);
                     //wait for player or 30sec
-                    Timer(); will need to be changed so users can hit or stay according to time*/
+                    Stopwatch stopwatch = new Stopwatch();
+                    stopwatch.Start();
+
+                    long i = stopwatch.ElapsedMilliseconds;
+
+                    while (i < 30000)
+                    {
+                        Console.Out.Write("'hit' or 'stay'?\n");
+                        String hitOrStay = Console.ReadLine();
+                        switch (hitOrStay)
+                        {
+                            case "hit":
+                                Card card = deck.DealCard();
+                                player.DealCard(card);
+                                stopwatch.Restart();
+                                break;
+                            default:
+                                player.IndicateWait();
+                                break;
+                        }
+                    } 
                 }
 
                     //step6:dealer hits until 17 or over
@@ -120,8 +136,11 @@ namespace ServerLogic.Games
                     }
                     }
 
-                    //step8:Round Over and loop begins again where it checks for user connections or breaks out and ends games overall
+                //step8: loop back throu game, check connections, if no connections break out of loop
+
             }
+
+            //step9: if no connections, results saved to server
         }
 
 

@@ -54,6 +54,12 @@ namespace ServerLogic.Players
             CurrentUser.Client.IndicatePlaying();
         }
 
+        public void IndicateWait()
+        {
+            Status = BlackjackPlayerStatus.Waiting;
+            CurrentUser.Client.IndicateWaiting();
+        }
+
         public List<Card> GetCards()
         {
             List<Card> CardsCopy = new List<Card>();
