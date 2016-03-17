@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ServerLogic;
+using ServerLogic.Games;
+using SharedModels.GameComponents;
 
 namespace ServerLogic
 {
@@ -15,10 +18,13 @@ namespace ServerLogic
 
         public ServerMain()
         {
-            ConnectedUsers = new List<User>();
-            OpenTables = new List<Game>();
+            User user = new User();
+            List<User> users = new List<User>();
+            users.Add(user);
 
-            UserIDtoTable = new Dictionary<int, Game>();
+            Blackjack bjack = new Blackjack(users);
+            bjack.Start();
+            Console.Read();
         }
     }
 }

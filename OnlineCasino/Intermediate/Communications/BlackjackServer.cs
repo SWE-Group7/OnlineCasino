@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SharedModels.GameComponents;
 using ServerLogic;
+using ServerLogic.Players;
 
 namespace Intermediate.Communications
 {
