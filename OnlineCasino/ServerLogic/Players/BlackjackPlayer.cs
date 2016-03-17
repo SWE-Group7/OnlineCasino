@@ -10,9 +10,9 @@ namespace ServerLogic.Players
 {
     public class BlackjackPlayer : Player
     {
-        BlackjackPlayerStatus PlayerStatus;
-        float UserBet;
-        List<Card> Cards;
+        public BlackjackPlayerStatus Status;
+        public float UserBet;
+        private List<Card> Cards;
 
         public BlackjackPlayer(User user, float buyIn)
             : base(user, buyIn)
@@ -24,10 +24,10 @@ namespace ServerLogic.Players
 
         public bool SetUserBet(float amount)
         {
-            if (PlayerStatus == BlackjackPlayerStatus.Betting)
+            if (Status == BlackjackPlayerStatus.Betting)
             {
                 UserBet = amount;
-                PlayerStatus = BlackjackPlayerStatus.Waiting;
+                Status = BlackjackPlayerStatus.Waiting;
                 return true;
             }
             else
@@ -44,14 +44,20 @@ namespace ServerLogic.Players
 
         public void IndicateBet()
         {
-            PlayerStatus = BlackjackPlayerStatus.Betting;
+            Status = BlackjackPlayerStatus.Betting;
             CurrentUser.Client.IndicateBet();
         }
 
         public void IndicatePlaying()
         {
-            PlayerStatus = BlackjackPlayerStatus.Playing;
+            Status = BlackjackPlayerStatus.Playing;
             CurrentUser.Client.IndicatePlaying();
+        }
+
+        public void IndicateWait()
+        {
+            Status = BlackjackPlayerStatus.Waiting;
+            CurrentUser.Client.IndicateWaiting();
         }
 
         public List<Card> GetCards()
@@ -66,18 +72,18 @@ namespace ServerLogic.Players
             return CardsCopy;
         }
 
-        public void DealtCards(Card card) {
+        public void DealCard(Card card) {
             Cards.Add(card);
         }
 
         public void ForceNoBet()
         {
-            PlayerStatus = BlackjackPlayerStatus.Waiting;
+            Status = BlackjackPlayerStatus.Waiting;
             UserBet = 0;
         }
     }
 
-    enum BlackjackPlayerStatus
+    public enum BlackjackPlayerStatus
     {
         Waiting,
         Betting,

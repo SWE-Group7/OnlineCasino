@@ -6,10 +6,19 @@ using System.Threading.Tasks;
 
 namespace ServerLogic
 {
-    class ServerMain
+    public class ServerMain
     {
-        List<User> ConnectedUsers;
-        List<Game> OpenTables;
+        public List<User> ConnectedUsers;
+        public List<Game> OpenTables;
 
+        public Dictionary<int, Game> UserIDtoTable;
+        
+        public ServerMain()
+    {
+            ConnectedUsers = new List<User>();
+            OpenTables = new List<Game>();
+
+            UserIDtoTable = new Dictionary<int, Game>();
+        }
     }
 }
