@@ -48,11 +48,12 @@
     <Compile Include="Players\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Players\User.cs" />
+    <Compile Include="ServerMain.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Connection\" />
     <Folder Include="EntityFrameworks\" />
-    <Folder Include="NewFolder1\" />
+    <Folder Include="Information\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ConsoleApplication1\Intermediate.csproj">

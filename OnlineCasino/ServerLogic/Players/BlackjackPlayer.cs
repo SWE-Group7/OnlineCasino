@@ -69,6 +69,12 @@ namespace ServerLogic.Players
         public void DealtCards(Card card) {
             Cards.Add(card);
         }
+
+        public void ForceNoBet()
+        {
+            PlayerStatus = BlackjackPlayerStatus.Waiting;
+            UserBet = 0;
+        }
     }
 
     enum BlackjackPlayerStatus
