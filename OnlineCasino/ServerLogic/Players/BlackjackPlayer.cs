@@ -8,12 +8,19 @@ using Intermediate.Communications;
 
 namespace ServerLogic.Players
 {
-    class BlackjackPlayer : Player
+    public class BlackjackPlayer : Player
     {
         BlackjackPlayerStatus PlayerStatus;
         float UserBet;
-        List<Card> Cards = new List<Card>();
-        //cards user holding or things associated with player
+        List<Card> Cards;
+
+        public BlackjackPlayer(User user, float buyIn)
+            : base(user, buyIn)
+        {
+            Cards = new List<Card>();
+
+            //CurrentUser.Client = new BlackjackConn();
+        }
 
         public bool SetUserBet(float amount)
         {
@@ -26,20 +33,25 @@ namespace ServerLogic.Players
             else
             {
                 return false;
-
             }
+        }
+
+        public void UpdateGameBalance(bool won)
+        {
+            if (won) GameBalance += UserBet;
+            else GameBalance -= UserBet;
         }
 
         public void IndicateBet()
         {
             PlayerStatus = BlackjackPlayerStatus.Betting;
-            User.Client.IndicateBet();
+            CurrentUser.Client.IndicateBet();
         }
 
         public void IndicatePlaying()
         {
             PlayerStatus = BlackjackPlayerStatus.Playing;
-            User.Client.IndicatePlaying();
+            CurrentUser.Client.IndicatePlaying();
         }
 
         public List<Card> GetCards()
@@ -56,6 +68,12 @@ namespace ServerLogic.Players
 
         public void DealtCards(Card card) {
             Cards.Add(card);
+        }
+
+        public void ForceNoBet()
+        {
+            PlayerStatus = BlackjackPlayerStatus.Waiting;
+            UserBet = 0;
         }
     }
 
