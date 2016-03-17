@@ -55,8 +55,7 @@ namespace ServerLogic.Games
                 {
                Console.Write("place your bet");
                     player.IndicateBet();
-                    //Timer(); //goes to timer class, which loops over 30 sec and then terminates. Gives user 30 secs
-            }
+                }
             
                 WaitForBets(); //wait for all bets or 30sec
 
@@ -72,7 +71,7 @@ namespace ServerLogic.Games
           
             }
 
-            //Dealer gets cards and is checked for 21 
+            //Dealer gets cards 
                 Card dealercard1 = deck.DealCard();
                 Card dealercard2 = deck.DealCard();
                 DealerHand.Add(deck.DealCard());
@@ -101,14 +100,14 @@ namespace ServerLogic.Games
                     DealerAmount = CardHelper.CountHand(DealerHand);
                 }
 
-                    //setp7: Winnings are distributed  if over 21 no winnings
+                    //setp7: Winnings are distributed  if over 21 no winnings set bjack state to gainsorloses
                 foreach (BlackjackPlayer player in Players)
                     {
+                        BlackjackState = BlackjackStates.GainsOrLoses;
                         int PlayersHand = CardHelper.CountHand(player.GetCards());
 
                     if (PlayersHand > DealerAmount)
                     {
-                        BlackjackState = BlackjackStates.GainsOrLoses;
                         /*distribute winnings*/
                     }
                     else if (PlayersHand < DealerAmount)
@@ -121,8 +120,7 @@ namespace ServerLogic.Games
                     }
                     }
 
-                    //step8:Round Over game state set to waiting again
-                GameState = GameStates.Waiting;
+                    //step8:Round Over and loop begins again where it checks for user connections or breaks out and ends games overall
             }
         }
 
@@ -166,6 +164,8 @@ namespace ServerLogic.Games
                 }
             }
         }
+
+        
     }
 }
 
