@@ -1,16 +1,18 @@
-﻿using SharedModels.GameComponents;
+﻿using ClientLogic.Connection;
+using SharedModels.GameComponents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Intermediate.Communications;
+//using Intermediate.Communications;
 
 namespace ServerLogic.Players
 {
     public class BlackjackPlayer : Player
     {
         public BlackjackPlayerStatus Status;
+        public int UserBuyIn;
         public float UserBet;
         private List<Card> Cards;
 
@@ -19,7 +21,7 @@ namespace ServerLogic.Players
         {
             Cards = new List<Card>();
 
-            //CurrentUser.Client = new BlackjackConn();
+            CurrentUser.Client = new BlackjackConn();
         }
 
         public bool SetUserBet(float amount)
@@ -45,7 +47,7 @@ namespace ServerLogic.Players
         public void IndicateBet()
         {
             Status = BlackjackPlayerStatus.Betting;
-            CurrentUser.Client.IndicateBet();
+            //CurrentUser.Client.IndicateBet();
         }
 
         public void IndicatePlaying()
@@ -72,7 +74,8 @@ namespace ServerLogic.Players
             return CardsCopy;
         }
 
-        public void DealCard(Card card) {
+        public void DealCard(Card card)
+        {
             Cards.Add(card);
         }
 
@@ -80,6 +83,11 @@ namespace ServerLogic.Players
         {
             Status = BlackjackPlayerStatus.Waiting;
             UserBet = 0;
+        }
+
+        public void ClearCards()
+        {
+            Cards = new List<Card>();
         }
     }
 
