@@ -12,7 +12,7 @@ namespace ServerConsole //print statements & request
         static void Main(string[] args)
         {
             ServerMain Server = new ServerMain();
-
+            
             Console.Write("Starting Server..");
 
             //while(1)?
