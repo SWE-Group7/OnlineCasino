@@ -8,12 +8,21 @@ namespace ServerLogic
 {
     public abstract class Player
     {
-        User CurrentUser;
-        float CurrentBalance;
+        protected User CurrentUser;
+        protected float GameBalance;
+        float BuyIn;
 
-        public Player()
+        public Player(User user, float buyIn)
         {
             //base class. Abstract
+            CurrentUser = user;
+            GameBalance = buyIn;
+            BuyIn = buyIn;
+        }
+
+        public void UpdateUserBalance()
+        {
+            CurrentUser.Balance = CurrentUser.Balance - BuyIn + GameBalance;
         }
     }
 }
