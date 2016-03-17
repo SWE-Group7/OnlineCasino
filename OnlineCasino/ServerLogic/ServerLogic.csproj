@@ -52,6 +52,7 @@
   <ItemGroup>
     <Folder Include="Connection\" />
     <Folder Include="EntityFrameworks\" />
+    <Folder Include="NewFolder1\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ConsoleApplication1\Intermediate.csproj">

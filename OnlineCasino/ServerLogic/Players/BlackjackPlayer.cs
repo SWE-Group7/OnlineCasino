@@ -58,16 +58,20 @@ namespace ServerLogic.Players
         {
             List<Card> CardsCopy = new List<Card>();
 
-            foreach(Card C in Cards)
+            foreach (Card C in Cards)
             {
                 CardsCopy.Add(new Card(C.Suit, C.Rank));
             }
 
             return CardsCopy;
         }
+
+        public void DealtCards(Card card) {
+            Cards.Add(card);
+        }
     }
 
-    enum BlackjackPlayerStatus 
+    enum BlackjackPlayerStatus
     {
         Waiting,
         Betting,

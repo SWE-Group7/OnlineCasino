@@ -10,8 +10,18 @@ namespace ServerConsole //print statements & request
     {
         static void Main(string[] args)
         {
-            Console.Write("Welcome! Are you signing in or creating an account"); 
-            //depending on answer go elsewhere. If signing in go to SQL. creating account go to user and set variables.
+            Console.Write("Welcome!"); 
+            
+
+            //Write to console every time client connects
+
+            //write to console every time a game starts
+
+            //write to console every time a game ends
+
+            //write to console every time a client disconnects
+
+
         }
     }
 }
