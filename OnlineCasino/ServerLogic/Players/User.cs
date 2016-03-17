@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 
 namespace ServerLogic
 {
-    class User //sign or register
+    public class User //sign or register
     {
         public int UserID;
         public string Username;
         public string Password;
         public string EmailAddress;
         public double Balance;
+        public bool InGame;
 
         public User()
         {
