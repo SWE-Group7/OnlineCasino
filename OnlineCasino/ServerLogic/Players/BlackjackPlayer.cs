@@ -1,4 +1,5 @@
-﻿using SharedModels.GameComponents;
+﻿using ClientLogic.Connection;
+using SharedModels.GameComponents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace ServerLogic.Players
         {
             Cards = new List<Card>();
 
-            //CurrentUser.Client = new BlackjackConn();
+            CurrentUser.Client = new BlackjackConn();
         }
 
         public bool SetUserBet(float amount)
@@ -52,13 +53,13 @@ namespace ServerLogic.Players
         public void IndicatePlaying()
         {
             Status = BlackjackPlayerStatus.Playing;
-           // CurrentUser.Client.IndicatePlaying();
+            CurrentUser.Client.IndicatePlaying();
         }
 
         public void IndicateWait()
         {
             Status = BlackjackPlayerStatus.Waiting;
-            //CurrentUser.Client.IndicateWaiting();
+            CurrentUser.Client.IndicateWaiting();
         }
 
         public List<Card> GetCards()
