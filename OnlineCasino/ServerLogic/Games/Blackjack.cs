@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 using ServerLogic.Games.GameComponents;
 using SharedModels.GameComponents;
 using System.Diagnostics;
@@ -95,42 +96,45 @@ namespace ServerLogic.Games
             //step5: each player hits or stays  bjack state is now userplayig
                 BlackjackState = BlackjackStates.Playing;
 
-                foreach (BlackjackPlayer player in Players)
+                if (!DealerWin)
                 {
-                    //wait for player or 30sec
-                    Stopwatch stopwatch = new Stopwatch();
-                    stopwatch.Start();
-
-                    long i = stopwatch.ElapsedMilliseconds;
-                    bool stay = false;
-
-                    while ((i < 30000) && (stay == false))
+                    foreach (BlackjackPlayer player in Players)
                     {
-                        i = stopwatch.ElapsedMilliseconds;
+                        //wait for player or 30sec
+                        Stopwatch stopwatch = new Stopwatch();
+                        stopwatch.Start();
 
-                        string hitOrStay;
-                        if (CardHelper.CountHand(player.GetCards()) > 21)
-                            hitOrStay = "stay";
-                        else { 
-                            Console.Out.Write("'hit' or 'stay'?\n");
-                            hitOrStay = Console.ReadLine();
-                        }
+                        long i = stopwatch.ElapsedMilliseconds;
+                        bool stay = false;
 
-                        switch (hitOrStay)
+                        while ((i < 30000) && (stay == false))
                         {
-                            case "hit":
-                                Card card = deck.DealCard();
-                                player.DealCard(card);
-                                Console.Out.Write("\n Your hand: \n");
-                                CardHelper.PrintHand(player.GetCards());
-                                stopwatch.Restart();
-                                break;
-                            default:
-                                player.IndicateWait();
-                                stay = true;
-                                break;
+                            i = stopwatch.ElapsedMilliseconds;
+
+                            string hitOrStay;
+                            if (CardHelper.CountHand(player.GetCards()) > 21)
+                                hitOrStay = "stay";
+                            else {
+                                Console.Out.Write("'hit' or 'stay'?\n");
+                                hitOrStay = Console.ReadLine();
+                            }
+
+                            switch (hitOrStay)
+                            {
+                                case "hit":
+                                    Card card = deck.DealCard();
+                                    player.DealCard(card);
+                                    Console.Out.Write("\n Your hand: \n");
+                                    CardHelper.PrintHand(player.GetCards());
+                                    stopwatch.Restart();
+                                    break;
+                                default:
+                                    player.IndicateWait();
+                                    stay = true;
+                                    break;
+                            }
                         }
-                    } 
+                    }
                 }
 
                 //step6:dealer hits until 17 or over
@@ -138,7 +142,7 @@ namespace ServerLogic.Games
                 Console.Out.Write("\nDealer's full hand: \n");
                 CardHelper.PrintHand(DealerHand);
 
-                if(DealerAmount >= 17 && DealerAmount < 21)
+                while(DealerAmount < 17)
                 {
                     Card drawn = deck.DealCard();
                     DealerHand.Add(drawn);
@@ -191,10 +195,10 @@ namespace ServerLogic.Games
                 foreach(BlackjackPlayer player in Players)
                 {
                     player.ClearCards();
+                    Console.Out.Write("\nYour game balance is: " + player.getGameBalance() + "\n");
                 }
 
                 DealerHand = new List<Card>();
-
             }
 
             //step9: if no connections, results saved to server
@@ -210,14 +214,23 @@ namespace ServerLogic.Games
 
             long i = stopwatch.ElapsedMilliseconds;
             int flag = 0;
-        
-            while (i < 30000 && !continuePlay)
+
+            Console.Out.Write("Place Bet: ");
+            string bet;
+
+            while (i < 30000)
             {
                 i = stopwatch.ElapsedMilliseconds;
                 foreach (BlackjackPlayer player in Players)
                 {
                     if (player.Status == BlackjackPlayerStatus.Betting)
                     {
+                        bet = Console.ReadLine();
+                        if (bet != null)
+                        {
+                            player.SetUserBet(float.Parse(bet));
+                            player.IndicateWait();
+                        }
                     }
                     else
                     {

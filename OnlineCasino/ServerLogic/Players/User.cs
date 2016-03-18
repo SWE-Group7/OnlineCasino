@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClientLogic.Connection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,7 +32,7 @@ namespace ServerLogic
 
         public static User Register(string username, string password, string email, string fullName)
         {
-            
+         
 
             DB.User.Register(username, hashedPassword, email, fullName, salt);
 
@@ -42,12 +43,12 @@ namespace ServerLogic
 
 
 
+       
 
 
+    
 
-
-
-
+       
 
     }
 }
