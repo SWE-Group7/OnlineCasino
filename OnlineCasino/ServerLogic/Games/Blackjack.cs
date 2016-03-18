@@ -34,7 +34,7 @@ namespace ServerLogic.Games
             {
                     Console.Out.Write("What is your buy in?");
                     string buyInStr = Console.ReadLine();
-                    float buyIn = float.Parse(buyInStr);
+                    decimal buyIn = decimal.Parse(buyInStr);
                     Players.Add(new BlackjackPlayer(u, buyIn));
             }
         }
@@ -81,7 +81,7 @@ namespace ServerLogic.Games
                         player.ForceNoBet();
                     }
 
-                    float bet = float.Parse(output);
+                    decimal bet = decimal.Parse(output);
                     if (bet > player.getGameBalance())
                     {
                         bet = player.getGameBalance();

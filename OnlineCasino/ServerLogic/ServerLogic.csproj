@@ -66,6 +66,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>CasinoDB.edmx</DependentUpon>
     </Compile>
+    <Compile Include="EntityFrameworks\Partials\User.cs" />
     <Compile Include="EntityFrameworks\User.cs">
       <DependentUpon>CasinoDB.tt</DependentUpon>
     </Compile>

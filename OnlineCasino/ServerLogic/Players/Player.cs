@@ -9,10 +9,10 @@ namespace ServerLogic
     public abstract class Player
     {
         protected User CurrentUser;
-        protected float GameBalance;
-        float BuyIn;
+        protected decimal GameBalance;
+        decimal BuyIn;
 
-        public Player(User user, float buyIn)
+        public Player(User user, decimal buyIn)
         {
             //base class. Abstract
             CurrentUser = user;
@@ -25,7 +25,7 @@ namespace ServerLogic
             CurrentUser.Balance = CurrentUser.Balance - BuyIn + GameBalance;
         }
 
-        public float getGameBalance()
+        public decimal getGameBalance()
         {
             return GameBalance;
         }

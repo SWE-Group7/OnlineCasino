@@ -19,6 +19,7 @@ namespace ServerLogic
         public bool InGame;
         public decimal Balance
         {
+            get { return Balance; }
             set
             {
                 decimal val = Math.Min(value, 0);
@@ -27,6 +28,8 @@ namespace ServerLogic
                     Balance = value;
             }
         }
+
+        public BaseConnection Client;
 
         private User(DB.User dbUser)
         {

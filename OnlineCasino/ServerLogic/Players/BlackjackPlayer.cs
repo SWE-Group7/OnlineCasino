@@ -13,10 +13,10 @@ namespace ServerLogic.Players
     {
         public BlackjackPlayerStatus Status;
         public int UserBuyIn;
-        public float UserBet;
+        public decimal UserBet;
         private List<Card> Cards;
 
-        public BlackjackPlayer(User user, float buyIn)
+        public BlackjackPlayer(User user, decimal buyIn)
             : base(user, buyIn)
         {
             Cards = new List<Card>();
@@ -24,7 +24,7 @@ namespace ServerLogic.Players
             CurrentUser.Client = new BlackjackConn();
         }
 
-        public bool SetUserBet(float amount)
+        public bool SetUserBet(decimal amount)
         {
             if (Status == BlackjackPlayerStatus.Betting)
             {
