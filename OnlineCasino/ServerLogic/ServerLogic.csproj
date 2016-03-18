@@ -77,6 +77,11 @@
     <Compile Include="Players\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Players\User.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="ServerMain.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -106,6 +111,10 @@
       <DependentUpon>CasinoDB.edmx</DependentUpon>
     </None>
     <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

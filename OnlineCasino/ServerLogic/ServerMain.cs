@@ -12,7 +12,7 @@ namespace ServerLogic
         public List<Game> OpenTables;
 
         public Dictionary<int, Game> UserIDtoTable;
-        
+
         public ServerMain()
         {
             ConnectedUsers = new List<User>();
@@ -20,5 +20,12 @@ namespace ServerLogic
 
             UserIDtoTable = new Dictionary<int, Game>();
         }
+
+        static public void  WriteException(string throwingMethod, Exception ex)
+        {
+            Console.WriteLine(String.Format("{0} threw an Exception : {1}", throwingMethod, ex.Message));
+        }
     }
+
+
 }
