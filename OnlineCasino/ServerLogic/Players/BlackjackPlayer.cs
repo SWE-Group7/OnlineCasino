@@ -81,6 +81,7 @@ namespace ServerLogic.Players
 
         public void ForceNoBet()
         {
+            Console.Out.Write("No bet");
             Status = BlackjackPlayerStatus.Waiting;
             UserBet = 0;
         }

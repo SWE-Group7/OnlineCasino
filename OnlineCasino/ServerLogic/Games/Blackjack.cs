@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using System.IO;
 using ServerLogic.Games.GameComponents;
 using SharedModels.GameComponents;
@@ -30,13 +31,13 @@ namespace ServerLogic.Games
             BlackjackState = BlackjackStates.Betting;
                 
             foreach (User u in users)
-                {
+            {
                     Console.Out.Write("What is your buy in?");
                     string buyInStr = Console.ReadLine();
                     float buyIn = float.Parse(buyInStr);
                     Players.Add(new BlackjackPlayer(u, buyIn));
-                }
             }
+        }
 
         public void Start()
         {
@@ -45,6 +46,7 @@ namespace ServerLogic.Games
 
                 Boolean DealerWin = false;
                 Boolean won = false;
+                Boolean noBet = false;
             //step1: wait for players.  Game state set to waiting
                 //set_Game_State(GameStates.Waiting);
 
@@ -63,7 +65,30 @@ namespace ServerLogic.Games
                     player.IndicateBet();
                 }
             
-                WaitForBets(); //wait for all bets or 30sec
+                //Betting 
+                foreach (BlackjackPlayer player in Players)
+                {
+                    string output = " ";
+                    try
+                    {
+                        Console.WriteLine("Place your bet: \n");
+                        Reader();
+                        output = ReadLine(30000);
+                    }
+                    catch (TimeoutException)
+                    {
+                        Console.WriteLine("You waited too long...Sit this one out.\n");
+                        player.ForceNoBet();
+                    }
+
+                    float bet = float.Parse(output);
+                    if (bet > player.getGameBalance())
+                    {
+                        bet = player.getGameBalance();
+                        Console.Out.Write("Over your balance, bet set to: " + bet + "\n");
+                    }
+                    player.SetUserBet(bet);
+                }
 
                 //step4:deal cards blackjack state changes to dealing.  CHECK DEALER HAND AND IF 21 GAMEOVER EVERYONE LOST
                 BlackjackState = BlackjackStates.Dealing;
@@ -96,48 +121,50 @@ namespace ServerLogic.Games
             //step5: each player hits or stays  bjack state is now userplayig
                 BlackjackState = BlackjackStates.Playing;
 
-                if (!DealerWin)
+                if (!DealerWin && !noBet)
                 {
-                foreach (BlackjackPlayer player in Players)
-                {
-                    //wait for player or 30sec
-                    Stopwatch stopwatch = new Stopwatch();
-                    stopwatch.Start();
-
-                    long i = stopwatch.ElapsedMilliseconds;
+                    foreach (BlackjackPlayer player in Players)
+                    {
                         bool stay = false;
 
-                        while ((i < 30000) && (stay == false))
-                    {
-                            i = stopwatch.ElapsedMilliseconds;
-
+                        while (stay == false)
+                        {
                             string hitOrStay;
+
                             if (CardHelper.CountHand(player.GetCards()) > 21)
                                 hitOrStay = "stay";
                             else {
-                        Console.Out.Write("'hit' or 'stay'?\n");
-                                hitOrStay = Console.ReadLine();
+                                try
+                                {
+                                    Console.WriteLine("'hit' or 'stay' \n");
+                                    Reader();
+                                    hitOrStay = ReadLine(30000);
+                                }
+                                catch (TimeoutException)
+                                {
+                                    Console.WriteLine("You waited too long... You will stay.");
+                                    hitOrStay = "stay";
+                                }
                             }
 
-                        switch (hitOrStay)
-                        {
-                            case "hit":
-                                Card card = deck.DealCard();
-                                player.DealCard(card);
+                            switch (hitOrStay)
+                            {
+                                case "hit":
+                                    Card card = deck.DealCard();
+                                    player.DealCard(card);
                                     Console.Out.Write("\n Your hand: \n");
                                     CardHelper.PrintHand(player.GetCards());
-                                stopwatch.Restart();
-                                break;
-                            default:
-                                player.IndicateWait();
+                                    break;
+                                default:
+                                    player.IndicateWait();
                                     stay = true;
-                                break;
+                                    break;
+                            }
                         }
-                    } 
-                }
+                    }
                 }
 
-                    //step6:dealer hits until 17 or over
+                //step6:dealer hits until 17 or over
 
                 Console.Out.Write("\nDealer's full hand: \n");
                 CardHelper.PrintHand(DealerHand);
@@ -171,7 +198,7 @@ namespace ServerLogic.Games
                         player.UpdateGameBalance(won);
                     }
                     else if (PlayersHand < DealerAmount)
-                    { 
+                    {
                         /*take bet amount*/
                     }
                     else
@@ -184,59 +211,51 @@ namespace ServerLogic.Games
                 //step8: loop back throu game, check connections, if no connections break out of loop
 
                 DealerHand = new List<Card>();
+
+                foreach(BlackjackPlayer player in Players)
+                {
+                    if (player.getGameBalance() <= 0)
+                    {
+                        Console.Out.Write("You are broke\nGoodbye.");
+                        Environment.Exit(0);
+                    }
+                }
             }
 
             //step9: if no connections, results saved to server
         }
 
+        private static Thread inputThread;
+        private static AutoResetEvent getInput, gotInput;
+        private static string input;
 
-        public void WaitForBets()
+        static void Reader()
         {
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
+            getInput = new AutoResetEvent(false);
+            gotInput = new AutoResetEvent(false);
+            inputThread = new Thread(reader);
+            inputThread.IsBackground = true;
+            inputThread.Start();
+        }
          
-            bool continuePlay = false;
-
-            long i = stopwatch.ElapsedMilliseconds;
-            int flag = 0;
-        
-            Console.Out.Write("Place Bet: ");
-            string bet;
-
-            while (i < 30000)
+        private static void reader()
             {
-                i = stopwatch.ElapsedMilliseconds;
-                foreach (BlackjackPlayer player in Players)
+            while (true)
                 {
-                    if (player.Status == BlackjackPlayerStatus.Betting)
-                    {
-                        bet = Console.ReadLine();
-                        if (bet != null)
-                        {
-                            player.SetUserBet(float.Parse(bet));
-                            player.IndicateWait();
-                        }
-                    }
-                    else
-                    {
-                        flag++;
-                    }
-                }
-                if (flag == Players.Count)
-                {
-                    continuePlay = true;
+                getInput.WaitOne();
+                input = Console.ReadLine();
+                gotInput.Set();
                 }
             }
         
-            stopwatch.Stop();
-
-            foreach (BlackjackPlayer player in Players)
-            {
-                if (player.Status == BlackjackPlayerStatus.Betting)
+        public static string ReadLine(int timeOutMillisecs)
                 {
-                    player.ForceNoBet();
-                }
-            }
+            getInput.Set();
+            bool success = gotInput.WaitOne(timeOutMillisecs);
+            if (success)
+                return input;
+            else
+                throw new TimeoutException("User did not provide input within the time limit.");
         }
     }
 }
