@@ -11,7 +11,9 @@ namespace ServerLogic.EntityFrameworks
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.Linq;
+    using SL = ServerLogic;
+
     public partial class User
     {
         public int UserID { get; set; }
@@ -24,5 +26,73 @@ namespace ServerLogic.EntityFrameworks
         public string Salt { get; set; }
         public System.DateTime CreationDate { get; set; }
         public System.DateTime LastLoginDate { get; set; }
+
+        public static User Register(string username, string password, string email, string fullName)
+        {
+            if (!(ValidateUserName(username) && ValidatePassword(password) && ValidateEmail(email)))
+                return null;
+
+            User dbUser = new User();
+
+            dbUser.Username =
+            dbUser.Salt = GenerateSalt();
+            dbUser.Password = HashPassword(password, dbUser.Salt);
+            
+            
+        }
+
+        private static bool ValidateEmail(string email)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static User Login(string username, string password)
+        {
+            return null;
+        }
+
+        private static string HashPassword(string password, string salt)
+        {
+            return null;
+        }
+
+        private static bool ValidateUserName(string username)
+        {
+            string validCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_";
+            char[] charArr = username.ToCharArray();
+            
+            foreach(char ch in charArr)
+            {
+                if (validCharacters.IndexOf(ch) == -1)
+                    return false;
+            }
+
+            return true;
+        }
+
+        private static bool ValidatePassword(string password)
+        {
+            string validCharacters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_!@#$%^&*()-=+.,<>/?\|~";
+            char[] charArr = password.ToCharArray();
+
+            foreach(char ch in charArr)
+            {
+                if (validCharacters.IndexOf(ch) == -1)
+                    return false;
+            }
+
+            return true;
+        }
+
+        private static string GenerateSalt()
+        {
+            Random random = new Random();
+            byte[] bytes = new byte[32];
+            random.NextBytes(bytes);
+
+            //Casts byte[32] to string
+            string salt = new string(bytes.Select(b => (char)b).ToArray());
+            return salt;
+        }
     }
 }
