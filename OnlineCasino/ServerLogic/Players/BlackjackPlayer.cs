@@ -47,13 +47,6 @@ namespace ServerLogic.Players
         {
             Status = BlackjackPlayerStatus.Betting;
             //CurrentUser.Client.IndicateBet();
-            Console.Out.Write("Place Bet: ");
-            String bet = Console.ReadLine();
-            if (bet != null)
-            {
-                UserBet = float.Parse(bet);
-                Status = BlackjackPlayerStatus.Waiting;
-            }
         }
 
         public void IndicatePlaying()
