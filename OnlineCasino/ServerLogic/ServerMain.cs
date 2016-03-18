@@ -14,7 +14,7 @@ namespace ServerLogic
         public Dictionary<int, Game> UserIDtoTable;
         
         public ServerMain()
-    {
+        {
             ConnectedUsers = new List<User>();
             OpenTables = new List<Game>();
 

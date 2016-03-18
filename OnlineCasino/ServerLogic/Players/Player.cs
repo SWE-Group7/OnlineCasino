@@ -24,5 +24,10 @@ namespace ServerLogic
         {
             CurrentUser.Balance = CurrentUser.Balance - BuyIn + GameBalance;
         }
+
+        public float getGameBalance()
+        {
+            return GameBalance;
+        }
     }
 }

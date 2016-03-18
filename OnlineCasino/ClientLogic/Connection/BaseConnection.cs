@@ -9,7 +9,6 @@ namespace ClientLogic.Connection
     public class BaseConnection
     {
         
-
         public BaseConnection()
         {
             
@@ -18,6 +17,21 @@ namespace ClientLogic.Connection
         public bool CheckConnection()
         {
             return false;
+        }
+
+        public void IndicateWaiting()
+        {
+
+        }
+
+        public void IndicateBetting()
+        {
+
+        }
+
+        public void IndicatePlaying()
+        {
+
         }
     }
 }
