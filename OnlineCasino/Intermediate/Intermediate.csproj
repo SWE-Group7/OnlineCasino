@@ -54,10 +54,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ServerLogic\ServerLogic.csproj">
-      <Project>{49a91363-2a03-4b60-b6a8-94bb80cb9a0b}</Project>
-      <Name>ServerLogic</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SharedModels\SharedModels.csproj">
       <Project>{7fdae663-98d2-4e4f-bfe6-670b29b24af4}</Project>
       <Name>SharedModels</Name>

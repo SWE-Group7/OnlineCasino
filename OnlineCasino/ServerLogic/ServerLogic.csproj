@@ -30,8 +30,19 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -40,6 +51,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EntityFrameworks\CasinoDB.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CasinoDB.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityFrameworks\CasinoDB.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CasinoDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityFrameworks\CasinoDB.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CasinoDB.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="EntityFrameworks\User.cs">
+      <DependentUpon>CasinoDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Games\Blackjack.cs" />
     <Compile Include="Games\Game.cs" />
     <Compile Include="Games\GameComponents\CardHelper.cs" />
@@ -52,8 +81,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Connection\" />
-    <Folder Include="EntityFrameworks\" />
-    <Folder Include="Information\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ConsoleApplication1\Intermediate.csproj">
@@ -64,6 +91,32 @@
       <Project>{7fdae663-98d2-4e4f-bfe6-670b29b24af4}</Project>
       <Name>SharedModels</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <EntityDeploy Include="EntityFrameworks\CasinoDB.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>CasinoDB.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="EntityFrameworks\CasinoDB.edmx.diagram">
+      <DependentUpon>CasinoDB.edmx</DependentUpon>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="EntityFrameworks\CasinoDB.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>CasinoDB.edmx</DependentUpon>
+      <LastGenOutput>CasinoDB.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="EntityFrameworks\CasinoDB.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>CasinoDB.edmx</DependentUpon>
+      <LastGenOutput>CasinoDB.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
