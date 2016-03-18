@@ -74,12 +74,14 @@ namespace ServerLogic.Players
             return CardsCopy;
         }
 
-        public void DealCard(Card card) {
+        public void DealCard(Card card)
+        {
             Cards.Add(card);
         }
 
         public void ForceNoBet()
         {
+            Console.Out.Write("No bet");
             Status = BlackjackPlayerStatus.Waiting;
             UserBet = 0;
         }
