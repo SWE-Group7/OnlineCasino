@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Intermediate.Communications;
+//using Intermediate.Communications;
 
 namespace ServerLogic.Players
 {
     public class BlackjackPlayer : Player
     {
         public BlackjackPlayerStatus Status;
+        public int UserBuyIn;
         public float UserBet;
         private List<Card> Cards;
 
@@ -45,19 +46,26 @@ namespace ServerLogic.Players
         public void IndicateBet()
         {
             Status = BlackjackPlayerStatus.Betting;
-            CurrentUser.Client.IndicateBet();
+            //CurrentUser.Client.IndicateBet();
+            Console.Out.Write("Place Bet: ");
+            String bet = Console.ReadLine();
+            if (bet != null)
+            {
+                UserBet = float.Parse(bet);
+                Status = BlackjackPlayerStatus.Waiting;
+            }
         }
 
         public void IndicatePlaying()
         {
             Status = BlackjackPlayerStatus.Playing;
-            CurrentUser.Client.IndicatePlaying();
+           // CurrentUser.Client.IndicatePlaying();
         }
 
         public void IndicateWait()
         {
             Status = BlackjackPlayerStatus.Waiting;
-            CurrentUser.Client.IndicateWaiting();
+            //CurrentUser.Client.IndicateWaiting();
         }
 
         public List<Card> GetCards()
@@ -80,6 +88,11 @@ namespace ServerLogic.Players
         {
             Status = BlackjackPlayerStatus.Waiting;
             UserBet = 0;
+        }
+
+        public void ClearCards()
+        {
+            Cards = new List<Card>();
         }
     }
 

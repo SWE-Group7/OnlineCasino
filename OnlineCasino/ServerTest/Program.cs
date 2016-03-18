@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ServerLogic.Games.GameComponents;
+using ServerLogic;
+using ServerLogic.Games;
 using SharedModels.GameComponents;
 
 namespace ServerTest
@@ -12,7 +13,13 @@ namespace ServerTest
     {
         static void Main(string[] args)
         {
+            User user = new User();
+            List<User> users = new List<User>();
+            users.Add(user);
 
+            Blackjack bjack = new Blackjack(users);
+            bjack.Start();
+            Console.Read();
         }
     }
 }

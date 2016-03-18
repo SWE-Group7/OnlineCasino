@@ -31,10 +31,17 @@ namespace ServerLogic.Games.GameComponents
                 while ((temp > 21) && (valueList.Exists(cards => cards == 11)))
                     temp = temp - 10;
 
-                handCount = temp;
-                Console.Out.Write("handCount value: " + handCount + "\n");               
+                handCount = temp;              
             }
             return handCount;
+        }
+
+        public static void PrintHand(List<Card> hand)
+        {
+            foreach(Card card in hand)
+            {
+                Console.Out.Write(card.Rank + " of " + card.Suit + "\n");
+            }
         }
     }
 }
