@@ -14,9 +14,9 @@
           <Property Name="Password" Type="varchar" MaxLength="64" Nullable="false" />
           <Property Name="EmailAddress" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="FullName" Type="varchar" MaxLength="255" Nullable="false" />
-          <Property Name="Balance" Type="money" Nullable="false" />
+          <Property Name="Balance" Type="decimal" Precision="19" Scale="4" Nullable="false" />
           <Property Name="Disabled" Type="bit" Nullable="false" />
-          <Property Name="Salt" Type="varchar" MaxLength="32" Nullable="false" />
+          <Property Name="Salt" Type="varchar" MaxLength="44" Nullable="false" />
           <Property Name="CreationDate" Type="datetime" Nullable="false" />
           <Property Name="LastLoginDate" Type="datetime" Nullable="false" />
         </EntityType>
@@ -41,7 +41,7 @@
           <Property Name="FullName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="Balance" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
           <Property Name="Disabled" Type="Boolean" Nullable="false" />
-          <Property Name="Salt" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="Salt" Type="String" Nullable="false" MaxLength="44" FixedLength="false" Unicode="false" />
           <Property Name="CreationDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastLoginDate" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
@@ -49,8 +49,8 @@
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
-      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="OnlineCasinoModelStoreContainer" CdmEntityContainer="OnlineCasinoEntity">
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="OnlineCasinoModelStoreContainer" CdmEntityContainer="OnlineCasinoEntity">
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="OnlineCasinoModel.User">
               <MappingFragment StoreEntitySet="Users">
@@ -68,8 +68,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
         </EntityContainerMapping>
-      </Mapping>
-    </edmx:Mappings>
+</Mapping></edmx:Mappings>
   </edmx:Runtime>
   <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
   <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
@@ -83,7 +82,7 @@
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
         <DesignerProperty Name="EnablePluralization" Value="true" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
-        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
       </DesignerInfoPropertySet>
     </Options>

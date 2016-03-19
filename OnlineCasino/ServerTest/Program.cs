@@ -20,6 +20,7 @@ namespace ServerTest
             string fullName;
             string email;
 
+           
 
             Console.WriteLine("Welcome to the Online Casino!");
 

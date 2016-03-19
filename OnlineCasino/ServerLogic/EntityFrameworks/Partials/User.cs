@@ -12,27 +12,30 @@ namespace ServerLogic.EntityFrameworks
     {
         public static User Register(string username, string password, string email, string fullName)
         {
-
             //Validate Email, Username, Password
             if (!(Validation.ValidateUserName(username) && Validation.ValidatePassword(password) && Validation.ValidateEmail(email)))
                 return null;
 
             User dbUser = new User();
-
-            dbUser.FullName = fullName;
-            dbUser.Username = username;
-            dbUser.EmailAddress = email;
-            dbUser.Salt = GenerateSalt();
-            dbUser.Password = HashPassword(password, dbUser.Salt);
-            dbUser.Balance = Properties.Settings.Default.StartingBalance;
-            dbUser.Disabled = false;
-            dbUser.CreationDate = DateTime.Now;
-            dbUser.LastLoginDate = dbUser.CreationDate;
-
             try
             {
                 using (OnlineCasinoEntity db = new OnlineCasinoEntity())
                 {
+
+                    //Check to see if username is taken
+                    if (db.Users.Where(u => u.Username == username).Any())
+                        return null;
+
+                    dbUser.FullName = fullName;
+                    dbUser.Username = username;
+                    dbUser.EmailAddress = email;
+                    dbUser.Salt = GenerateSalt();
+                    dbUser.Password = HashPassword(password, dbUser.Salt);
+                    dbUser.Balance = Properties.Settings.Default.StartingBalance;
+                    dbUser.Disabled = false;
+                    dbUser.CreationDate = DateTime.Now;
+                    dbUser.LastLoginDate = dbUser.CreationDate;
+
                     db.Users.Add(dbUser);
                     db.SaveChanges();
                 }
@@ -66,6 +69,7 @@ namespace ServerLogic.EntityFrameworks
                         return null;
 
                 }
+
             }
             catch (Exception ex)
             {
@@ -77,10 +81,10 @@ namespace ServerLogic.EntityFrameworks
         {
 
             SHA256 hasher = SHA256Managed.Create();
-            byte[] bytes = Encoding.UTF8.GetBytes(password + salt);
+            byte[] bytes = Convert.FromBase64String(password + salt);
             bytes = hasher.ComputeHash(bytes);
 
-            return Encoding.UTF8.GetString(bytes);
+            return Convert.ToBase64String(bytes);
         }
 
         public static bool UpdateBalance(int id, decimal balance)
@@ -94,6 +98,7 @@ namespace ServerLogic.EntityFrameworks
                     db.SaveChanges();
                     return (dbUser.Balance == balance);
                 }
+
 
             }
             catch (Exception ex)
@@ -110,9 +115,7 @@ namespace ServerLogic.EntityFrameworks
             byte[] bytes = new byte[32];
             random.NextBytes(bytes);
 
-            //Casts byte[32] to string
-            string salt = new string(bytes.Select(b => (char)b).ToArray());
-            return salt;
+            return Convert.ToBase64String(bytes);
         }
     }
 }
