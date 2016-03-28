@@ -214,6 +214,9 @@ namespace ServerLogic.Games
 
                 foreach(BlackjackPlayer player in Players)
                 {
+                    //Clear player hand
+                    player.ClearCards();
+
                     if (player.getGameBalance() <= 0)
                     {
                         Console.Out.Write("You are broke\nGoodbye.");
