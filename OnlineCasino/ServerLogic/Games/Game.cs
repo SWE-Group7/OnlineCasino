@@ -15,8 +15,8 @@ namespace ServerLogic
 
     public abstract class Game
     {
-        public List<Player> Players;
-        public GameStates GameState;
+        protected List<Player> Players;
+        protected GameStates GameState;
 
         public Game()
         {  

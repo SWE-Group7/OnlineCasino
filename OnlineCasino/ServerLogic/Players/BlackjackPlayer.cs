@@ -1,5 +1,4 @@
-﻿using ClientLogic.Connection;
-using SharedModels.GameComponents;
+﻿using SharedModels.GameComponents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,13 +14,14 @@ namespace ServerLogic.Players
         public int UserBuyIn;
         public decimal UserBet;
         private List<Card> Cards;
+        public bool inGame;
 
         public BlackjackPlayer(User user, decimal buyIn)
             : base(user, buyIn)
         {
             Cards = new List<Card>();
-
-            CurrentUser.Client = new BlackjackConn();
+            inGame = true;
+            //CurrentUser.Client = new BlackjackConn();
         }
 
         public bool SetUserBet(decimal amount)
@@ -53,13 +53,13 @@ namespace ServerLogic.Players
         public void IndicatePlaying()
         {
             Status = BlackjackPlayerStatus.Playing;
-            CurrentUser.Client.IndicatePlaying();
+            //CurrentUser.Client.IndicatePlaying();
         }
 
         public void IndicateWait()
         {
             Status = BlackjackPlayerStatus.Waiting;
-            CurrentUser.Client.IndicateWaiting();
+            //CurrentUser.Client.IndicateWaiting();
         }
 
         public List<Card> GetCards()
@@ -81,7 +81,7 @@ namespace ServerLogic.Players
 
         public void ForceNoBet()
         {
-            Console.Out.Write("No bet");
+            Console.Out.Write("\nNo bet\n");
             Status = BlackjackPlayerStatus.Waiting;
             UserBet = 0;
         }

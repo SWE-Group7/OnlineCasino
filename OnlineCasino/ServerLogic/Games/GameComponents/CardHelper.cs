@@ -18,7 +18,7 @@ namespace ServerLogic.Games.GameComponents
             foreach(Card card in hand)
             {
                 int temp = handCount;
-                int cardValue = (int)card.getCardRank();
+                int cardValue = (int)card.Rank;
 
                 if (cardValue >= 10)
                     cardValue = 10;
@@ -29,7 +29,7 @@ namespace ServerLogic.Games.GameComponents
                 temp += cardValue;
 
                 while ((temp > 21) && (valueList.Exists(cards => cards == 11)))
-                    temp = temp - 10;
+                    temp = temp - 10; 
 
                 handCount = temp;              
             }

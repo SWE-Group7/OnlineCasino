@@ -1,5 +1,4 @@
-﻿using ClientLogic.Connection;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,8 +29,6 @@ namespace ServerLogic
                     balance = value;
             }
         }
-
-        public BaseConnection Client;
 
         private User(DB.User dbUser)
         {

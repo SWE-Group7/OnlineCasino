@@ -89,10 +89,6 @@
     <Folder Include="Connection\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ClientLogic\ClientLogic.csproj">
-      <Project>{2aa28960-20a7-4487-9bf3-c54af486a5cf}</Project>
-      <Name>ClientLogic</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ConsoleApplication1\Intermediate.csproj">
       <Project>{9bc55116-f1b3-4aee-ab44-28d63bebae37}</Project>
       <Name>Intermediate</Name>

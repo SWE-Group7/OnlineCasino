@@ -29,5 +29,25 @@ namespace ServerLogic
         {
             return GameBalance;
         }
+
+        public string GetFullName()
+        {
+            return CurrentUser.FullName;
+        }
+
+        public string GetUsername()
+        {
+            return CurrentUser.Username;
+        }
+
+        public decimal GetBalance()
+        {
+            return CurrentUser.Balance;
+        }
+
+        public void GiftMoney(decimal gift)
+        {
+            CurrentUser.Balance += gift;
+        }
     }
 }

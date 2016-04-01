@@ -26,6 +26,4 @@ namespace ServerLogic
             Console.WriteLine(String.Format("{0} threw an Exception : {1}", throwingMethod, ex.Message));
         }
     }
-
-
 }

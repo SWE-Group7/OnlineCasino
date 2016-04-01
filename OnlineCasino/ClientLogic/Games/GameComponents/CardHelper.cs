@@ -18,7 +18,7 @@ namespace ServerLogic.Games.GameComponents
             foreach (Card card in hand)
             {
                 int temp = handCount;
-                int cardValue = (int)card.getCardRank();
+                int cardValue = (int)card.Rank;
 
                 if (cardValue >= 10)
                     cardValue = 10;
