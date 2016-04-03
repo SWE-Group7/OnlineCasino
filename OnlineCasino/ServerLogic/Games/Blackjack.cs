@@ -75,24 +75,27 @@ namespace ServerLogic.Games
                 }
 
                 //BETTING
+                decimal bet;
+                
                 foreach (BlackjackPlayer player in Players)
                 {
                     Console.WriteLine("------" + player.GetFullName() + "'s Turn -----");
                     string output = " ";
-                    try
+                    do
                     {
-                        Console.WriteLine("Place your bet: \n");
-                        Reader();
-                        output = ReadLine(30000);
+                        try
+                        {
+                            Console.WriteLine("Place your bet: \n");
+                            Reader();
+                            output = ReadLine(30000);
+                        }
+                        catch (TimeoutException)
+                        {
+                            Console.WriteLine("You waited too long...Sit this one out.\n");
+                            player.ForceNoBet();
+                        }
                     }
-                    catch (TimeoutException)
-                    {
-                        Console.WriteLine("You waited too long...Sit this one out.\n");
-                        player.ForceNoBet();
-                    }
-
-                    decimal bet;
-                    decimal.TryParse(output, out bet);
+                    while (!decimal.TryParse(output, out bet));
 
                     if (bet > player.getGameBalance())
                     {
@@ -103,6 +106,7 @@ namespace ServerLogic.Games
                     player.SetUserBet(bet);
                 }
                 Console.Clear();
+
                 //DEALING
                 BlackjackState = BlackjackStates.Dealing;
         

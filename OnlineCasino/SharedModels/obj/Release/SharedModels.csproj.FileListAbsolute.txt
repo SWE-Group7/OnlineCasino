@@ -1,0 +1,4 @@
+C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\SharedModels\bin\Release\SharedModels.dll
+C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\SharedModels\bin\Release\SharedModels.pdb
+C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\SharedModels\obj\Release\SharedModels.dll
+C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\SharedModels\obj\Release\SharedModels.pdb

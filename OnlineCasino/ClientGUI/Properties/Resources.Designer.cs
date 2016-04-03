@@ -63,9 +63,9 @@ namespace ClientGUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Poker_Straight_Flush_Kreuz {
+        internal static System.Drawing.Bitmap CardsBackground {
             get {
-                object obj = ResourceManager.GetObject("Poker-Straight-Flush-Kreuz", resourceCulture);
+                object obj = ResourceManager.GetObject("CardsBackground", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

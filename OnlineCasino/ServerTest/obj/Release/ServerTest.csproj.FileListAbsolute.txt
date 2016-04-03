@@ -1,0 +1,14 @@
+C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ServerTest\bin\Release\ServerTest.exe.config
+C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ServerTest\bin\Release\ServerTest.exe
+C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ServerTest\bin\Release\ServerTest.pdb
+C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ServerTest\bin\Release\EntityFramework.dll
+C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ServerTest\bin\Release\EntityFramework.SqlServer.dll
+C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ServerTest\bin\Release\ServerLogic.dll
+C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ServerTest\bin\Release\SharedModels.dll
+C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ServerTest\bin\Release\ServerLogic.pdb
+C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ServerTest\bin\Release\SharedModels.pdb
+C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ServerTest\bin\Release\EntityFramework.xml
+C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ServerTest\bin\Release\EntityFramework.SqlServer.xml
+C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ServerTest\obj\Release\ServerTest.csprojResolveAssemblyReference.cache
+C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ServerTest\obj\Release\ServerTest.exe
+C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ServerTest\obj\Release\ServerTest.pdb
