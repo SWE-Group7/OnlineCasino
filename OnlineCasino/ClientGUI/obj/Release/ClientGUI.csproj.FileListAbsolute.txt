@@ -7,3 +7,12 @@ C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ClientGUI\obj\Relea
 C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ClientGUI\obj\Release\ClientGUI.exe
 C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ClientGUI\obj\Release\ClientGUI.pdb
 C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ClientGUI\obj\Release\ClientGUI.csprojResolveAssemblyReference.cache
+C:\Users\Nadine\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\bin\Release\ClientGUI.exe.config
+C:\Users\Nadine\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\obj\Release\ClientGUI.exe
+C:\Users\Nadine\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\obj\Release\ClientGUI.pdb
+C:\Users\Nadine\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\bin\Release\ClientGUI.exe
+C:\Users\Nadine\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\bin\Release\ClientGUI.pdb
+C:\Users\Nadine\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\obj\Release\ClientGUI.csprojResolveAssemblyReference.cache
+C:\Users\Nadine\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\obj\Release\ClientGUI.ClientGUI.resources
+C:\Users\Nadine\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\obj\Release\ClientGUI.Properties.Resources.resources
+C:\Users\Nadine\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\obj\Release\ClientGUI.csproj.GenerateResource.Cache

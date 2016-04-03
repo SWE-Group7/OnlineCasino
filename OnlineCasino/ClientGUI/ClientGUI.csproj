@@ -82,7 +82,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Properties\Images\Poker-Straight-Flush-Kreuz.jpg" />
+    <None Include="Properties\Images\CardsBackground.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

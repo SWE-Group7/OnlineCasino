@@ -5,3 +5,10 @@ C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ClientLogic\bin\Deb
 C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ClientLogic\obj\Debug\ClientLogic.csprojResolveAssemblyReference.cache
 C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ClientLogic\obj\Debug\ClientLogic.dll
 C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ClientLogic\obj\Debug\ClientLogic.pdb
+C:\Users\Nadine\Documents\GitHub\OnlineCasino\OnlineCasino\ClientLogic\bin\Debug\ClientLogic.dll
+C:\Users\Nadine\Documents\GitHub\OnlineCasino\OnlineCasino\ClientLogic\bin\Debug\ClientLogic.pdb
+C:\Users\Nadine\Documents\GitHub\OnlineCasino\OnlineCasino\ClientLogic\bin\Debug\SharedModels.dll
+C:\Users\Nadine\Documents\GitHub\OnlineCasino\OnlineCasino\ClientLogic\bin\Debug\SharedModels.pdb
+C:\Users\Nadine\Documents\GitHub\OnlineCasino\OnlineCasino\ClientLogic\obj\Debug\ClientLogic.csprojResolveAssemblyReference.cache
+C:\Users\Nadine\Documents\GitHub\OnlineCasino\OnlineCasino\ClientLogic\obj\Debug\ClientLogic.dll
+C:\Users\Nadine\Documents\GitHub\OnlineCasino\OnlineCasino\ClientLogic\obj\Debug\ClientLogic.pdb
