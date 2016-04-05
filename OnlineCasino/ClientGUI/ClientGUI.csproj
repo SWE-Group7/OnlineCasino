@@ -46,6 +46,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BlackjackGUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CardsGUI.cs" />
     <Compile Include="ClientGUI.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -85,7 +89,69 @@
     <None Include="Images\CardsBackground.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Properties\Images\" />
+    <None Include="Images\BlackjackBackground.jpg" />
+    <None Include="Images\cards\queen_of_spades.png" />
+    <None Include="Images\cards\queen_of_hearts.png" />
+    <None Include="Images\cards\queen_of_diamonds.png" />
+    <None Include="Images\cards\queen_of_clubs.png" />
+    <None Include="Images\cards\king_of_spades.png" />
+    <None Include="Images\cards\king_of_hearts.png" />
+    <None Include="Images\cards\king_of_diamonds.png" />
+    <None Include="Images\cards\king_of_clubs.png" />
+    <None Include="Images\cards\jack_of_spades.png" />
+    <None Include="Images\cards\jack_of_hearts.png" />
+    <None Include="Images\cards\jack_of_diamonds.png" />
+    <None Include="Images\cards\jack_of_clubs.png" />
+    <None Include="Images\cards\ace_of_spades.png" />
+    <None Include="Images\cards\ace_of_hearts.png" />
+    <None Include="Images\cards\ace_of_diamonds.png" />
+    <None Include="Images\cards\ace_of_clubs.png" />
+    <None Include="Images\cards\10_of_spades.png" />
+    <None Include="Images\cards\10_of_hearts.png" />
+    <None Include="Images\cards\10_of_diamonds.png" />
+    <None Include="Images\cards\10_of_clubs.png" />
+    <None Include="Images\cards\9_of_spades.png" />
+    <None Include="Images\cards\9_of_hearts.png" />
+    <None Include="Images\cards\9_of_diamonds.png" />
+    <None Include="Images\cards\9_of_clubs.png" />
+    <None Include="Images\cards\8_of_spades.png" />
+    <None Include="Images\cards\8_of_hearts.png" />
+    <None Include="Images\cards\8_of_diamonds.png" />
+    <None Include="Images\cards\8_of_clubs.png" />
+    <None Include="Images\cards\7_of_spades.png" />
+    <None Include="Images\cards\7_of_hearts.png" />
+    <None Include="Images\cards\7_of_diamonds.png" />
+    <None Include="Images\cards\7_of_clubs.png" />
+    <None Include="Images\cards\6_of_spades.png" />
+    <None Include="Images\cards\6_of_hearts.png" />
+    <None Include="Images\cards\6_of_diamonds.png" />
+    <None Include="Images\cards\6_of_clubs.png" />
+    <None Include="Images\cards\5_of_spades.png" />
+    <None Include="Images\cards\5_of_hearts.png" />
+    <None Include="Images\cards\5_of_diamonds.png" />
+    <None Include="Images\cards\5_of_clubs.png" />
+    <None Include="Images\cards\4_of_spades.png" />
+    <None Include="Images\cards\4_of_hearts.png" />
+    <None Include="Images\cards\4_of_diamonds.png" />
+    <None Include="Images\cards\4_of_clubs.png" />
+    <None Include="Images\cards\3_of_spades.png" />
+    <None Include="Images\cards\3_of_hearts.png" />
+    <None Include="Images\cards\3_of_diamonds.png" />
+    <None Include="Images\cards\3_of_clubs.png" />
+    <None Include="Images\cards\2_of_spades.png" />
+    <None Include="Images\cards\2_of_hearts.png" />
+    <None Include="Images\cards\2_of_diamonds.png" />
+    <None Include="Images\cards\2_of_clubs.png" />
+    <Content Include="Images\Menu_Header.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Menu_Blackjack.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharedModels\SharedModels.csproj">
+      <Project>{7fdae663-98d2-4e4f-bfe6-670b29b24af4}</Project>
+      <Name>SharedModels</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

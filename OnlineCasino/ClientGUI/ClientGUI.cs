@@ -12,11 +12,7 @@ namespace ClientGUI
 {
     public partial class ClientGUI : Form
     {
-
-        public ClientGUI()
-        {
-            InitializeComponent();
-        }
+        BlackjackGUI BlackjackGUI;
        
         enum State
         {
@@ -26,8 +22,20 @@ namespace ClientGUI
             Game
         }
 
-        State ClientState = State.Login;
+        enum Game
+        {
+            None = 0,
+            Blackjack,
+        }
 
+        State ClientState = State.Login;
+        Game GameChoice = Game.None;
+
+        public ClientGUI()
+        {
+            InitializeComponent();
+        }
+        
         private void ClientGUI_Load(object sender, EventArgs e)
         {
             this.BackgroundImage = global::ClientGUI.Properties.Resources.CardsBackground;
@@ -40,29 +48,39 @@ namespace ClientGUI
             {
                 case State.Login:
                     {
-                        e.Graphics.DrawRectangle(Pens.Black, Width / 2 - 226, Height / 2 - 176, 451, 251);
-                        e.Graphics.FillRectangle(Brushes.White, new Rectangle(Width / 2 - 225, Height / 2 - 175, 450, 250));
+                        e.Graphics.DrawRectangle(Pens.Black, Width / 2 - 226, Height / 2 - 126, 451, 251);
+                        e.Graphics.FillRectangle(Brushes.White, new Rectangle(Width / 2 - 225, Height / 2 - 125, 450, 250));
                     }
                     break;
                 case State.Register:
                     {
-                        e.Graphics.FillRectangle(Brushes.White, new Rectangle(Width / 2 - 225, Height / 2 - 175, 450, 250));
+                        e.Graphics.DrawRectangle(Pens.Black, Width / 2 - 226, Height / 2 - 126, 451, 251);
+                        e.Graphics.FillRectangle(Brushes.White, new Rectangle(Width / 2 - 225, Height / 2 - 125, 450, 250));
                     }
                     break;
                 case State.Menu:
                     {
-                        e.Graphics.Clear(Color.White);
-                        e.Graphics.DrawRectangle(Pens.Black, Width / 2 - 226, Height / 2 - 176, 451, 268);
-
-                        e.Graphics.FillRectangle(Brushes.White, new Rectangle(Width / 2 - 225, Height / 2 - 175, 600, 300));
+                        // add welcome text with name and balance
+                        e.Graphics.DrawRectangle(Pens.Black, Width / 2 - 301, Height / 2 - 201, 601, 401);
+                        e.Graphics.FillRectangle(Brushes.White, new Rectangle(Width / 2 - 300, Height / 2 - 200, 600, 400));
                     }
                     break;
                 case State.Game:
-                    { }
+                    {
+                        switch(GameChoice)
+                        {
+                            case Game.Blackjack:
+                                { 
+                                    BlackjackGUI.BlackjackGUI_Paint(sender, e);
+                                }
+                                break;
+                        }
+                    }
                     break;
             }
         }
        
+        // LOGIN PAGE BUTTON EVENTS
         private void Submit_Click(object sender, EventArgs e)
         {
             // Add log in functionality
@@ -75,7 +93,8 @@ namespace ClientGUI
             ClientState = State.Register;
             Register_Draw();
         }
-  
+
+        // REGISTER PAGE BUTTONS EVENTS
         private void Register_Click(object sender, EventArgs e)
         {
             // Add account registration functionality
@@ -87,6 +106,31 @@ namespace ClientGUI
         {
             ClientState = State.Login;
             Login_Draw();
+        }
+
+        // MENU BUTTONS EVENTS
+        private void LogOut_Click(object sender, EventArgs e)
+        {
+            // Add account log out funcationality
+
+            ClientState = State.Login;
+            Login_Draw();
+        }
+        private void Blackjack_Click(object sender, EventArgs e)
+        {
+            BlackjackGUI = new BlackjackGUI();
+            this.Controls.Clear();
+            this.Invalidate();
+            this.BackgroundImage = global::ClientGUI.Properties.Resources.BlackjackBackground;
+
+            ClientState = State.Game;
+            GameChoice = Game.Blackjack;
+
+            Game_Draw();
+        }
+        private void AccountInfo_Click(object sender, EventArgs e)
+        {
+            // Create account information page
         }
 
         private void timer1_Tick(object sender, EventArgs e)

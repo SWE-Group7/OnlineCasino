@@ -37,6 +37,7 @@ namespace ClientGUI
             // 
             // timer1
             // 
+            this.timer1.Enabled = true;
             this.timer1.Interval = 1;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
@@ -53,6 +54,7 @@ namespace ClientGUI
             this.Load += new System.EventHandler(this.ClientGUI_Load);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.ClientGUI_Paint);
             this.ResumeLayout(false);
+
         }
 
         #endregion
@@ -62,51 +64,55 @@ namespace ClientGUI
         public void Login_Draw()
         {
             this.Controls.Clear();
+            this.Invalidate();
+
             Label LoginLabel = new Label();
-            LoginLabel.Size = new Size(310, 20);
-            LoginLabel.Location = new Point(Width / 2 - 150, Height / 2 - 120);
-            LoginLabel.Font = new Font("Helvetica", 16);
+            LoginLabel.Size = new Size(320, 30);
+            LoginLabel.Location = new Point(Width / 2 - 160, Height / 2 - 70);
+            LoginLabel.Font = new Font("Segoe UI", 16);
             LoginLabel.BackColor = Color.Transparent;
-            LoginLabel.Text = "Welcome to the Online Casino!";
+            LoginLabel.Text = " Welcome to the Online Casino!";
             Controls.Add(LoginLabel);
 
             Label UsernameLabel = new Label();
             UsernameLabel.Size = new Size(65, 20);
-            UsernameLabel.Location = new Point(Width / 2 - 135, Height / 2 - 60);
-            UsernameLabel.Font = new Font("Helvetica", 8);
+            UsernameLabel.Location = new Point(Width / 2 - 135, Height / 2 - 10);
+            UsernameLabel.Font = new Font("Segoe UI", 8);
             UsernameLabel.Text = " Username:";
             UsernameLabel.BackColor = Color.Transparent;
             Controls.Add(UsernameLabel);
 
             TextBox UsernameTextBox = new TextBox();
             UsernameTextBox.Size = new Size(200, 20);
-            UsernameTextBox.Location = new Point(Width / 2 - 70, Height / 2 - 60);
+            UsernameTextBox.Location = new Point(Width / 2 - 70, Height / 2 - 10);
             Controls.Add(UsernameTextBox);
 
             Label PasswordLabel = new Label();
             PasswordLabel.Size = new Size(65, 20);
-            PasswordLabel.Location = new Point(Width / 2 - 135, Height / 2 - 38);
+            PasswordLabel.Location = new Point(Width / 2 - 135, Height / 2 + 12);
             PasswordLabel.BackColor = Color.Transparent;
-            PasswordLabel.Font = new Font("Helvetica", 8);
+            PasswordLabel.Font = new Font("Segoe UI", 8);
             PasswordLabel.Text = " Password:";
             Controls.Add(PasswordLabel);
 
             TextBox PasswordTextBox = new TextBox();
             PasswordTextBox.Size = new Size(200, 20);
-            PasswordTextBox.Location = new Point(Width / 2 - 70, Height / 2 - 38);
+            PasswordTextBox.Location = new Point(Width / 2 - 70, Height / 2 + 12);
             PasswordTextBox.UseSystemPasswordChar = true;
             Controls.Add(PasswordTextBox);
 
             Button Submit = new Button();
             Submit.Size = new Size(202, 22);
-            Submit.Location = new Point(Width / 2 - 71, Height / 2 - 16);
+            Submit.BackColor = Color.White;
+            Submit.Location = new Point(Width / 2 - 71, Height / 2 + 34);
             Submit.Text = "Sign In";
             Submit.Click += new System.EventHandler(Submit_Click);
             Controls.Add(Submit);
 
             Button NewUser = new Button();
             NewUser.Size = new Size(202, 22);
-            NewUser.Location = new Point(Width / 2 - 71, Height / 2 + 6);
+            NewUser.BackColor = Color.White;
+            NewUser.Location = new Point(Width / 2 - 71, Height / 2 + 56);
             NewUser.Text = "New User?";
             NewUser.Click += new System.EventHandler(NewUser_Click);
             Controls.Add(NewUser);
@@ -115,77 +121,82 @@ namespace ClientGUI
         public void Register_Draw()
         {
             this.Controls.Clear();
+            this.Invalidate();
+
+            this.BackColor = Color.White;
             Label RegisterLabel = new Label();
             RegisterLabel.Size = new Size(250, 30);
-            RegisterLabel.Location = new Point(Width / 2 - 125, Height / 2 - 120);
-            RegisterLabel.Font = new Font("Helvetica", 16);
+            RegisterLabel.Location = new Point(Width / 2 - 125, Height / 2 - 70);
+            RegisterLabel.Font = new Font("Segoe UI", 16);
             RegisterLabel.BackColor = Color.Transparent;
             RegisterLabel.Text = "Register a New Account";
             Controls.Add(RegisterLabel);
 
             Label UsernameLabel = new Label();
             UsernameLabel.Size = new Size(65, 20);
-            UsernameLabel.Location = new Point(Width / 2 - 135, Height / 2 - 80);
-            UsernameLabel.Font = new Font("Helvetica", 8);
+            UsernameLabel.Location = new Point(Width / 2 - 135, Height / 2 - 30);
+            UsernameLabel.Font = new Font("Segoe UI", 8);
             UsernameLabel.Text = " Username:";
             UsernameLabel.BackColor = Color.Transparent;
             Controls.Add(UsernameLabel);
 
             TextBox UsernameTextBox = new TextBox();
             UsernameTextBox.Size = new Size(200, 20);
-            UsernameTextBox.Location = new Point(Width / 2 - 70, Height / 2 - 80);
+            UsernameTextBox.Location = new Point(Width / 2 - 70, Height / 2 - 30);
             Controls.Add(UsernameTextBox);
 
             Label PasswordLabel = new Label();
             PasswordLabel.Size = new Size(65, 20);
-            PasswordLabel.Location = new Point(Width / 2 - 135, Height / 2 - 58);
+            PasswordLabel.Location = new Point(Width / 2 - 135, Height / 2 - 8);
             PasswordLabel.BackColor = Color.Transparent;
-            PasswordLabel.Font = new Font("Helvetica", 8);
+            PasswordLabel.Font = new Font("Segoe UI", 8);
             PasswordLabel.Text = " Password:";
             Controls.Add(PasswordLabel);
 
             TextBox PasswordTextBox = new TextBox();
             PasswordTextBox.Size = new Size(200, 20);
-            PasswordTextBox.Location = new Point(Width / 2 - 70, Height / 2 - 58);
+            PasswordTextBox.Location = new Point(Width / 2 - 70, Height / 2 - 8);
             PasswordTextBox.UseSystemPasswordChar = true;
             Controls.Add(PasswordTextBox);
 
             Label EmailLabel = new Label();
             EmailLabel.Size = new Size(65, 20);
-            EmailLabel.Location = new Point(Width / 2 - 135, Height / 2 - 36);
+            EmailLabel.Location = new Point(Width / 2 - 135, Height / 2 + 14);
             EmailLabel.BackColor = Color.Transparent;
-            EmailLabel.Font = new Font("Helvetica", 8);
+            EmailLabel.Font = new Font("Segoe UI", 8);
             EmailLabel.Text = " Email:";
             Controls.Add(EmailLabel);
 
             TextBox EmailTextBox = new TextBox();
             EmailTextBox.Size = new Size(200, 20);
-            EmailTextBox.Location = new Point(Width / 2 - 70, Height / 2 - 36);
+            EmailTextBox.Location = new Point(Width / 2 - 70, Height / 2 + 14);
             Controls.Add(EmailTextBox);
 
             Label FullNameLabel = new Label();
             FullNameLabel.Size = new Size(65, 20);
-            FullNameLabel.Location = new Point(Width / 2 - 135, Height / 2 - 14);
+            FullNameLabel.Location = new Point(Width / 2 - 135, Height / 2 + 36);
             FullNameLabel.BackColor = Color.Transparent;
-            FullNameLabel.Font = new Font("Helvetica", 8);
+            FullNameLabel.Font = new Font("Segoe UI", 8);
             FullNameLabel.Text = " Full Name:";
             Controls.Add(FullNameLabel);
 
             TextBox FullNameTextBox = new TextBox();
             FullNameTextBox.Size = new Size(200, 20);
-            FullNameTextBox.Location = new Point(Width / 2 - 70, Height / 2 - 14);
+            FullNameTextBox.Location = new Point(Width / 2 - 70, Height / 2 + 36);
             Controls.Add(FullNameTextBox);
 
             Button Register = new Button();
             Register.Size = new Size(202, 22);
-            Register.Location = new Point(Width / 2 - 71, Height / 2 + 8);
+            Register.BackColor = Color.White;
+            Register.Location = new Point(Width / 2 - 71, Height / 2 + 58);
             Register.Text = "Register";
             Register.Click += new System.EventHandler(Register_Click);
             Controls.Add(Register);
 
             Button ReturnToLogin = new Button();
             ReturnToLogin.Size = new Size(50, 22);
-            ReturnToLogin.Location = new Point(Width / 2 - 220, Height / 2 + 50);
+            ReturnToLogin.BackColor = Color.White;
+            ReturnToLogin.Location = new Point(Width / 2 - 220, Height / 2 + 100);
             ReturnToLogin.Text = "< Back";
             ReturnToLogin.Click += new System.EventHandler(ReturnToLogin_Click);
             Controls.Add(ReturnToLogin);
@@ -195,18 +206,56 @@ namespace ClientGUI
         public void Menu_Draw()
         {
             this.Controls.Clear();
+            this.Invalidate();
 
-            Button Blackjack = new Button();
-            Blackjack.Size = new Size(60, 100);
-            Blackjack.Location = new Point(Width / 2 - 220, Height / 2 + 50);
-      
+            this.BackColor = Color.White;
+
+            PictureBox MenuHeader = new PictureBox();
+            MenuHeader.BackgroundImage = global::ClientGUI.Properties.Resources.Menu_Header;
+            MenuHeader.BackgroundImageLayout = ImageLayout.Stretch;
+            MenuHeader.Location = new Point(Width / 2 - 150, Height / 2 - 100);
+            MenuHeader.Size = new Size(300, 30);
+            Controls.Add(MenuHeader);
+
+            Button Blackjack = new Button();         
+            Blackjack.BackgroundImage = global::ClientGUI.Properties.Resources.Menu_Blackjack;
+            Blackjack.BackgroundImageLayout = ImageLayout.Stretch;
+            Blackjack.Size = new Size(175, 200);
+            Blackjack.Location = new Point(Width / 2 - 275, Height / 2 - 50);
+            Blackjack.Click += new System.EventHandler(Blackjack_Click);
             Controls.Add(Blackjack);
+
+            Button LogOut = new Button();
+            LogOut.Size = new Size(75, 22);
+            LogOut.BackColor = Color.White;
+            LogOut.Location = new Point(Width / 2 - 295, Height / 2 + 200 - 22 - 5);
+            LogOut.Text = "< Log Out";
+            LogOut.Font = new Font("Segoe UI", 8);
+            LogOut.Click += new System.EventHandler(LogOut_Click);
+            Controls.Add(LogOut);
+
+            Button AccountInfo = new Button();
+            AccountInfo.Size = new Size(100, 22);
+            AccountInfo.BackColor = Color.White;
+            AccountInfo.Location = new Point(Width / 2 - 220, Height / 2 + 200 - 22 - 5);
+            AccountInfo.Text = "Your Account";
+            AccountInfo.Font = new Font("Segoe UI", 8);
+            AccountInfo.Click += new System.EventHandler(AccountInfo_Click);
+            Controls.Add(AccountInfo);
 
         }
 
         public void Game_Draw()
         {
             // Make separate classes for each of the game GUIs
+            switch(GameChoice)
+            {
+                case Game.Blackjack:
+                    {
+                        
+                    }
+                    break;
+            }
         }
     }
 }
