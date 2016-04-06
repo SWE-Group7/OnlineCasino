@@ -46,10 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BlackjackGUI.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="CardsGUI.cs" />
+    <Compile Include="BlackjackGUI.cs" />
+    <Compile Include="Deck.cs" />
     <Compile Include="ClientGUI.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -58,6 +56,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="BlackjackGUI.resx">
+      <DependentUpon>BlackjackGUI.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ClientGUI.resx">
       <DependentUpon>ClientGUI.cs</DependentUpon>
     </EmbeddedResource>
@@ -148,6 +149,10 @@
     <None Include="Images\Menu_Blackjack.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ClientLogic\ClientLogic.csproj">
+      <Project>{2aa28960-20a7-4487-9bf3-c54af486a5cf}</Project>
+      <Name>ClientLogic</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SharedModels\SharedModels.csproj">
       <Project>{7fdae663-98d2-4e4f-bfe6-670b29b24af4}</Project>
       <Name>SharedModels</Name>

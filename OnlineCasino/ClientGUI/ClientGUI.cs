@@ -118,7 +118,7 @@ namespace ClientGUI
         }
         private void Blackjack_Click(object sender, EventArgs e)
         {
-            BlackjackGUI = new BlackjackGUI();
+            BlackjackGUI = new BlackjackGUI(Height, Width);
             this.Controls.Clear();
             this.Invalidate();
             this.BackgroundImage = global::ClientGUI.Properties.Resources.BlackjackBackground;
