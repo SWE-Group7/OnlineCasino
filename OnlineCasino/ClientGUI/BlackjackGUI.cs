@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using SharedModels.GameComponents;
+using SharedModels.Players;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using ClientLogic;
@@ -10,10 +11,12 @@ namespace ClientGUI
     {
         Deck Deck = new Deck();
         List<Card> YourHand = new List<Card>();
-        List<List<Card>> OtherPlayersHands = new List<List<Card>>();
+        List<BlackjackPlayer> OtherPlayers = new List<BlackjackPlayer>();
 
         Bitmap CardImage;
         Card c = new Card(CardSuit.Clubs, CardRank.Ace);
+        Card d = new Card(CardSuit.Diamonds, CardRank.King);
+        Card e = new Card(CardSuit.Hearts, CardRank.Eight);
 
         System.Diagnostics.Stopwatch Stopwatch = new System.Diagnostics.Stopwatch();
 
@@ -69,13 +72,17 @@ namespace ClientGUI
             clientWidth = w;
 
             YourHand.Add(c);
+            YourHand.Add(d);
+            YourHand.Add(e);
+
 
             yourCardX =  clientWidth / 2 - cardWidth / 2;
             yourCardY = clientHeight - 200;
             yourCardsCount = YourHand.Count - 1;
 
             otherCardX = clientWidth + 20;
-            otherCardY = clientHeight - (clientHeight / 2);               
+            otherCardY = clientHeight - (clientHeight / 2); 
+                          
         }
 
         float sx = 0;
@@ -109,8 +116,6 @@ namespace ClientGUI
                                     e.Graphics.Transform = t;
                                     e.Graphics.DrawString("......", new Font("Segoe UI", 12), Brushes.Black, new Point(clientWidth / 2, clientHeight / 2 + 10));
 
-
-                                    //Check connection from method in ClientLogic Connection
                                     CheckConnection();
                                 }
                                 break;
@@ -145,11 +150,11 @@ namespace ClientGUI
                         }
                         yourCardsCount = YourHand.Count - 1;
                        
-                        foreach (List<Card> l in OtherPlayersHands)
+                        foreach (BlackjackPlayer p in OtherPlayers)
                         {
-                            otherCardsCount = l.Count;
+                            otherCardsCount = p.Hand.Count;
 
-                            foreach (Card c in l)
+                            foreach (Card c in p.Hand)
                             {
                                 CardImage = Deck.CardImage(c.Suit, c.Rank);
 
@@ -157,7 +162,6 @@ namespace ClientGUI
                                 {
                                     e.Graphics.DrawImage(CardImage, new Rectangle(otherCardX, otherCardY, cardWidth, cardHeight));
                                 }
-
                             }
                         }
 

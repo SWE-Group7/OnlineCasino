@@ -14,7 +14,6 @@ namespace ServerLogic
 
         public Player(User user, decimal buyIn)
         {
-            //base class. Abstract
             CurrentUser = user;
             GameBalance = buyIn;
             BuyIn = buyIn;

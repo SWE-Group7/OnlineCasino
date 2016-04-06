@@ -43,6 +43,9 @@
     <Compile Include="GameComponents\Card.cs" />
     <Compile Include="GameComponents\CardRank.cs" />
     <Compile Include="GameComponents\CardSuit.cs" />
+    <Compile Include="Players\BlackjackPlayer.cs" />
+    <Compile Include="Players\Player.cs" />
+    <Compile Include="Players\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Connection\Security.cs" />
     <Compile Include="Validation.cs" />

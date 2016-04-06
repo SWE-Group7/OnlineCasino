@@ -83,7 +83,8 @@ namespace ClientGUI
         // LOGIN PAGE BUTTON EVENTS
         private void Submit_Click(object sender, EventArgs e)
         {
-            // Add log in functionality
+            Username = UsernameTextBox.Text;
+            Password = PasswordTextBox.Text;
 
             ClientState = State.Menu;
             Menu_Draw();
@@ -97,7 +98,10 @@ namespace ClientGUI
         // REGISTER PAGE BUTTONS EVENTS
         private void Register_Click(object sender, EventArgs e)
         {
-            // Add account registration functionality
+            Username = UsernameTextBox.Text;
+            Password = PasswordTextBox.Text;
+            EmailAddress = EmailTextBox.Text;
+            FullName = FullNameTextBox.Text;
 
             ClientState = State.Menu;
             Menu_Draw();
@@ -131,11 +135,26 @@ namespace ClientGUI
         private void AccountInfo_Click(object sender, EventArgs e)
         {
             // Create account information page
+            
+        }
+
+        // IN GAME BUTTONS EVENTS
+        private void ReturnToMenu_Click(object sender, EventArgs e)
+        {
+            this.BackgroundImage = global::ClientGUI.Properties.Resources.CardsBackground;
+            this.Controls.Clear();
+            this.Invalidate();
+
+            ClientState = State.Menu;
+            Menu_Draw();
+
+            GameChoice = Game.None;
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
             this.Invalidate();
         }
+
     }
 }

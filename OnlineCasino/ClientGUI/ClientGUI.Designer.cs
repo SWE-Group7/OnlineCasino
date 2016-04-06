@@ -5,6 +5,11 @@ namespace ClientGUI
 {
     partial class ClientGUI
     {
+        public string Username;
+        public string FullName;
+        public string EmailAddress;
+        private string Password;
+
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -61,6 +66,11 @@ namespace ClientGUI
 
         private System.Windows.Forms.Timer timer1;
 
+        TextBox UsernameTextBox;
+        TextBox PasswordTextBox;
+        TextBox EmailTextBox;
+        TextBox FullNameTextBox;
+
         public void Login_Draw()
         {
             this.Controls.Clear();
@@ -82,9 +92,9 @@ namespace ClientGUI
             UsernameLabel.BackColor = Color.Transparent;
             Controls.Add(UsernameLabel);
 
-            TextBox UsernameTextBox = new TextBox();
+            UsernameTextBox = new TextBox();
             UsernameTextBox.Size = new Size(200, 20);
-            UsernameTextBox.Location = new Point(Width / 2 - 70, Height / 2 - 10);
+            UsernameTextBox.Location = new Point(Width / 2 - 70, Height / 2 - 10);           
             Controls.Add(UsernameTextBox);
 
             Label PasswordLabel = new Label();
@@ -95,7 +105,7 @@ namespace ClientGUI
             PasswordLabel.Text = " Password:";
             Controls.Add(PasswordLabel);
 
-            TextBox PasswordTextBox = new TextBox();
+            PasswordTextBox = new TextBox();
             PasswordTextBox.Size = new Size(200, 20);
             PasswordTextBox.Location = new Point(Width / 2 - 70, Height / 2 + 12);
             PasswordTextBox.UseSystemPasswordChar = true;
@@ -116,6 +126,9 @@ namespace ClientGUI
             NewUser.Text = "New User?";
             NewUser.Click += new System.EventHandler(NewUser_Click);
             Controls.Add(NewUser);
+
+            
+            //Password = PasswordTextBox.Text;
         }
 
         public void Register_Draw()
@@ -136,13 +149,14 @@ namespace ClientGUI
             UsernameLabel.Size = new Size(65, 20);
             UsernameLabel.Location = new Point(Width / 2 - 135, Height / 2 - 30);
             UsernameLabel.Font = new Font("Segoe UI", 8);
-            UsernameLabel.Text = " Username:";
+            UsernameLabel.Text = " Username:";              
             UsernameLabel.BackColor = Color.Transparent;
             Controls.Add(UsernameLabel);
 
-            TextBox UsernameTextBox = new TextBox();
+            UsernameTextBox = new TextBox();
             UsernameTextBox.Size = new Size(200, 20);
             UsernameTextBox.Location = new Point(Width / 2 - 70, Height / 2 - 30);
+            Username = UsernameTextBox.Text;
             Controls.Add(UsernameTextBox);
 
             Label PasswordLabel = new Label();
@@ -153,10 +167,11 @@ namespace ClientGUI
             PasswordLabel.Text = " Password:";
             Controls.Add(PasswordLabel);
 
-            TextBox PasswordTextBox = new TextBox();
+            PasswordTextBox = new TextBox();
             PasswordTextBox.Size = new Size(200, 20);
             PasswordTextBox.Location = new Point(Width / 2 - 70, Height / 2 - 8);
             PasswordTextBox.UseSystemPasswordChar = true;
+            Password = PasswordTextBox.Text;
             Controls.Add(PasswordTextBox);
 
             Label EmailLabel = new Label();
@@ -167,9 +182,10 @@ namespace ClientGUI
             EmailLabel.Text = " Email:";
             Controls.Add(EmailLabel);
 
-            TextBox EmailTextBox = new TextBox();
+            EmailTextBox = new TextBox();
             EmailTextBox.Size = new Size(200, 20);
             EmailTextBox.Location = new Point(Width / 2 - 70, Height / 2 + 14);
+            EmailAddress = EmailTextBox.Text;
             Controls.Add(EmailTextBox);
 
             Label FullNameLabel = new Label();
@@ -180,9 +196,10 @@ namespace ClientGUI
             FullNameLabel.Text = " Full Name:";
             Controls.Add(FullNameLabel);
 
-            TextBox FullNameTextBox = new TextBox();
+            FullNameTextBox = new TextBox();
             FullNameTextBox.Size = new Size(200, 20);
             FullNameTextBox.Location = new Point(Width / 2 - 70, Height / 2 + 36);
+            FullName = FullNameTextBox.Text;
             Controls.Add(FullNameTextBox);
 
             Button Register = new Button();
@@ -247,8 +264,16 @@ namespace ClientGUI
 
         public void Game_Draw()
         {
+            Button ReturnToMenu = new Button();
+            ReturnToMenu.Size = new Size(50, 22);
+            ReturnToMenu.BackColor = Color.White;
+            ReturnToMenu.Location = new Point(20, Height - 75);
+            ReturnToMenu.Text = "< Back";
+            ReturnToMenu.Click += new System.EventHandler(ReturnToMenu_Click);
+            Controls.Add(ReturnToMenu);
+
             // Make separate classes for each of the game GUIs
-            switch(GameChoice)
+            switch (GameChoice)
             {
                 case Game.Blackjack:
                     {

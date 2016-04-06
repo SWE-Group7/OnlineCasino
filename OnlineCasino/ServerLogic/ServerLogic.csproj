@@ -74,8 +74,11 @@
     <Compile Include="Games\Game.cs" />
     <Compile Include="Games\GameComponents\CardHelper.cs" />
     <Compile Include="Games\GameComponents\Deck.cs" />
+    <Compile Include="Games\GameComponents\RouletteWheel.cs" />
+    <Compile Include="Games\Roulette.cs" />
     <Compile Include="Players\BlackjackPlayer.cs" />
     <Compile Include="Players\Player.cs" />
+    <Compile Include="Players\RoulettePlayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Players\User.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
