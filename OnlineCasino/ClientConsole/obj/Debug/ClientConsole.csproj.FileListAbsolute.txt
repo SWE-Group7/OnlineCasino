@@ -1,9 +1,0 @@
-C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ClientConsole\bin\Debug\ClientConsole.exe.config
-C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ClientConsole\bin\Debug\ClientConsole.exe
-C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ClientConsole\bin\Debug\ClientConsole.pdb
-C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ClientConsole\obj\Debug\ClientConsole.exe
-C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ClientConsole\obj\Debug\ClientConsole.pdb
-C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ClientConsole\bin\Debug\EntityFramework.dll
-C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ClientConsole\bin\Debug\EntityFramework.SqlServer.dll
-C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ClientConsole\bin\Debug\EntityFramework.xml
-C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ClientConsole\bin\Debug\EntityFramework.SqlServer.xml
