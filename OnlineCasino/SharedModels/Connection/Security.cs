@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace SharedModels
 {
+    [Serializable]
     public class Security
     {
-        string Username;
-        string Password;
+        public readonly string Username;
+        public readonly string Password;
 
         public Security(string username, string password)
         {

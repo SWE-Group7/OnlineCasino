@@ -272,7 +272,7 @@ namespace ServerLogic.Games
                     if (player.getGameBalance() <= 0)
                     {
                         Console.WriteLine("\nYour game balance is 0! You lose the game!");
-                        player.InGame = false;
+                        player.inGame = false;
                         
                         if(Players.Count == 0)
                         {
@@ -283,9 +283,12 @@ namespace ServerLogic.Games
                     }
                 }
 
-                Players.RemoveAll((p) => !((BlackjackPlayer)p).InGame);
+                foreach(BlackjackPlayer p in Players)
+                {
+                    if (!p.inGame) Players.Remove(p);
+                }
 
-                if (Players.Count == 0)
+                if(Players.Count == 0)
                 {
                     Console.ReadKey();
                     Environment.Exit(0);

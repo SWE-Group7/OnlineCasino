@@ -12,3 +12,17 @@ C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ServerTest\bin\Debu
 C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ServerTest\obj\Debug\ServerTest.csprojResolveAssemblyReference.cache
 C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ServerTest\obj\Debug\ServerTest.exe
 C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ServerTest\obj\Debug\ServerTest.pdb
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerTest\bin\Debug\ServerTest.exe.config
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerTest\obj\Debug\ServerTest.exe
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerTest\obj\Debug\ServerTest.pdb
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerTest\bin\Debug\ServerTest.exe
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerTest\bin\Debug\ServerTest.pdb
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerTest\bin\Debug\EntityFramework.dll
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerTest\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerTest\bin\Debug\ServerLogic.dll
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerTest\bin\Debug\SharedModels.dll
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerTest\bin\Debug\ServerLogic.pdb
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerTest\bin\Debug\SharedModels.pdb
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerTest\bin\Debug\EntityFramework.xml
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerTest\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerTest\obj\Debug\ServerTest.csprojResolveAssemblyReference.cache

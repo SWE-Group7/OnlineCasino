@@ -11,16 +11,16 @@ namespace ServerLogic.Players
     public class BlackjackPlayer : Player
     {
         public BlackjackPlayerStatus Status;
-        public int UserBuyIn { get; set; }
-        public decimal UserBet { get; set; }
+        public int UserBuyIn;
+        public decimal UserBet;
         private List<Card> Cards;
-        public bool InGame { get; set; }
+        public bool inGame;
 
         public BlackjackPlayer(User user, decimal buyIn)
             : base(user, buyIn)
         {
             Cards = new List<Card>();
-            InGame = true;
+            inGame = true;
             //CurrentUser.Client = new BlackjackConn();
         }
 
@@ -47,16 +47,19 @@ namespace ServerLogic.Players
         public void IndicateBet()
         {
             Status = BlackjackPlayerStatus.Betting;
+            //CurrentUser.Client.IndicateBet();
         }
 
         public void IndicatePlaying()
         {
             Status = BlackjackPlayerStatus.Playing;
+            //CurrentUser.Client.IndicatePlaying();
         }
 
         public void IndicateWait()
         {
             Status = BlackjackPlayerStatus.Waiting;
+            //CurrentUser.Client.IndicateWaiting();
         }
 
         public List<Card> GetCards()

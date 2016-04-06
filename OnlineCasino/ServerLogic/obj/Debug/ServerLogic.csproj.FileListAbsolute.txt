@@ -10,3 +10,27 @@ C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ServerLogic\bin\Deb
 C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ServerLogic\obj\Debug\ServerLogic.csprojResolveAssemblyReference.cache
 C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ServerLogic\obj\Debug\ServerLogic.dll
 C:\Users\nadinedevich\Source\Repos\OnlineCasino\OnlineCasino\ServerLogic\obj\Debug\ServerLogic.pdb
+C:\Users\Foster\Documents\Visual Studio 2015\GitHub\OnlineCasino\OnlineCasino\ServerLogic\bin\Debug\ServerLogic.dll.config
+C:\Users\Foster\Documents\Visual Studio 2015\GitHub\OnlineCasino\OnlineCasino\ServerLogic\bin\Debug\ServerLogic.dll
+C:\Users\Foster\Documents\Visual Studio 2015\GitHub\OnlineCasino\OnlineCasino\ServerLogic\bin\Debug\ServerLogic.pdb
+C:\Users\Foster\Documents\Visual Studio 2015\GitHub\OnlineCasino\OnlineCasino\ServerLogic\bin\Debug\EntityFramework.dll
+C:\Users\Foster\Documents\Visual Studio 2015\GitHub\OnlineCasino\OnlineCasino\ServerLogic\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\Foster\Documents\Visual Studio 2015\GitHub\OnlineCasino\OnlineCasino\ServerLogic\bin\Debug\SharedModels.dll
+C:\Users\Foster\Documents\Visual Studio 2015\GitHub\OnlineCasino\OnlineCasino\ServerLogic\bin\Debug\SharedModels.pdb
+C:\Users\Foster\Documents\Visual Studio 2015\GitHub\OnlineCasino\OnlineCasino\ServerLogic\bin\Debug\EntityFramework.xml
+C:\Users\Foster\Documents\Visual Studio 2015\GitHub\OnlineCasino\OnlineCasino\ServerLogic\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\Foster\Documents\Visual Studio 2015\GitHub\OnlineCasino\OnlineCasino\ServerLogic\obj\Debug\ServerLogic.csprojResolveAssemblyReference.cache
+C:\Users\Foster\Documents\Visual Studio 2015\GitHub\OnlineCasino\OnlineCasino\ServerLogic\obj\Debug\ServerLogic.dll
+C:\Users\Foster\Documents\Visual Studio 2015\GitHub\OnlineCasino\OnlineCasino\ServerLogic\obj\Debug\ServerLogic.pdb
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerLogic\bin\Debug\ServerLogic.dll.config
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerLogic\bin\Debug\ServerLogic.dll
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerLogic\bin\Debug\ServerLogic.pdb
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerLogic\bin\Debug\EntityFramework.dll
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerLogic\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerLogic\bin\Debug\SharedModels.dll
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerLogic\bin\Debug\SharedModels.pdb
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerLogic\bin\Debug\EntityFramework.xml
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerLogic\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerLogic\obj\Debug\ServerLogic.csprojResolveAssemblyReference.cache
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerLogic\obj\Debug\ServerLogic.dll
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerLogic\obj\Debug\ServerLogic.pdb

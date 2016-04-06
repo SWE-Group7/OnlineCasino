@@ -40,10 +40,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Connection\ClientCommand.cs" />
+    <Compile Include="Connection\Serializer.cs" />
+    <Compile Include="Connection\ServerCommand.cs" />
     <Compile Include="GameComponents\Card.cs" />
     <Compile Include="GameComponents\CardRank.cs" />
     <Compile Include="GameComponents\CardSuit.cs" />
-    <Compile Include="Players\BlackjackPlayer.cs" />
+	<Compile Include="Players\BlackjackPlayer.cs" />
     <Compile Include="Players\Player.cs" />
     <Compile Include="Players\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

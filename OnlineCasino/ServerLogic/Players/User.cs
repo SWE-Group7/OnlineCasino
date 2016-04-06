@@ -15,6 +15,7 @@ namespace ServerLogic
         readonly public string EmailAddress;
         readonly private string HashedPassword;
         readonly private string Salt;
+        
         public bool InGame;
 
         private decimal balance;
@@ -57,8 +58,8 @@ namespace ServerLogic
 
             if (dbUser != null)
                 return new User(dbUser);
-
-            return null;
+            else
+                return null;
         } 
         
         public bool Authenticate(string password)
