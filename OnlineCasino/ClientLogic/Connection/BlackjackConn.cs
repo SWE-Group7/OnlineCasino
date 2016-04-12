@@ -8,7 +8,8 @@ namespace ClientLogic.Connection
 {
     public class BlackjackConn : BaseConnection
     {
-        public BlackjackConn()
+        public BlackjackConn(string username, string password, string fullName, string email)
+            :base(username, password, fullName, email)
         {
 
         }

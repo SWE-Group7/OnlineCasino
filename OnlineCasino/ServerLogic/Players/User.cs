@@ -1,9 +1,12 @@
-﻿using System;
+﻿using ServerLogic.Connections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DB = ServerLogic.EntityFrameworks;
+using SM = SharedModels;
+
 
 namespace ServerLogic
 {
@@ -15,6 +18,7 @@ namespace ServerLogic
         readonly public string EmailAddress;
         readonly private string HashedPassword;
         readonly private string Salt;
+        public Connection Connection;
         
         public bool InGame;
 
@@ -60,6 +64,11 @@ namespace ServerLogic
                 return new User(dbUser);
             else
                 return null;
+        }
+        
+        public SM.Players.User GetSharedModel()
+        {
+            return new SM.Players.User(UserID, Username, FullName, EmailAddress, Balance);
         } 
         
         public bool Authenticate(string password)
