@@ -9,39 +9,41 @@ namespace ClientGUI
 {
     public class BlackjackGUI : Form
     {
-        enum OverallState
+        public enum OverallState
         {
             Waiting = 0,
             Playing,
             Distributing
         }
-        OverallState State = OverallState.Waiting;
+        public OverallState State = OverallState.Waiting;
 
-        enum WaitingState
+        public enum WaitingState
         {
             NoConnection = 0,
             TableFound
         }
-        WaitingState WaitStatus = WaitingState.NoConnection;
+        public WaitingState WaitStatus = WaitingState.NoConnection;
 
-        enum GameState
+        public enum GameState
         {
             Waiting = 0,
+            Betting,
             Playing
         }
-        GameState PlayStatus = GameState.Waiting;
-      
-        enum RoundEndState
+        public GameState PlayStatus = GameState.Waiting;
+
+        public enum RoundEndState
         {
             Win = 0,
             Lose,
             Tie
         }
-        RoundEndState EndStatus = RoundEndState.Tie;
+        public RoundEndState EndStatus = RoundEndState.Tie;
 
         Deck Deck = new Deck();
-        BlackjackPlayer You;
-        List<BlackjackPlayer> OtherPlayers = new List<BlackjackPlayer>();
+        public BlackjackPlayer You;
+        public List<BlackjackPlayer> OtherPlayers = new List<BlackjackPlayer>();
+        public List<Card> DealerHand = new List<Card>();
 
         Bitmap CardImage;
 
@@ -51,6 +53,9 @@ namespace ClientGUI
         Card e = new Card(CardSuit.Hearts, CardRank.Eight);
 
         System.Diagnostics.Stopwatch Stopwatch = new System.Diagnostics.Stopwatch();
+
+        public decimal buyIn;
+        public decimal bet;
 
         private int clientHeight;
         private int clientWidth;
@@ -64,10 +69,17 @@ namespace ClientGUI
         int yourCardsCount = 0;
         int yourCardOffset;
 
+        int dealerCardX;
+        int dealerCardY;
+        int dealerCardsCount = 0;
+        int dealerCardOffset;
+
         int otherCardX;
         int otherCardY;
         int otherCardsCount = 0;
-        int otherCardOffset;
+        int otherCardOffset = 0;
+        int otherPlayerOffset = 0;
+        int otherPlayerCount = 0;
 
         int cardHeight = 150;
         int cardWidth = 120;      
@@ -78,21 +90,47 @@ namespace ClientGUI
             clientHeight = h;
             clientWidth = w;
 
-            // Replace
+            // Remove
             You.Hand.Add(c);
             You.Hand.Add(d);
             You.Hand.Add(e);
 
-            BlackjackPlayer b = new BlackjackPlayer(1020, 300);
-            OtherPlayers.Add(b);
+            // Remove
+            BlackjackPlayer ap = new BlackjackPlayer(1020, 300);
+            BlackjackPlayer bp = new BlackjackPlayer(1020, 300);
+            BlackjackPlayer cp = new BlackjackPlayer(1020, 300);
+            BlackjackPlayer dp = new BlackjackPlayer(1020, 300);
+
+            OtherPlayers.Add(ap);
+            OtherPlayers.Add(bp);
+            OtherPlayers.Add(cp);
+            OtherPlayers.Add(dp);
+
+            DealerHand.Add(c);
+
             OtherPlayers[0].Hand.Add(c);
+            OtherPlayers[0].Hand.Add(c);
+
+            OtherPlayers[1].Hand.Add(d);
+            OtherPlayers[1].Hand.Add(e);
+
+            OtherPlayers[2].Hand.Add(d);
+            OtherPlayers[2].Hand.Add(e);
+
+            OtherPlayers[3].Hand.Add(d);
+            OtherPlayers[3].Hand.Add(e);
+
 
             yourCardX = clientWidth / 2 - cardWidth / 2;
             yourCardY = clientHeight - 200;
             yourCardsCount = You.Hand.Count - 1;
 
-            otherCardX = clientWidth - cardWidth - 50;
-            otherCardY = 50;
+            dealerCardX = clientWidth / 2 - (cardWidth - 20) / 2;
+            dealerCardY = 20;
+            dealerCardOffset = DealerHand.Count - 1;
+
+            otherCardX = (cardWidth - 20) + 50;
+            otherCardY = 100;
         }
 
         float sx = 0;
@@ -141,11 +179,13 @@ namespace ClientGUI
                     break;
                 case OverallState.Playing:
                     {
-                        e.Graphics.DrawRectangle(Pens.Black, new Rectangle(clientWidth / 2 - 177, clientHeight / 2 - 52, 352, 102));
-                        e.Graphics.FillRectangle(Brushes.White, new Rectangle(clientWidth / 2 - 175, clientHeight / 2 - 50, 350, 100));
+                        //e.Graphics.DrawRectangle(Pens.Black, new Rectangle(clientWidth / 2 - 177, clientHeight / 2 - 52, 352, 102));
+                        //e.Graphics.FillRectangle(Brushes.White, new Rectangle(clientWidth / 2 - 175, clientHeight / 2 - 50, 350, 100));
                         e.Graphics.DrawLine(Pens.Black, new Point(0, clientHeight - cardHeight - 60), new Point(1500, clientHeight - cardHeight - 60));
-                     
-                        // Draw your hand in center of screen
+
+                        e.Graphics.DrawString("Buy In: $" + buyIn, new Font("Segoe UI", 12), Brushes.White, new Point(100, clientHeight - cardHeight));
+                        e.Graphics.DrawString("   Bet: $" + bet, new Font("Segoe UI", 12), Brushes.White, new Point(106, clientHeight - cardHeight + 20));
+
                         yourCardOffset = (You.Hand.Count * (cardWidth + 20)) / 2;
                         foreach (Card c in You.Hand)
                         {
@@ -157,38 +197,93 @@ namespace ClientGUI
                                 e.Graphics.DrawImage(CardImage, new Rectangle(yourCardX, yourCardY, cardWidth, cardHeight));
                             }
 
-                            yourCardsCount -= 1;
+                            yourCardsCount--;
                             yourCardX = clientWidth / 2 - yourCardOffset;
                         }
                         yourCardsCount = You.Hand.Count - 1;
 
-                        //Draw all other player hands
+                        otherPlayerCount = OtherPlayers.Count;
+                        bool leftSide = true;
                         foreach (BlackjackPlayer p in OtherPlayers)
                         {
                             otherCardsCount = p.Hand.Count;
+                            
+                            if(otherPlayerCount % 2 == 0)
+                            {
+                                otherCardY = 400;
+                                if(otherPlayerCount == 2) { otherCardX = 30; leftSide = true; }
+                                else { otherCardX = clientWidth - cardWidth - 30; leftSide = false; }
+                            }
+                            else
+                            {
+                                otherCardY = 100;
+                                if (otherPlayerCount == 1) { otherCardX = 30; leftSide = true; }
+                                else { otherCardX = clientWidth - cardWidth - 30; leftSide = false; }
+                            }
+
+                            e.Graphics.DrawString("Player " + otherPlayerCount, new Font("Segoe UI", 20), Brushes.White, new Point(otherCardX, otherCardY + cardHeight)); 
 
                             foreach (Card c in p.Hand)
                             {
                                 CardImage = Deck.CardImage(c.Suit, c.Rank);
-
+                              
                                 if (CardImage != null)
                                 {
-                                    e.Graphics.DrawImage(CardImage, new Rectangle(otherCardX, otherCardY, cardWidth, cardHeight));
+                                    e.Graphics.DrawImage(CardImage, new Rectangle(otherCardX, otherCardY, cardWidth - 20, cardHeight - 20));
                                 }
+
+                                if (leftSide) { otherCardX += (p.Hand.Count * (cardWidth)) / 2; }
+                                else { otherCardX -= (p.Hand.Count * (cardWidth)) / 2; }
                             }
+                            otherPlayerCount--;
                         }
+
+                        e.Graphics.DrawString("Dealer", new Font("Segoe UI", 20), Brushes.White, new Point(clientWidth/2 - 60, cardHeight + 10));
+                        dealerCardOffset = (DealerHand.Count * (cardWidth + 20)) / 2;
+                        foreach (Card c in DealerHand)
+                        {
+                            CardImage = Deck.CardImage(c.Suit, c.Rank);
+                            dealerCardX += (dealerCardsCount * cardWidth + dealerCardsCount * 20);
+
+                            if (CardImage != null)
+                            {
+                                e.Graphics.DrawImage(CardImage, new Rectangle(dealerCardX, dealerCardY, cardWidth - 20, cardHeight - 20));
+                            }
+
+                            dealerCardsCount--;
+                            dealerCardX = clientWidth / 2 - dealerCardOffset;
+                        }
+                        dealerCardsCount = DealerHand.Count - 1;
 
                         switch (PlayStatus)
                         {
 
                             case GameState.Waiting:
                                 {
-                                    e.Graphics.DrawString("...", new Font("Segoe UI", 16), Brushes.Black, new Point(clientWidth / 2 - 150, clientHeight / 2 - 30));
+                                    e.Graphics.DrawString("Waiting on other players", new Font("Segoe UI", 16), Brushes.White, new Point(clientWidth / 2 - 150, clientHeight / 2 - 30));
+                                    var t = e.Graphics.Transform;
+
+                                    if (sp)
+                                        sx += .02f;
+                                    else
+                                        sx -= .02f;
+                                    if (sx < -.28) sp = true;
+                                    if (sx > .18) sp = false;
+
+                                    t.Shear(sx, 0);
+
+                                    e.Graphics.Transform = t;
+                                    e.Graphics.DrawString(".", new Font("Segoe UI", 12), Brushes.White, new Point(clientWidth / 2, clientHeight / 2));
+                                }
+                                break;
+                            case GameState.Betting:
+                                {
+                                    
                                 }
                                 break;
                             case GameState.Playing:
                                 {                                  
-                                    e.Graphics.DrawString("your turn", new Font("Segoe UI", 38), Brushes.Black, new Point(clientWidth / 2 - 115, clientHeight / 2 - 40));
+                                    e.Graphics.DrawString("your turn", new Font("Segoe UI", 38), Brushes.White, new Point(clientWidth / 2 - 118, clientHeight / 2 - 40));
 
                                     e.Graphics.FillRectangle(Brushes.OldLace, clientWidth - 150, clientHeight - 175, 100, 35);
                                     e.Graphics.DrawRectangle(Pens.Black, clientWidth - 151, clientHeight - 176, 102, 37);
@@ -210,19 +305,7 @@ namespace ClientGUI
                                             e.Graphics.FillRectangle(Brushes.DimGray, clientWidth - 150, clientHeight - 120, 100, 35);
                                             e.Graphics.DrawString("stay", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 128, clientHeight - 125));
                                         }
-                                    }
-
-                                    if (clickX < clientWidth - 50 && clickX > clientWidth - 150)
-                                    {
-                                        if (clickY < clientHeight - 175 + 35 && clickY > clientHeight - 175)
-                                        {
-                                            // hit
-                                        }
-                                        else if ((clickY < clientHeight - 120 + 35 && clickY > clientHeight - 120))
-                                        {
-                                            // stay
-                                        }
-                                    }
+                                    }                                  
                                 }
                                 break;
                         }

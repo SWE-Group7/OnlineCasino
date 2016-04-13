@@ -10,6 +10,14 @@ namespace ClientGUI
         public string EmailAddress;
         private string Password;
 
+        public decimal balance;
+
+        public string buyInString;
+        public string betString;
+
+        public decimal buyIn;
+        public decimal bet;
+
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -72,6 +80,9 @@ namespace ClientGUI
         TextBox PasswordTextBox;
         TextBox EmailTextBox;
         TextBox FullNameTextBox;
+
+        TextBox BuyInTextBox;
+        TextBox BetTextBox;
 
         public void Login_Draw()
         {
@@ -283,6 +294,55 @@ namespace ClientGUI
                     }
                     break;
             }
+        }
+
+        public void BettingScreen_Draw()
+        {
+            this.Controls.Clear();
+            this.Invalidate();
+
+            Label BettingLabel = new Label();
+            BettingLabel.Size = new Size(250, 50);
+            BettingLabel.Location = new Point(Width / 2 - 50, Height / 2 - 90);
+            BettingLabel.Font = new Font("Segoe UI", 25);
+            BettingLabel.BackColor = Color.Transparent;
+            BettingLabel.Text = " BETTING ";
+            Controls.Add(BettingLabel);
+
+            Label BuyInLabel = new Label();
+            BuyInLabel.Size = new Size(170, 20);
+            BuyInLabel.Location = new Point(Width / 2 - 170, Height / 2 - 30);
+            BuyInLabel.Font = new Font("Segoe UI", 8);
+            BuyInLabel.Text = "Enter your buy in for this game:";
+            BuyInLabel.BackColor = Color.Transparent;
+            Controls.Add(BuyInLabel);
+
+            BuyInTextBox = new TextBox();
+            BuyInTextBox.Size = new Size(70, 20);
+            BuyInTextBox.Location = new Point(Width / 2, Height / 2 - 30);
+            Controls.Add(BuyInTextBox);
+
+            Label BetLabel = new Label();
+            BetLabel.Size = new Size(250, 20);
+            BetLabel.Location = new Point(Width / 2 - 250, Height / 2 - 8);
+            BetLabel.BackColor = Color.Transparent;
+            BetLabel.Font = new Font("Segoe UI", 8);
+            BetLabel.Text = "Of your buy in, choose your bet for this round:";
+            Controls.Add(BetLabel);
+
+            BetTextBox = new TextBox();
+            BetTextBox.Size = new Size(70, 20);
+            BetTextBox.Location = new Point(Width / 2, Height / 2 - 8);
+            Controls.Add(BetTextBox);
+
+            Button SubmitBet = new Button();
+            SubmitBet.Size = new Size(70, 22);
+            SubmitBet.BackColor = Color.White;
+            SubmitBet.Location = new Point(Width / 2, Height / 2 + 14);
+            SubmitBet.Text = "Finalize Bet";
+            SubmitBet.Click += new System.EventHandler(SubmitBet_Click);
+            Controls.Add(SubmitBet);
+
         }
     }
 }
