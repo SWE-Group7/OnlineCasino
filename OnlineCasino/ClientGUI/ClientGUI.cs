@@ -13,7 +13,10 @@ namespace ClientGUI
     public partial class ClientGUI : Form
     {
         BlackjackGUI BlackjackGUI;
-       
+
+        public int mouseX;
+        public int mouseY;
+
         enum State
         {
             Login = 0,
@@ -35,7 +38,7 @@ namespace ClientGUI
         {
             InitializeComponent();
         }
-        
+
         private void ClientGUI_Load(object sender, EventArgs e)
         {
             this.BackgroundImage = global::ClientGUI.Properties.Resources.CardsBackground;
@@ -44,7 +47,7 @@ namespace ClientGUI
 
         private void ClientGUI_Paint(object sender, PaintEventArgs e)
         {
-            switch(ClientState)
+            switch (ClientState)
             {
                 case State.Login:
                     {
@@ -67,10 +70,10 @@ namespace ClientGUI
                     break;
                 case State.Game:
                     {
-                        switch(GameChoice)
+                        switch (GameChoice)
                         {
                             case Game.Blackjack:
-                                { 
+                                {
                                     BlackjackGUI.BlackjackGUI_Paint(sender, e);
                                 }
                                 break;
@@ -79,7 +82,7 @@ namespace ClientGUI
                     break;
             }
         }
-       
+
         // LOGIN PAGE BUTTON EVENTS
         private void Submit_Click(object sender, EventArgs e)
         {
@@ -135,7 +138,7 @@ namespace ClientGUI
         private void AccountInfo_Click(object sender, EventArgs e)
         {
             // Create account information page
-            
+
         }
 
         // IN GAME BUTTONS EVENTS
@@ -156,5 +159,22 @@ namespace ClientGUI
             this.Invalidate();
         }
 
+        private void ClientGUI_MouseDown(object sender, MouseEventArgs e)
+        {                       
+            mouseX = e.X;
+            mouseY = e.Y;
+
+            BlackjackGUI.clickX = e.X;
+            BlackjackGUI.clickY = e.Y;          
+        }
+
+        private void ClientGUI_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (BlackjackGUI != null)
+            {
+                BlackjackGUI.hoverX = e.X;
+                BlackjackGUI.hoverY = e.Y;
+            }
+        }
     }
 }

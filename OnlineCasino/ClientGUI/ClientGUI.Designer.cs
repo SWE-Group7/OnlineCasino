@@ -58,6 +58,8 @@ namespace ClientGUI
             this.Text = "Online Casino";
             this.Load += new System.EventHandler(this.ClientGUI_Load);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.ClientGUI_Paint);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ClientGUI_MouseDown);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ClientGUI_MouseMove);
             this.ResumeLayout(false);
 
         }
