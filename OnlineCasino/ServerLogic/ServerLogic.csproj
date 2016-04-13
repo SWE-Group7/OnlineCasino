@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Connections\Connection.cs" />
     <Compile Include="EntityFrameworks\CasinoDB.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -85,9 +86,7 @@
     </Compile>
     <Compile Include="ServerMain.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Connection\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\ConsoleApplication1\Intermediate.csproj">
       <Project>{9bc55116-f1b3-4aee-ab44-28d63bebae37}</Project>

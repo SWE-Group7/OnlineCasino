@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using SharedModels.Connection;
 using System.Runtime.Serialization.Formatters.Binary;
 using SharedModels;
+using ServerLogic.Connections;
 
 namespace ServerLogic
 {
@@ -49,7 +50,10 @@ namespace ServerLogic
                 cmd = (ServerCommand) BitConverter.ToInt32(buffer, 0);
 
                 if (!(cmd == ServerCommand.Login || cmd == ServerCommand.Login))
+                {
+                    client.Close();
                     continue;
+                }
 
                 bytesRead = client.GetStream().Read(buffer, 0, sizeof(int));
                 bytesToRead = BitConverter.ToInt32(buffer, 0);
@@ -58,28 +62,36 @@ namespace ServerLogic
                 index = 0;
                 while (bytesToRead > 0)
                 {   
-                    bytesRead = client.GetStream().Read(buffer, 0, bytesToRead % bufferSize);
+                    bytesRead = client.GetStream().Read(buffer, 0, Math.Min(bufferSize, bytesToRead));
                     Array.ConstrainedCopy(buffer, 0, obj, index, bytesRead);
                     index += bytesRead;
                     bytesToRead -= bytesRead;
                 }
-                
-                switch (cmd)
-                {
-                    case ServerCommand.Login:
-                        Security security = (Security) Serializer.Deserialize(obj);
-                        User user = User.Login(security.Username, security.Password);
-                        
-                        
-                        break;
-                    case ServerCommand.Register:
-                        break;
 
-                }
+                Thread thread = new Thread(() => Login(client, cmd, obj));
+                thread.Start();
 
-                
-                
             }
+        }
+
+        private void Login(TcpClient client, ServerCommand cmd, byte[] obj)
+        {
+            Connection connection = new Connection(client);
+            User user = connection.TryLogin(cmd, obj);
+
+            if(user == null)
+            {
+                connection.RejectLogin();
+            }
+            else
+            {
+                lock(ConnectedUsers)
+                    ConnectedUsers.Add(user);
+
+                connection.AcceptLogin();
+                connection.Communicate();
+            }
+            
         }
 
         static public void  WriteException(string throwingMethod, Exception ex)

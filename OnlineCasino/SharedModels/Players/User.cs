@@ -12,19 +12,19 @@ namespace SharedModels.Players
         readonly public string Username;
         readonly public string FullName;
         readonly public string EmailAddress;
-        readonly private string HashedPassword;
-        readonly private string Salt;
-        public bool InGame;
+        readonly public decimal Balance;
+        
 
-        private User(int uID, string username, string fullname, string email)
+        public User(int uID, string username, string fullname, string email, decimal balance)
         {
-            // user sign in
+            UserID = uID;
+            Username = username;
+            FullName = fullname;
+            EmailAddress = email;
+            Balance = balance;
         }
 
-        public static bool Register(string username, string password, string email, string fullName)
-        {
-            // user registration (false if unable to register)
-            return false;
-        }
+
+        
     }
 }

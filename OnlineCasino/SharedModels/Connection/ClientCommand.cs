@@ -8,8 +8,13 @@ namespace SharedModels.Connection
 {
     public enum ClientCommand
     {
-        Login = 0,
-        Register
+        RequestCmd,
+        ReturnCmd,
+        AcceptLogin,
+        dffdd,
+        Disconnect,
+        ReturnUser
+        
 
     }
 }
