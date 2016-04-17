@@ -1,4 +1,4 @@
-﻿using ClientLogic.Connection;
+﻿using ClientLogic.Connections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,6 @@ namespace ClientLogic.Games
 {
     public class Blackjack : Game
     {
-        private BlackjackConn Server;
 
     }
 }

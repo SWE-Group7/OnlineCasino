@@ -10,8 +10,8 @@ namespace SharedModels.Connection
     {
         RequestCmd,
         ReturnCmd,
-        AcceptLogin,
-        dffdd,
+        LoginFail,
+        LoginSuccess,
         Disconnect,
         ReturnUser
         

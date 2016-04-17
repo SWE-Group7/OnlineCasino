@@ -66,7 +66,7 @@ namespace ServerLogic.Connections
             lock(CurrentUser)
                 smUser = CurrentUser.GetSharedModel();
 
-            ImmediateWrite(ClientCommand.AcceptLogin, smUser);
+            ImmediateWrite(ClientCommand.LoginSuccess, smUser);
 
         }
 

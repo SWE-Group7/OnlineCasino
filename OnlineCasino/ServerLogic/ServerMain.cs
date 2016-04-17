@@ -28,7 +28,7 @@ namespace ServerLogic
 
         public void Start()
         {
-            
+            ListenForClients();
         }
 
         private void ListenForClients()
