@@ -22,6 +22,7 @@ namespace ClientGUI
             Login = 0,
             Register,
             Menu,
+            Betting,
             Game
         }
 
@@ -66,6 +67,12 @@ namespace ClientGUI
                         // add welcome text with name and balance
                         e.Graphics.DrawRectangle(Pens.Black, Width / 2 - 301, Height / 2 - 201, 601, 401);
                         e.Graphics.FillRectangle(Brushes.White, new Rectangle(Width / 2 - 300, Height / 2 - 200, 600, 400));
+                    }
+                    break;
+                case State.Betting:
+                    {
+                        
+
                     }
                     break;
                 case State.Game:
@@ -125,15 +132,7 @@ namespace ClientGUI
         }
         private void Blackjack_Click(object sender, EventArgs e)
         {
-            BlackjackGUI = new BlackjackGUI(Height, Width);
-            this.Controls.Clear();
-            this.Invalidate();
-            this.BackgroundImage = global::ClientGUI.Properties.Resources.BlackjackBackground;
-
-            ClientState = State.Game;
-            GameChoice = Game.Blackjack;
-
-            Game_Draw();
+            BettingScreen_Draw();
         }
         private void AccountInfo_Click(object sender, EventArgs e)
         {
@@ -154,18 +153,67 @@ namespace ClientGUI
             GameChoice = Game.None;
         }
 
+        private void SubmitBet_Click(object sender, EventArgs e)
+        {
+            buyInString = BuyInTextBox.Text;
+            betString = BetTextBox.Text;
+            if (!decimal.TryParse(buyInString, out buyIn) || !decimal.TryParse(betString, out bet))
+            {
+                // try again
+
+            }
+            else if (bet > buyIn)
+            {
+                // try again
+            }
+            else
+            {
+                BlackjackGUI = new BlackjackGUI(Height, Width);
+
+                BlackjackGUI.bet = bet;
+                BlackjackGUI.buyIn = buyIn;
+
+                this.Controls.Clear();
+                this.Invalidate();
+                this.BackgroundImage = global::ClientGUI.Properties.Resources.BlackjackBackground;
+
+                ClientState = State.Game;
+                GameChoice = Game.Blackjack;
+
+                Game_Draw();
+            }
+        }
+
         private void timer1_Tick(object sender, EventArgs e)
         {
             this.Invalidate();
         }
 
         private void ClientGUI_MouseDown(object sender, MouseEventArgs e)
-        {                       
+        {
             mouseX = e.X;
             mouseY = e.Y;
 
-            BlackjackGUI.clickX = e.X;
-            BlackjackGUI.clickY = e.Y;          
+            if (BlackjackGUI != null)
+            {
+                BlackjackGUI.clickX = e.X;
+                BlackjackGUI.clickY = e.Y;
+
+                if (BlackjackGUI.clickX < Width - 50 && BlackjackGUI.clickX > Width - 150)
+                {
+                    if (BlackjackGUI.clickY < Height - 175 + 35 && BlackjackGUI.clickY > Height - 175)
+                    {
+                        if (BlackjackGUI.You.Hand.Count < 5)
+                        {
+                            BlackjackGUI.You.Hand.Add(new SharedModels.GameComponents.Card(SharedModels.GameComponents.CardSuit.Clubs, SharedModels.GameComponents.CardRank.Five)); 
+                        }
+                    }
+                    else if ((BlackjackGUI.clickY < Height - 120 + 35 && BlackjackGUI.clickY > Height - 120))
+                    {
+                        BlackjackGUI.PlayStatus = BlackjackGUI.GameState.Waiting;
+                    }
+                }
+            }
         }
 
         private void ClientGUI_MouseMove(object sender, MouseEventArgs e)
