@@ -19,3 +19,6 @@ C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ClientLogic\bin
 C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ClientLogic\obj\Debug\ClientLogic.csprojResolveAssemblyReference.cache
 C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ClientLogic\obj\Debug\ClientLogic.dll
 C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ClientLogic\obj\Debug\ClientLogic.pdb
+D:\SoftEng\OnlineCasino\OnlineCasino\ClientLogic\obj\Debug\ClientLogic.csprojResolveAssemblyReference.cache
+D:\SoftEng\OnlineCasino\OnlineCasino\ClientLogic\obj\Debug\ClientLogic.dll
+D:\SoftEng\OnlineCasino\OnlineCasino\ClientLogic\obj\Debug\ClientLogic.pdb

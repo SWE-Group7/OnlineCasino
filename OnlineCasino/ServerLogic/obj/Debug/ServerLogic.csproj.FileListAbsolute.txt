@@ -34,3 +34,6 @@ C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerLogic\bin
 C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerLogic\obj\Debug\ServerLogic.csprojResolveAssemblyReference.cache
 C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerLogic\obj\Debug\ServerLogic.dll
 C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerLogic\obj\Debug\ServerLogic.pdb
+D:\SoftEng\OnlineCasino\OnlineCasino\ServerLogic\obj\Debug\ServerLogic.csprojResolveAssemblyReference.cache
+D:\SoftEng\OnlineCasino\OnlineCasino\ServerLogic\obj\Debug\ServerLogic.dll
+D:\SoftEng\OnlineCasino\OnlineCasino\ServerLogic\obj\Debug\ServerLogic.pdb

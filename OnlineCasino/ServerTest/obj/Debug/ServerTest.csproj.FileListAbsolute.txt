@@ -26,3 +26,17 @@ C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerTest\bin\
 C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerTest\bin\Debug\EntityFramework.xml
 C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerTest\bin\Debug\EntityFramework.SqlServer.xml
 C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerTest\obj\Debug\ServerTest.csprojResolveAssemblyReference.cache
+D:\SoftEng\OnlineCasino\OnlineCasino\ServerTest\bin\Debug\ServerTest.exe.config
+D:\SoftEng\OnlineCasino\OnlineCasino\ServerTest\bin\Debug\ServerTest.exe
+D:\SoftEng\OnlineCasino\OnlineCasino\ServerTest\bin\Debug\ServerTest.pdb
+D:\SoftEng\OnlineCasino\OnlineCasino\ServerTest\bin\Debug\EntityFramework.dll
+D:\SoftEng\OnlineCasino\OnlineCasino\ServerTest\bin\Debug\EntityFramework.SqlServer.dll
+D:\SoftEng\OnlineCasino\OnlineCasino\ServerTest\bin\Debug\ServerLogic.dll
+D:\SoftEng\OnlineCasino\OnlineCasino\ServerTest\bin\Debug\SharedModels.dll
+D:\SoftEng\OnlineCasino\OnlineCasino\ServerTest\bin\Debug\ServerLogic.pdb
+D:\SoftEng\OnlineCasino\OnlineCasino\ServerTest\bin\Debug\SharedModels.pdb
+D:\SoftEng\OnlineCasino\OnlineCasino\ServerTest\bin\Debug\EntityFramework.xml
+D:\SoftEng\OnlineCasino\OnlineCasino\ServerTest\bin\Debug\EntityFramework.SqlServer.xml
+D:\SoftEng\OnlineCasino\OnlineCasino\ServerTest\obj\Debug\ServerTest.csprojResolveAssemblyReference.cache
+D:\SoftEng\OnlineCasino\OnlineCasino\ServerTest\obj\Debug\ServerTest.exe
+D:\SoftEng\OnlineCasino\OnlineCasino\ServerTest\obj\Debug\ServerTest.pdb

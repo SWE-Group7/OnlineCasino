@@ -35,3 +35,17 @@ C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\obj\D
 C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\obj\Debug\ClientGUI.ClientGUI.resources
 C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\obj\Debug\ClientGUI.Properties.Resources.resources
 C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\obj\Debug\ClientGUI.csproj.GenerateResource.Cache
+D:\SoftEng\OnlineCasino\OnlineCasino\ClientGUI\bin\Debug\ClientGUI.exe.config
+D:\SoftEng\OnlineCasino\OnlineCasino\ClientGUI\obj\Debug\ClientGUI.exe
+D:\SoftEng\OnlineCasino\OnlineCasino\ClientGUI\obj\Debug\ClientGUI.pdb
+D:\SoftEng\OnlineCasino\OnlineCasino\ClientGUI\bin\Debug\ClientGUI.exe
+D:\SoftEng\OnlineCasino\OnlineCasino\ClientGUI\bin\Debug\ClientGUI.pdb
+D:\SoftEng\OnlineCasino\OnlineCasino\ClientGUI\bin\Debug\ClientLogic.dll
+D:\SoftEng\OnlineCasino\OnlineCasino\ClientGUI\bin\Debug\SharedModels.dll
+D:\SoftEng\OnlineCasino\OnlineCasino\ClientGUI\bin\Debug\ClientLogic.pdb
+D:\SoftEng\OnlineCasino\OnlineCasino\ClientGUI\bin\Debug\SharedModels.pdb
+D:\SoftEng\OnlineCasino\OnlineCasino\ClientGUI\obj\Debug\ClientGUI.csprojResolveAssemblyReference.cache
+D:\SoftEng\OnlineCasino\OnlineCasino\ClientGUI\obj\Debug\ClientGUI.BlackjackGUI.resources
+D:\SoftEng\OnlineCasino\OnlineCasino\ClientGUI\obj\Debug\ClientGUI.ClientGUI.resources
+D:\SoftEng\OnlineCasino\OnlineCasino\ClientGUI\obj\Debug\ClientGUI.Properties.Resources.resources
+D:\SoftEng\OnlineCasino\OnlineCasino\ClientGUI\obj\Debug\ClientGUI.csproj.GenerateResource.Cache
