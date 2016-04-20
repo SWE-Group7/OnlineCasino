@@ -15,6 +15,7 @@ namespace ClientGUI
         public RouletteGUI()
         {
             InitialBet();
+            //textBox2.Text;
             //InitializeComponent();
            // this.MouseClick += RouletteGUI_MouseClick;
         }
@@ -159,18 +160,24 @@ namespace ClientGUI
         }
 
         private void button1_Click(object sender, EventArgs e)
-        {
+        {  
+            //hides labels from start screen
+            this.label2.Hide();
+            this.label3.Hide();
+            this.button1.Hide();
+            this.button2.Hide();
+            this.textBox1.Hide();
+            this.textBox2.Hide();
+            //start table form
             InitializeComponent();
-            //MessageBox.Show(this.textBox1.Text);
-            //MessageBox.Show(this.textBox2.Text);
             Console.WriteLine(this.textBox1.Text); Console.WriteLine(this.textBox2.Text);
 
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void button2_Click(object sender, EventArgs e)//back button on start screen
         {
-            Application.Exit(); Console.WriteLine("The back button was clicked"); 
             //in the game this button should take the user back to the pick game page.
+            Application.Exit(); Console.WriteLine("The back button was clicked"); 
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
@@ -189,6 +196,37 @@ namespace ClientGUI
         }
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
+        }
+
+        private void button3_Click(object sender, EventArgs e)//allows user to change bet while in table screen
+        {
+            //textBox2.Text= "400";
+        }
+
+        private void button5_Click(object sender, EventArgs e)//Exit Button on table screen
+        {
+            //Will exit application for now, but will work similar to back button which will take user back to main menu
+            Application.Exit();
+        }
+
+        private void button4_Click(object sender, EventArgs e)//this is the spin button
+        {
+            Form video = new Form();
+            //this.Hide();
+            AxShockwaveFlashObjects.AxShockwaveFlash Flash1;
+            Flash1 = new AxShockwaveFlashObjects.AxShockwaveFlash();
+            video.Size = new System.Drawing.Size(939, 540);
+            Flash1.Dock= DockStyle.Fill;
+            video.Controls.Add(Flash1);
+            video.Show();
+            try
+            {   
+                Flash1.Movie = "https://www.youtube.com/v/dlrzUQRdDbs?autoplay=1";
+                Flash1.Play();
+            }
+            catch (Exception exp) { Application.Exit(); Console.WriteLine("guess there was an exception" + exp.StackTrace); }
+
+            //HOW TO MAKE VIDEO FORM DISAPPEAR AFTER VIDEO ENDS??
         }
     }
 }
