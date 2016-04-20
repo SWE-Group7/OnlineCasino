@@ -46,7 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BlackjackGUI.cs" />
+    <Compile Include="Game GUIs\BlackjackGUI.cs" />
     <Compile Include="Deck.cs" />
     <Compile Include="ClientGUI.cs">
       <SubType>Form</SubType>
@@ -54,9 +54,16 @@
     <Compile Include="ClientGUI.Designer.cs">
       <DependentUpon>ClientGUI.cs</DependentUpon>
     </Compile>
+    <Compile Include="Game GUIs\PokerGUI.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="BlackjackGUI.resx">
+    <Compile Include="RouletteGUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RouletteGUI.Designer.cs">
+      <DependentUpon>RouletteGUI.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Game GUIs\BlackjackGUI.resx">
       <DependentUpon>BlackjackGUI.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ClientGUI.resx">
