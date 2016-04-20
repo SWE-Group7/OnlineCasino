@@ -213,18 +213,18 @@ namespace ClientGUI
         {
             Form video = new Form();
             //this.Hide();
-            AxShockwaveFlashObjects.AxShockwaveFlash Flash1;
-            Flash1 = new AxShockwaveFlashObjects.AxShockwaveFlash();
-            video.Size = new System.Drawing.Size(939, 540);
-            Flash1.Dock= DockStyle.Fill;
-            video.Controls.Add(Flash1);
-            video.Show();
-            try
-            {   
-                Flash1.Movie = "https://www.youtube.com/v/dlrzUQRdDbs?autoplay=1";
-                Flash1.Play();
-            }
-            catch (Exception exp) { Application.Exit(); Console.WriteLine("guess there was an exception" + exp.StackTrace); }
+            //AxShockwaveFlashObjects.AxShockwaveFlash Flash1;
+            //Flash1 = new AxShockwaveFlashObjects.AxShockwaveFlash();
+            //video.Size = new System.Drawing.Size(939, 540);
+            //Flash1.Dock= DockStyle.Fill;
+            //video.Controls.Add(Flash1);
+            //video.Show();
+            //try
+            //{   
+            //    Flash1.Movie = "https://www.youtube.com/v/dlrzUQRdDbs?autoplay=1";
+            //    Flash1.Play();
+            //}
+            //catch (Exception exp) { Application.Exit(); Console.WriteLine("guess there was an exception" + exp.StackTrace); }
 
             //HOW TO MAKE VIDEO FORM DISAPPEAR AFTER VIDEO ENDS??
         }

@@ -299,23 +299,23 @@ namespace ClientGUI
                 this.Invalidate();
 
                 Label AreYouSure = new Label();
-                AreYouSure.Size = new Size(100, 60);
-                AreYouSure.Location = new Point(5, Height - 120);
+                AreYouSure.Size = new Size(80,75);
+                AreYouSure.Location = new Point(15, Height - 160);
                 AreYouSure.Font = new Font("Segoe UI", 8);
                 AreYouSure.BackColor = Color.White;
                 AreYouSure.Text = "Are you sure? \n You'll lose your entire buy in! That's $" + buyIn + "!";
                 Controls.Add(AreYouSure);
 
                 Button Yes = new Button();
-                Yes.Size = new Size(30, 22);
+                Yes.Size = new Size(35, 22);
                 Yes.BackColor = Color.White;
-                Yes.Location = new Point(20, Height - 75);
+                Yes.Location = new Point(15, Height - 75);
                 Yes.Text = "yes";
                 Yes.Click += new System.EventHandler(Yes_Click);
                 Controls.Add(Yes);
 
                 Button No = new Button();
-                No.Size = new Size(30, 22);
+                No.Size = new Size(35, 22);
                 No.BackColor = Color.White;
                 No.Location = new Point(60, Height - 75);
                 No.Text = "no";
