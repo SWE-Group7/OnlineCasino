@@ -20,7 +20,7 @@ namespace ServerLogic.Games.GameComponents
             int spunNum;
 
             Random spin = new Random();
-            spunNum = spin.Next(MAX_NUMBER, 0);
+            spunNum = spin.Next(0, MAX_NUMBER);
 
             return spunNum;
         }

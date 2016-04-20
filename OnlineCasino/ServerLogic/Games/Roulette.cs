@@ -104,18 +104,20 @@ namespace ServerLogic.Games
                             player.ForceNoBet();
                         }
                     }
-                    while ((!int.TryParse(output, out betNum)) || ((output != "red") && (output != "black")));
+                    while ((int.TryParse(output1, out betNum) == false) && (output1 != "red") && (output1 != "black"));
 
-                    bool isNumber = int.TryParse(output, out betNum);
+                    bool isNumber = int.TryParse(output1, out betNum);
 
-                    if (!isNumber)
+                    if (isNumber == false)
                     {
-                        betColor = output;
+                        betColor = output1;
+                        Console.WriteLine("You bet " + betColor + "!\n");
                         player.SetUserBet(bet, betColor);
                     }
 
                     else
                     {
+                        Console.WriteLine("You bet " + betNum + "!\n");
                         player.SetUserBet(bet, betNum);
                     }
                 }
@@ -136,13 +138,13 @@ namespace ServerLogic.Games
                 {
                     Console.Out.Write("\n-------" + player.GetFullName() + "Conclusion------- \n");
 
-                    if (player.getBetColor() == chosenColor && player.hasBetColor)
+                    if ((player.getBetColor() == chosenColor) && (player.hasBetColor))
                     {
                         Console.WriteLine("The color you chose was correct, you win!\n");
                         player.UpdateGameBalance(true);
                     }
 
-                    else if (player.getBetNum() == chosenNum && !player.hasBetColor)
+                    else if ((player.getBetNum() == chosenNum) && (!player.hasBetColor))
                     {
                         Console.WriteLine("The number you chose was correct, you win!\n");
                         player.UpdateGameBalance(true);
@@ -230,4 +232,3 @@ namespace ServerLogic.Games
         }
     }
 }
-
