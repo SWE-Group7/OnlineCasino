@@ -20,7 +20,7 @@ namespace ServerLogic.Games.GameComponents
             int spunNum;
 
             Random spin = new Random();
-            spunNum = spin.Next(MAX_NUMBER, 0);
+            spunNum = spin.Next(0, MAX_NUMBER);
 
             return spunNum;
         }
@@ -30,7 +30,11 @@ namespace ServerLogic.Games.GameComponents
             if (number == 0)
                 return "green";
 
-            else if (number % 2 == 0)
+            else if ((number == 2) || (number == 4) || (number == 6) ||
+                (number == 8) || (number == 10) || (number == 11) || (number == 13) ||
+                (number == 15) || (number == 17) || (number == 20) || (number == 22) ||
+                (number == 24) || (number == 26) || (number == 28) || (number == 29) ||
+                (number == 31) || (number == 33) || (number == 35))
                 return "black";
             else
                 return "red";

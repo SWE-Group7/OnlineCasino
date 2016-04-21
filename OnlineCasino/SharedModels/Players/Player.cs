@@ -6,10 +6,16 @@ using System.Threading.Tasks;
 
 namespace SharedModels.Players
 {
+    [Serializable]
     public abstract class Player
     {
-        protected User CurrentUser;
-        protected decimal GameBalance;
-        decimal BuyIn;
+        public readonly User CurrentUser;
+        public readonly decimal GameBalance;
+
+        public Player(User u, decimal gb)
+        {
+            CurrentUser = u;
+            GameBalance = gb;
+        }
     }
 }

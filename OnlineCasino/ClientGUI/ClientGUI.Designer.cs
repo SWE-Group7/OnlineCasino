@@ -18,6 +18,9 @@ namespace ClientGUI
         public decimal buyIn;
         public decimal bet;
 
+        private bool check = false;
+        private bool leave = false;
+
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -277,13 +280,48 @@ namespace ClientGUI
 
         public void Game_Draw()
         {
-            Button ReturnToMenu = new Button();
-            ReturnToMenu.Size = new Size(50, 22);
-            ReturnToMenu.BackColor = Color.White;
-            ReturnToMenu.Location = new Point(20, Height - 75);
-            ReturnToMenu.Text = "< Back";
-            ReturnToMenu.Click += new System.EventHandler(ReturnToMenu_Click);
-            Controls.Add(ReturnToMenu);
+            if (!check)
+            {
+                this.Controls.Clear();
+                this.Invalidate();
+
+                Button ReturnToMenu = new Button();
+                ReturnToMenu.Size = new Size(50, 22);
+                ReturnToMenu.BackColor = Color.White;
+                ReturnToMenu.Location = new Point(20, Height - 75);
+                ReturnToMenu.Text = "< Back";
+                ReturnToMenu.Click += new System.EventHandler(ReturnToMenu_Click);
+                Controls.Add(ReturnToMenu);
+            }
+            else
+            {
+                this.Controls.Clear();
+                this.Invalidate();
+
+                Label AreYouSure = new Label();
+                AreYouSure.Size = new Size(80,75);
+                AreYouSure.Location = new Point(15, Height - 160);
+                AreYouSure.Font = new Font("Segoe UI", 8);
+                AreYouSure.BackColor = Color.White;
+                AreYouSure.Text = "Are you sure? \n You'll lose your entire buy in! That's $" + buyIn + "!";
+                Controls.Add(AreYouSure);
+
+                Button Yes = new Button();
+                Yes.Size = new Size(35, 22);
+                Yes.BackColor = Color.White;
+                Yes.Location = new Point(15, Height - 75);
+                Yes.Text = "yes";
+                Yes.Click += new System.EventHandler(Yes_Click);
+                Controls.Add(Yes);
+
+                Button No = new Button();
+                No.Size = new Size(35, 22);
+                No.BackColor = Color.White;
+                No.Location = new Point(60, Height - 75);
+                No.Text = "no";
+                No.Click += new System.EventHandler(No_Click);
+                Controls.Add(No);
+            }
 
             // Make separate classes for each of the game GUIs
             switch (GameChoice)
@@ -301,6 +339,14 @@ namespace ClientGUI
             this.Controls.Clear();
             this.Invalidate();
 
+            Button ReturnToMenu = new Button();
+            ReturnToMenu.Size = new Size(50, 22);
+            ReturnToMenu.BackColor = Color.White;
+            ReturnToMenu.Location = new Point(20, Height - 75);
+            ReturnToMenu.Text = "< Back";
+            ReturnToMenu.Click += new System.EventHandler(ReturnToMenu_Click);
+            Controls.Add(ReturnToMenu);
+
             Label BettingLabel = new Label();
             BettingLabel.Size = new Size(250, 50);
             BettingLabel.Location = new Point(Width / 2 - 50, Height / 2 - 90);
@@ -309,25 +355,38 @@ namespace ClientGUI
             BettingLabel.Text = " BETTING ";
             Controls.Add(BettingLabel);
 
-            Label BuyInLabel = new Label();
-            BuyInLabel.Size = new Size(170, 20);
-            BuyInLabel.Location = new Point(Width / 2 - 170, Height / 2 - 30);
-            BuyInLabel.Font = new Font("Segoe UI", 8);
-            BuyInLabel.Text = "Enter your buy in for this game:";
-            BuyInLabel.BackColor = Color.Transparent;
-            Controls.Add(BuyInLabel);
+            if (BlackjackGUI == null)
+            {
+                Label BuyInLabel = new Label();
+                BuyInLabel.Size = new Size(178, 20);
+                BuyInLabel.Location = new Point(Width / 2 - 178, Height / 2 - 30);
+                BuyInLabel.Font = new Font("Segoe UI", 8);
+                BuyInLabel.Text = "Enter your buy in for this game: $";
+                BuyInLabel.BackColor = Color.Transparent;
+                Controls.Add(BuyInLabel);
 
-            BuyInTextBox = new TextBox();
-            BuyInTextBox.Size = new Size(70, 20);
-            BuyInTextBox.Location = new Point(Width / 2, Height / 2 - 30);
-            Controls.Add(BuyInTextBox);
+                BuyInTextBox = new TextBox();
+                BuyInTextBox.Size = new Size(70, 20);
+                BuyInTextBox.Location = new Point(Width / 2, Height / 2 - 30);
+                Controls.Add(BuyInTextBox);
+            }
+            else
+            {
+                Label BuyInLabel = new Label();
+                BuyInLabel.Size = new Size(170, 20);
+                BuyInLabel.Location = new Point(Width / 2 - 30, Height / 2 - 30);
+                BuyInLabel.Font = new Font("Segoe UI", 8);
+                BuyInLabel.Text = "Available buy in: $" + buyIn;
+                BuyInLabel.BackColor = Color.Transparent;
+                Controls.Add(BuyInLabel);
+            }
 
             Label BetLabel = new Label();
-            BetLabel.Size = new Size(250, 20);
-            BetLabel.Location = new Point(Width / 2 - 250, Height / 2 - 8);
+            BetLabel.Size = new Size(180, 20);
+            BetLabel.Location = new Point(Width / 2 - 180, Height / 2 - 8);
             BetLabel.BackColor = Color.Transparent;
             BetLabel.Font = new Font("Segoe UI", 8);
-            BetLabel.Text = "Of your buy in, choose your bet for this round:";
+            BetLabel.Text = "Choose your bet for this round: $";
             Controls.Add(BetLabel);
 
             BetTextBox = new TextBox();
