@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ClientGUI.Game_GUIs;
+using SharedModels.GameComponents;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,7 +15,7 @@ namespace ClientGUI
     public partial class ClientGUI : Form
     {
         BlackjackGUI BlackjackGUI;
-        PokerGUI PokerGUI;
+        TexasHoldEmGUI TexasHoldEmGUI;
 
         public int mouseX;
         public int mouseY;
@@ -271,6 +273,7 @@ namespace ClientGUI
                             {
                                 if (BlackjackGUI.clickY > Height / 2 + 60 && BlackjackGUI.clickY < Height / 2 + 60 + 40)
                                 {
+                                    BlackjackGUI.You.RefreshHand();
                                     BettingScreen_Draw();
 
                                     ClientState = State.Betting;

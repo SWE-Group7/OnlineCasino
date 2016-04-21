@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ClientGUI
+namespace ClientGUI.Game_GUIs
 {
-    class PokerGUI
+    public class TexasHoldEmGUI : CardGameGUI
     {
+
     }
 }

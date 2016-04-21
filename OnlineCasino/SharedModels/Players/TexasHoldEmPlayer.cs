@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace SharedModels.Players
 {
-    public class BlackjackPlayer : Player
+    public class TexasHoldEmPlayer : Player
     {
         public List<Card> Hand;
         public decimal UserBuyIn;
         public decimal UserBet;
 
-        public BlackjackPlayer(User u, decimal gameBalance, decimal buy, decimal bet):
+        public TexasHoldEmPlayer(User u, decimal gameBalance, decimal buy, decimal bet) :
             base(u, gameBalance)
         {
             Hand = new List<Card>();

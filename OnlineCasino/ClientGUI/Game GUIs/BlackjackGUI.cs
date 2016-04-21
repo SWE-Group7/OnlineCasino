@@ -1,92 +1,36 @@
 ﻿using System.Drawing;
-using SharedModels.GameComponents;
-using SharedModels.Players;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using ClientLogic;
+using ClientGUI.Players;
+using SharedModels.GameComponents;
+using SharedModels.Players;
 
-namespace ClientGUI
+namespace ClientGUI.Game_GUIs
 {
-    public class BlackjackGUI
+    public class BlackjackGUI : CardGameGUI
     {
-        public enum OverallState
-        {
-            Waiting = 0,
-            Playing,
-            Distributing
-        }
-        public OverallState OS = OverallState.Waiting;
-
-        public enum WaitingState
-        {
-            NoConnection = 0,
-            TableFound,
-            Betting
-        }
-        public WaitingState WS = WaitingState.NoConnection;
-
-        public enum GameState
-        {
-            Waiting = 0,
-            Playing
-        }
-        public GameState PS = GameState.Waiting;
-
-        public enum RoundEndState
-        {
-            Win = 0,
-            Lose,
-            Tie
-        }
-        public RoundEndState RES = RoundEndState.Tie;
-
-        Deck Deck = new Deck();
-        public BlackjackPlayer You;
-        public List<BlackjackPlayer> OtherPlayers = new List<BlackjackPlayer>();
+        User u;
+        public new Players.BlackjackPlayer You;
+        public new List<CardPlayer> OtherPlayers;
         public List<Card> DealerHand = new List<Card>();
 
-        Bitmap CardImage;
-
         // Replace
+       
+        
         Card c = new Card(CardSuit.Clubs, CardRank.Ace);
         Card d = new Card(CardSuit.Diamonds, CardRank.King);
         Card e = new Card(CardSuit.Hearts, CardRank.Eight);
 
-        System.Diagnostics.Stopwatch Stopwatch = new System.Diagnostics.Stopwatch();
-
-        public decimal buyIn;
-        public decimal bet;
-
-        private int clientHeight;
-        private int clientWidth;
-        public int clickX;
-        public int clickY;
-        public int hoverX;
-        public int hoverY;
-        
-        int yourCardX;
-        int yourCardY;
-        int yourCardsCount = 0;
-        int yourCardOffset;
-
-        int dealerCardX;
-        int dealerCardY;
-        int dealerCardsCount = 0;
-        int dealerCardOffset;
-
-        int otherCardX;
-        int otherCardY;
-        int otherCardsCount = 0;
-        int otherCardOffset = 0;
-        int otherPlayerOffset = 0;
-        int otherPlayerCount = 0;
-
-        int cardHeight = 150;
-        int cardWidth = 120;      
 
         public BlackjackGUI(int h, int w)
         {
-            You = new BlackjackPlayer(100, 100);
+            u = new User(100, "n", "nadine", "omg", 100);
+            SharedModels.Players.BlackjackPlayer b = new SharedModels.Players.BlackjackPlayer(u, 100, 100, 100);
+            
+            Deck = new Deck();
+            You = new Players.BlackjackPlayer(b);
+            OtherPlayers = new List<Players.BlackjackPlayer>().ConvertAll(x => (CardPlayer)x);
             clientHeight = h;
             clientWidth = w;
 
@@ -95,30 +39,30 @@ namespace ClientGUI
             You.Hand.Add(d);
             You.Hand.Add(e);
 
-            // Remove
-            BlackjackPlayer ap = new BlackjackPlayer(1020, 300);
-            BlackjackPlayer bp = new BlackjackPlayer(1020, 300);
-            BlackjackPlayer cp = new BlackjackPlayer(1020, 300);
-            BlackjackPlayer dp = new BlackjackPlayer(1020, 300);
+            //// Remove
+            //BlackjackPlayer ap = new BlackjackPlayer(new SharedModels.Players.BlackjackPlayer(100, 100));
+            //BlackjackPlayer bp = new BlackjackPlayer(new SharedModels.Players.BlackjackPlayer(100, 100));
+            //BlackjackPlayer cp = new BlackjackPlayer(new SharedModels.Players.BlackjackPlayer(100, 100));
+            //BlackjackPlayer dp = new BlackjackPlayer(new SharedModels.Players.BlackjackPlayer(100, 100));
 
-            OtherPlayers.Add(ap);
-            OtherPlayers.Add(bp);
-            OtherPlayers.Add(cp);
-            OtherPlayers.Add(dp);
+            //OtherPlayers.Add(ap);
+            //OtherPlayers.Add(bp);
+            //OtherPlayers.Add(cp);
+            //OtherPlayers.Add(dp);
 
             DealerHand.Add(c);
 
-            OtherPlayers[0].Hand.Add(c);
-            OtherPlayers[0].Hand.Add(c);
+            //OtherPlayers[0].Hand.Add(c);
+            //OtherPlayers[0].Hand.Add(c);
 
-            OtherPlayers[1].Hand.Add(d);
-            OtherPlayers[1].Hand.Add(e);
+            //OtherPlayers[1].Hand.Add(d);
+            //OtherPlayers[1].Hand.Add(e);
 
-            OtherPlayers[2].Hand.Add(d);
-            OtherPlayers[2].Hand.Add(e);
+            //OtherPlayers[2].Hand.Add(d);
+            //OtherPlayers[2].Hand.Add(e);
 
-            OtherPlayers[3].Hand.Add(d);
-            OtherPlayers[3].Hand.Add(e);
+            //OtherPlayers[3].Hand.Add(d);
+            //OtherPlayers[3].Hand.Add(e);
 
             yourCardX = clientWidth / 2 - cardWidth / 2;
             yourCardY = clientHeight - 200;
@@ -128,8 +72,8 @@ namespace ClientGUI
             dealerCardY = 20;
             dealerCardOffset = DealerHand.Count - 1;
 
-            otherCardX = (cardWidth - 20) + 50;
-            otherCardY = 100;
+            otherPlayerCardX = (cardWidth - 20) + 50;
+            otherPlayerCardY = 100;
         }
 
         float sx = 0;
@@ -178,64 +122,9 @@ namespace ClientGUI
                     break;
                 case OverallState.Playing:
                     {
-                        //e.Graphics.DrawRectangle(Pens.Black, new Rectangle(clientWidth / 2 - 177, clientHeight / 2 - 52, 352, 102));
-                        //e.Graphics.FillRectangle(Brushes.White, new Rectangle(clientWidth / 2 - 175, clientHeight / 2 - 50, 350, 100));
-                        e.Graphics.DrawLine(Pens.Black, new Point(0, clientHeight - cardHeight - 60), new Point(1500, clientHeight - cardHeight - 60));
+                        YourHand_Paint(sender, e, You);
 
-                        e.Graphics.DrawString("Buy In: $" + buyIn, new Font("Segoe UI", 12), Brushes.White, new Point(100, clientHeight - cardHeight));
-                        e.Graphics.DrawString("   Bet: $" + bet, new Font("Segoe UI", 12), Brushes.White, new Point(106, clientHeight - cardHeight + 20));
-
-                        yourCardOffset = (You.Hand.Count * (cardWidth + 20)) / 2;
-                        foreach (Card c in You.Hand)
-                        {
-                            CardImage = Deck.CardImage(c.Suit, c.Rank);
-                            yourCardX += (yourCardsCount * cardWidth + yourCardsCount * 20);
-
-                            if (CardImage != null)
-                            {
-                                e.Graphics.DrawImage(CardImage, new Rectangle(yourCardX, yourCardY, cardWidth, cardHeight));
-                            }
-
-                            yourCardsCount--;
-                            yourCardX = clientWidth / 2 - yourCardOffset;
-                        }
-                        yourCardsCount = You.Hand.Count - 1;
-
-                        otherPlayerCount = OtherPlayers.Count;
-                        bool leftSide = true;
-                        foreach (BlackjackPlayer p in OtherPlayers)
-                        {
-                            otherCardsCount = p.Hand.Count;
-                            
-                            if(otherPlayerCount % 2 == 0)
-                            {
-                                otherCardY = 400;
-                                if(otherPlayerCount == 2) { otherCardX = 30; leftSide = true; }
-                                else { otherCardX = clientWidth - cardWidth - 30; leftSide = false; }
-                            }
-                            else
-                            {
-                                otherCardY = 100;
-                                if (otherPlayerCount == 1) { otherCardX = 30; leftSide = true; }
-                                else { otherCardX = clientWidth - cardWidth - 30; leftSide = false; }
-                            }
-
-                            e.Graphics.DrawString("Player " + otherPlayerCount, new Font("Segoe UI", 20), Brushes.White, new Point(otherCardX, otherCardY + cardHeight)); 
-
-                            foreach (Card c in p.Hand)
-                            {
-                                CardImage = Deck.CardImage(c.Suit, c.Rank);
-                              
-                                if (CardImage != null)
-                                {
-                                    e.Graphics.DrawImage(CardImage, new Rectangle(otherCardX, otherCardY, cardWidth - 20, cardHeight - 20));
-                                }
-
-                                if (leftSide) { otherCardX += (p.Hand.Count * (cardWidth)) / 2; }
-                                else { otherCardX -= (p.Hand.Count * (cardWidth)) / 2; }
-                            }
-                            otherPlayerCount--;
-                        }
+                        OtherPlayerHands_Paint(sender, e, OtherPlayers);
 
                         e.Graphics.DrawString("Dealer", new Font("Segoe UI", 20), Brushes.White, new Point(clientWidth/2 - 60, cardHeight + 10));
                         dealerCardOffset = (DealerHand.Count * (cardWidth + 20)) / 2;
@@ -354,17 +243,7 @@ namespace ClientGUI
             }
         }
 
-        private void CheckConnection()
-        {
-            if (Stopwatch.ElapsedMilliseconds > 1000)
-            {
-                OS = OverallState.Playing;
-                PS = GameState.Playing;
 
-                Stopwatch.Stop();
-                Stopwatch.Reset();
-            }
-        }
 
     }
 }
