@@ -66,7 +66,7 @@ namespace ServerLogic
                 return null;
         }
         
-        public SM.Players.User GetSharedModel()
+        public SM.Players.User GetSharedModelPrivate()
         {
             return new SM.Players.User(UserID, Username, FullName, EmailAddress, Balance);
         } 

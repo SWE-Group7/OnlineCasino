@@ -11,6 +11,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using SharedModels;
 using ServerLogic.Connections;
 
+
 namespace ServerLogic
 {
     public class ServerMain
@@ -42,22 +43,42 @@ namespace ServerLogic
 
             Listener.Start();
 
+            CommType commType;
             ServerCommand cmd;
+            int reqId;
             while (true)
             {
                 TcpClient client = Listener.AcceptTcpClient();
-                bytesRead = client.GetStream().Read(buffer, 0, sizeof(int));
-                cmd = (ServerCommand) BitConverter.ToInt32(buffer, 0);
 
-                if (!(cmd == ServerCommand.Login || cmd == ServerCommand.Login))
+                //Get CommType
+                bytesRead = client.GetStream().Read(buffer, 0, sizeof(int));
+                commType = (CommType) BitConverter.ToInt32(buffer, 0);
+
+                //If not Request, Close
+                if(commType != CommType.Request)
                 {
                     client.Close();
                     continue;
                 }
 
+                //Get Command
+                bytesRead = client.GetStream().Read(buffer, 0, sizeof(int));
+                cmd = (ServerCommand) BitConverter.ToInt32(buffer, 0);
+
+                //If not Login or Register, Close
+                if (!(cmd == ServerCommand.Login || cmd == ServerCommand.Register))
+                {
+                    client.Close();
+                    continue;
+                }
+
+                //Get Request ID and Object Length
+                bytesRead = client.GetStream().Read(buffer, 0, sizeof(int));
+                reqId = BitConverter.ToInt32(buffer, 0);
                 bytesRead = client.GetStream().Read(buffer, 0, sizeof(int));
                 bytesToRead = BitConverter.ToInt32(buffer, 0);
 
+                //Get Object
                 obj = new byte[bytesToRead];
                 index = 0;
                 while (bytesToRead > 0)
@@ -68,30 +89,26 @@ namespace ServerLogic
                     bytesToRead -= bytesRead;
                 }
 
-                Thread thread = new Thread(() => Login(client, cmd, obj));
+                Thread thread = new Thread(() => Login(client, cmd, reqId, obj));
                 thread.Start();
 
             }
         }
 
-        private void Login(TcpClient client, ServerCommand cmd, byte[] obj)
+        private void Login(TcpClient client, ServerCommand cmd, int reqId, byte[] obj)
         {
             Connection connection = new Connection(client);
-            User user = connection.TryLogin(cmd, obj);
+            User user;
+            bool success = connection.TryLogin(cmd, obj, out user);
 
-            if(user == null)
+            if(success)
             {
-                connection.RejectLogin();
-            }
-            else
-            {
-                lock(ConnectedUsers)
-                    ConnectedUsers.Add(user);
-
-                connection.AcceptLogin();
+                connection.AcceptLogin(reqId);
                 connection.Communicate();
+
+                lock (ConnectedUsers)
+                    ConnectedUsers.Add(user);
             }
-            
         }
 
         static public void  WriteException(string throwingMethod, Exception ex)
@@ -99,6 +116,6 @@ namespace ServerLogic
             Console.WriteLine(String.Format("{0} threw an Exception : {1}", throwingMethod, ex.Message));
         }
 
-
+        static public void 
     }
 }

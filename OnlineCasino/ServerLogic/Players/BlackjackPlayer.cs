@@ -1,4 +1,5 @@
-﻿using SharedModels.GameComponents;
+﻿using ServerLogic.Connections.CommandHandlers;
+using SharedModels.GameComponents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,20 +11,24 @@ namespace ServerLogic.Players
 {
     public class BlackjackPlayer : Player
     {
+
         public BlackjackPlayerStatus Status;
         public int UserBuyIn;
         public decimal UserBet;
-        private List<Card> Cards;
         public bool inGame;
+        private List<Card> Cards;
+        private BlackJackCH Commander;
 
-        public BlackjackPlayer(User user, decimal buyIn)
-            : base(user, buyIn)
+        public BlackjackPlayer(User user)
+            : base(user)
         {
+            Commander = new BlackJackCH(user.Connection);
             Cards = new List<Card>();
+            user.InGame = true;
             inGame = true;
-            //CurrentUser.Client = new BlackjackConn();
+            
         }
-
+        
         public bool SetUserBet(decimal amount)
         {
             if (Status == BlackjackPlayerStatus.Betting)
@@ -47,7 +52,7 @@ namespace ServerLogic.Players
         public void IndicateBet()
         {
             Status = BlackjackPlayerStatus.Betting;
-            //CurrentUser.Client.IndicateBet();
+            
         }
 
         public void IndicatePlaying()
@@ -90,6 +95,14 @@ namespace ServerLogic.Players
         {
             Cards = new List<Card>();
         }
+
+        public class Request
+        {
+            public Request()
+            {
+                
+            }
+        }
     }
 
     public enum BlackjackPlayerStatus
@@ -98,4 +111,6 @@ namespace ServerLogic.Players
         Betting,
         Playing
     }
+
+    
 }
