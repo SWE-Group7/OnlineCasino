@@ -12,6 +12,7 @@ namespace ServerConsole //print statements & request
         static void Main(string[] args)
         {
             ServerMain Server = new ServerMain();
+            
             Server.Start();
             
             

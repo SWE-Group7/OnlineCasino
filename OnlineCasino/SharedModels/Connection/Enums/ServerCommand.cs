@@ -8,12 +8,11 @@ namespace SharedModels.Connection
 {
     public enum ServerCommand
     {
-        RequestCmd,
-        ReturnCmd,
         Login,
         Register,
-        Disconnect,
-        GetUser,
+        GetUserInfo,
+        GetGameList,
+        Disconnect
     }
 
     public static class Extensions

@@ -40,12 +40,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AsyncResult.cs" />
-    <Compile Include="Connection\ClientCommand.cs" />
-    <Compile Include="Connection\.cs" />
+    <Compile Include="AsyncBuffer.cs" />
+    <Compile Include="RequestResult.cs" />
+    <Compile Include="Connection\Enums\ClientCommand.cs" />
+    <Compile Include="Connection\Payload.cs" />
+    <Compile Include="Connection\Enums\CommType.cs" />
     <Compile Include="Connection\Security.cs" />
     <Compile Include="Connection\Serializer.cs" />
-    <Compile Include="Connection\ServerCommand.cs" />
+    <Compile Include="Connection\Enums\ServerCommand.cs" />
     <Compile Include="GameComponents\Card.cs" />
     <Compile Include="GameComponents\CardRank.cs" />
     <Compile Include="GameComponents\CardSuit.cs" />

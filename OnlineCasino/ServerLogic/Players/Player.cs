@@ -10,14 +10,13 @@ namespace ServerLogic
     {
         protected User CurrentUser;
         protected decimal GameBalance;
-        decimal BuyIn;
+        decimal BuyIn = 0;
 
-        public Player(User user, decimal buyIn)
+        public Player(User user)
         {
             //base class. Abstract
             CurrentUser = user;
-            GameBalance = buyIn;
-            BuyIn = buyIn;
+            GameBalance = BuyIn;
         }
 
         public void UpdateUserBalance()

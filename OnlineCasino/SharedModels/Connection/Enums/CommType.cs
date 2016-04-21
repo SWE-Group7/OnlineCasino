@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharedModels
+namespace SharedModels.Connection
 {
-    class AsyncResult
+    public enum CommType
     {
+        Void,
+        Request,
+        Return
     }
 }

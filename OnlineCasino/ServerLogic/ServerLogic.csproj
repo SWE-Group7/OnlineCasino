@@ -51,7 +51,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Connections\CommandHandlers\BlackJackCH.cs" />
     <Compile Include="Connections\Connection.cs" />
+    <Compile Include="Connections\CommandHandlers\Client.cs" />
     <Compile Include="EntityFrameworks\CasinoDB.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

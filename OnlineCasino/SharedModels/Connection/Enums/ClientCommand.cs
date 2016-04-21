@@ -8,13 +8,19 @@ namespace SharedModels.Connection
 {
     public enum ClientCommand
     {
-        RequestCmd,
-        ReturnCmd,
-        LoginFail,
-        LoginSuccess,
         Disconnect,
-        ReturnUser
+
+        //Return Success
+        ReturnSuccess,
+        ReturnFailure,
         
+
+        //Games
+        SendCard,
+        
+        //Blackjack
+        Blackjack_IndicateBet,
+        Blackjack_SendPlayer,
 
     }
 }
