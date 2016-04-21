@@ -583,6 +583,26 @@ namespace ClientGUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Menu_Roulette {
+            get {
+                object obj = ResourceManager.GetObject("Menu_Roulette", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Menu_TexasHoldEm {
+            get {
+                object obj = ResourceManager.GetObject("Menu_TexasHoldEm", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap queen_of_clubs {
             get {
                 object obj = ResourceManager.GetObject("queen_of_clubs", resourceCulture);

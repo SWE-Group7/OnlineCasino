@@ -286,4 +286,10 @@
   <data name="BlackjackBackground" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\BlackjackBackground.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Menu_TexasHoldEm" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\Menu_TexasHoldEm.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Menu_Roulette" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\Menu_Roulette.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

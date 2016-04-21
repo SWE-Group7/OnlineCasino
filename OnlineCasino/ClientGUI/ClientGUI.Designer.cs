@@ -254,9 +254,25 @@ namespace ClientGUI
             Blackjack.BackgroundImage = global::ClientGUI.Properties.Resources.Menu_Blackjack;
             Blackjack.BackgroundImageLayout = ImageLayout.Stretch;
             Blackjack.Size = new Size(175, 200);
-            Blackjack.Location = new Point(Width / 2 - 275, Height / 2 - 50);
+            Blackjack.Location = new Point(Width / 2 - 274, Height / 2 - 50);
             Blackjack.Click += new System.EventHandler(Blackjack_Click);
             Controls.Add(Blackjack);
+
+            Button TexasHoldEm = new Button();
+            TexasHoldEm.BackgroundImage = global::ClientGUI.Properties.Resources.Menu_TexasHoldEm;
+            TexasHoldEm.BackgroundImageLayout = ImageLayout.Stretch;
+            TexasHoldEm.Size = new Size(175, 200);
+            TexasHoldEm.Location = new Point(Width / 2 - 87, Height / 2 - 50);
+            TexasHoldEm.Click += new System.EventHandler(TexasHoldEm_Click);
+            Controls.Add(TexasHoldEm);
+
+            Button Roulette = new Button();
+            Roulette.BackgroundImage = global::ClientGUI.Properties.Resources.Menu_Roulette;
+            Roulette.BackgroundImageLayout = ImageLayout.Stretch;
+            Roulette.Size = new Size(175, 200);
+            Roulette.Location = new Point(Width / 2 + 99, Height / 2 - 50);
+            Roulette.Click += new System.EventHandler(Roulette_Click);
+            Controls.Add(Roulette);
 
             Button LogOut = new Button();
             LogOut.Size = new Size(75, 22);

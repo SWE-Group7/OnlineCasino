@@ -139,6 +139,16 @@ namespace ClientGUI
             ClientState = State.Betting;
             BettingScreen_Draw();
         }
+        private void TexasHoldEm_Click(object sender, EventArgs e)
+        {
+            ClientState = State.Betting;
+            BettingScreen_Draw();
+        }
+        private void Roulette_Click(object sender, EventArgs e)
+        {
+            ClientState = State.Betting;
+            BettingScreen_Draw();
+        }
         private void AccountInfo_Click(object sender, EventArgs e)
         {
             // Create account information page

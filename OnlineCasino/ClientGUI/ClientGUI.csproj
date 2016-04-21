@@ -104,6 +104,8 @@
     <None Include="Images\CardsBackground.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Images\Menu_Roulette.jpg" />
+    <None Include="Images\Menu_TexasHoldEm.jpg" />
     <None Include="Images\BlackjackBackground.jpg" />
     <None Include="Images\cards\queen_of_spades.png" />
     <None Include="Images\cards\queen_of_hearts.png" />
