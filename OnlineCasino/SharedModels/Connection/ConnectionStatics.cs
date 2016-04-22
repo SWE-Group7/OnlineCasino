@@ -6,13 +6,8 @@ using System.Threading.Tasks;
 
 namespace SharedModels.Connection
 {
-    public enum CommType
+    public static class ConnectionStatics
     {
-        Void,
-        Request,
-        Return,
-
-
-        Start = 7777777
+        public const int InbetweenReadTimeout = 1000;
     }
 }

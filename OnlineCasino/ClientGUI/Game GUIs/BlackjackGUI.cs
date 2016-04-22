@@ -1,22 +1,22 @@
-﻿ using System.Drawing;
+﻿using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using ClientGUI.Players;
 using SharedModels.GameComponents;
-using SharedModels.Players;
+using SM = SharedModels.Players;
 
 namespace ClientGUI.Game_GUIs
 {
     public class BlackjackGUI : CardGameGUI
     {
-        User u;
+        SM.User u;
         public new Players.BlackjackPlayer You;
         public new List<CardPlayer> OtherPlayers;
         public List<Card> DealerHand = new List<Card>();
 
         public BlackjackGUI(int h, int w)
         {
-            u = new User(100, "n", "nadine", "omg", 100);
+            u = new SM.User(100, "n", "nadine", "omg", 100);
             SharedModels.Players.BlackjackPlayer b = new SharedModels.Players.BlackjackPlayer(u, 100, 100, 100);
             
             Deck = new Deck();
@@ -195,7 +195,7 @@ namespace ClientGUI.Game_GUIs
                             case RoundEndState.Lose:
                                 {
                                     e.Graphics.DrawString("you lose", new Font("Segoe UI", 38), Brushes.Black, new Point(clientWidth / 2 - 95, clientHeight / 2 - 140));
-                                    e.Graphics.DrawString("-$" + bet, new Font("Segoe UI", 15), Brushes.Black, new Point(clientWidth / 2 - 15, clientHeight / 2 - 40));                                 
+                                    e.Graphics.DrawString("-$" + bet, new Font("Segoe UI", 15), Brushes.Black, new Point(clientWidth / 2 - 15, clientHeight / 2 - 40));
                                     e.Graphics.DrawString("current buy in: $" + buyIn, new Font("Segoe UI", 13), Brushes.Black, new Point(clientWidth / 2 - 75, clientHeight / 2 - 20));
 
                                 }

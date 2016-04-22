@@ -1,4 +1,4 @@
-namespace ClientGUI
+namespace ClientLogic
 {
     partial class RouletteGUI
     {

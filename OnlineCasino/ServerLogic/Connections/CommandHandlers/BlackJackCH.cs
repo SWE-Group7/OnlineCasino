@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ServerLogic.Connections.CommandHandlers
 {
-    public class BlackJackCH : ClientHandler
+    public class BlackjackCH : ClientHandler
     {
         private RequestResult BlockingReturn;
 
@@ -17,11 +17,11 @@ namespace ServerLogic.Connections.CommandHandlers
         {
             get
             {
-                return !BlockingReturn.HasValue();
+                return !BlockingReturn.HasReturned();
             }
         }
 
-        public BlackJackCH(Connection connection)
+        public BlackjackCH(Connection connection)
             : base(connection)
         {
         }
@@ -33,13 +33,14 @@ namespace ServerLogic.Connections.CommandHandlers
             BlockingReturn = connection.Request(cmd);
             
         }
+
         public bool GetBet(out decimal bet)
         {
             bet = 0;
 
             if (!Waiting)
             {
-                bet = (decimal) BlockingReturn.GetValue();
+                //bet = (decimal) BlockingReturn.GetValue();
                 return true;
             } else
             {
@@ -54,9 +55,5 @@ namespace ServerLogic.Connections.CommandHandlers
             
         }
 
-        private void setReturn(ClientCommand cmd, RequestResult async)
-        {
-            
-        }
     }
 }

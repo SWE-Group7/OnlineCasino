@@ -15,12 +15,12 @@ namespace ServerLogic.Players
         public BlackjackPlayerStatus Status;
         public bool inGame;
         private List<Card> Cards;
-        private BlackJackCH Commander;
+        private BlackjackCH Commander;
 
         public BlackjackPlayer(User user, decimal BuyIn)
             : base(user, BuyIn)
         {
-            Commander = new BlackJackCH(user.Connection);
+
             Cards = new List<Card>();
             user.InGame = true;
             inGame = true;

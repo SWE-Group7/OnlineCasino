@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ClientGUI.Game_GUIs
+namespace ClientLogic.Game_GUIs
 {
     public class TexasHoldEmGUI : CardGameGUI
     {

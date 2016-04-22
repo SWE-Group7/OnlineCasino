@@ -10,12 +10,8 @@ namespace ServerConsole //print statements & request
     class Program
     {
         static void Main(string[] args)
-        {
-            ServerMain Server = new ServerMain();
-            
-            Server.Start();
-            
-            
+        {  
+            ServerMain.Start();
         }
     }
 }

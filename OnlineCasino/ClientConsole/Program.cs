@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ClientLogic.Connections;
 using SharedModels.Players;
+using ClientLogic;
 
 namespace ClientConsole
 {
@@ -12,12 +13,10 @@ namespace ClientConsole
     {
         static void Main(string[] args)
         {
-            Connection connection = new Connection();
             string username = Prompt("Username:");
             string password = Prompt("Password:");
 
-            User user = connection.SyncLogin(username, password);
-            
+            ClientMain.TrySyncLogin(username, password);
             
         }
 

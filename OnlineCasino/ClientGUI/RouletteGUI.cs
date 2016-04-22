@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ClientGUI
+namespace ClientLogic
 {
     public partial class RouletteGUI : Form
     {
