@@ -203,12 +203,12 @@ namespace ServerLogic.Games
 
                     if (PlayersHand == 21)
                     {
-                        Console.WriteLine("You got TexasHoldEm! +$" + player.UserBet);
+                        Console.WriteLine("You got TexasHoldEm! +$" + player.Bet);
                         player.UpdateGameBalance(true);
                     }
                     else if (PlayersHand > 21)
                     {
-                        Console.WriteLine(player.GetFullName() + " busted. -$" + player.UserBet);
+                        Console.WriteLine(player.GetFullName() + " busted. -$" + player.Bet);
                         player.UpdateGameBalance(false);
                     }
                    

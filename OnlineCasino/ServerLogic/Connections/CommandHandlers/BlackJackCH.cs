@@ -56,8 +56,7 @@ namespace ServerLogic.Connections.CommandHandlers
 
         private void setReturn(ClientCommand cmd, RequestResult async)
         {
-            if(AsyncReturns.ContainsKey(cmd))
-                AsyncReturns[cmd] = 
+            
         }
     }
 }

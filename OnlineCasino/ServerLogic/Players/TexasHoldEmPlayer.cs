@@ -11,8 +11,6 @@ namespace ServerLogic.Players
     public class TexasHoldEmPlayer : Player
     {
         public TexasHoldEmPlayerStatus Status;
-        public int UserBuyIn;
-        public decimal UserBet;
         private List<Card> Cards;
         public bool inGame;
 
@@ -28,7 +26,7 @@ namespace ServerLogic.Players
         {
             if (Status == TexasHoldEmPlayerStatus.Betting)
             {
-                UserBet = amount;
+                Bet = amount;
                 Status = TexasHoldEmPlayerStatus.Waiting;
                 return true;
             }
@@ -40,8 +38,8 @@ namespace ServerLogic.Players
 
         public void UpdateGameBalance(bool won)
         {
-            if (won) GameBalance += UserBet;
-            else GameBalance -= UserBet;
+            if (won) GameBalance += Bet;
+            else GameBalance -= Bet;
         }
 
         public void IndicateBet()
@@ -83,7 +81,7 @@ namespace ServerLogic.Players
         {
             Console.Out.Write("\nNo bet\n");
             Status = TexasHoldEmPlayerStatus.Waiting;
-            UserBet = 0;
+            Bet = 0;
         }
 
         public void ClearCards()

@@ -18,7 +18,7 @@ namespace ServerLogic.Connections
         }
 
         #region Requests
-        public 
+        //public 
         #endregion
 
     }

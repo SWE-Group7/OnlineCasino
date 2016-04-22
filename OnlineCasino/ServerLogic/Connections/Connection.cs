@@ -118,8 +118,8 @@ namespace ServerLogic.Connections
 
         public void Command(ClientCommand cmd, object obj = null)
         {
-            VoidPayload payload = new VoidPayload((int)cmd, obj);
-            QueueWrite(payload);
+            //Payload payload = new Payload((int)cmd, obj);
+            //QueueWrite(payload);
         }
 
         private void QueueWrite(Payload payload)

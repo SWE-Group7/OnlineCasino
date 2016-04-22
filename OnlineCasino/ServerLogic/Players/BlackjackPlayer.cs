@@ -13,14 +13,12 @@ namespace ServerLogic.Players
     {
 
         public BlackjackPlayerStatus Status;
-        public int UserBuyIn;
-        public decimal UserBet;
         public bool inGame;
         private List<Card> Cards;
         private BlackJackCH Commander;
 
-        public BlackjackPlayer(User user)
-            : base(user)
+        public BlackjackPlayer(User user, decimal BuyIn)
+            : base(user, BuyIn)
         {
             Commander = new BlackJackCH(user.Connection);
             Cards = new List<Card>();
@@ -33,7 +31,7 @@ namespace ServerLogic.Players
         {
             if (Status == BlackjackPlayerStatus.Betting)
             {
-                UserBet = amount;
+                Bet = amount;
                 Status = BlackjackPlayerStatus.Waiting;
                 return true;
             }
@@ -45,8 +43,8 @@ namespace ServerLogic.Players
 
         public void UpdateGameBalance(bool won)
         {
-            if (won) GameBalance += UserBet;
-            else GameBalance -= UserBet;
+            if (won) GameBalance += Bet;
+            else GameBalance -= Bet;
         }
 
         public void IndicateBet()
@@ -88,7 +86,7 @@ namespace ServerLogic.Players
         {
             Console.Out.Write("\nNo bet\n");
             Status = BlackjackPlayerStatus.Waiting;
-            UserBet = 0;
+            Bet = 0;
         }
 
         public void ClearCards()

@@ -1,7 +1,6 @@
-﻿using System.Drawing;
+﻿ using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
-using ClientLogic;
 using ClientGUI.Players;
 using SharedModels.GameComponents;
 using SharedModels.Players;
@@ -15,14 +14,6 @@ namespace ClientGUI.Game_GUIs
         public new List<CardPlayer> OtherPlayers;
         public List<Card> DealerHand = new List<Card>();
 
-        // Replace
-       
-        
-        Card c = new Card(CardSuit.Clubs, CardRank.Ace);
-        Card d = new Card(CardSuit.Diamonds, CardRank.King);
-        Card e = new Card(CardSuit.Hearts, CardRank.Eight);
-
-
         public BlackjackGUI(int h, int w)
         {
             u = new User(100, "n", "nadine", "omg", 100);
@@ -35,6 +26,9 @@ namespace ClientGUI.Game_GUIs
             clientWidth = w;
 
             // Remove
+            Card c = new Card(CardSuit.Clubs, CardRank.Ace);
+            Card d = new Card(CardSuit.Diamonds, CardRank.King);
+            Card e = new Card(CardSuit.Hearts, CardRank.Eight);
             You.Hand.Add(c);
             You.Hand.Add(d);
             You.Hand.Add(e);
@@ -76,9 +70,6 @@ namespace ClientGUI.Game_GUIs
             otherPlayerCardY = 100;
         }
 
-        float sx = 0;
-        bool sp = true;
-
         public void BlackjackGUI_Paint(object sender, PaintEventArgs e)
         {
             switch (OS)
@@ -89,32 +80,12 @@ namespace ClientGUI.Game_GUIs
                         {
                             case WaitingState.NoConnection:
                                 {
-                                    Stopwatch.Start();
-                                    e.Graphics.DrawRectangle(Pens.Black, clientWidth / 2 - 226, clientHeight / 2 - 126, 451, 251);
-                                    e.Graphics.FillRectangle(Brushes.White, new Rectangle(clientWidth / 2 - 225, clientHeight / 2 - 125, 450, 250));
-
-                                    e.Graphics.DrawString("JOINING NEXT FREE TABLE", new Font("Segoe UI", 16), Brushes.Black, new Point(clientWidth / 2 - 140, clientHeight / 2 - 30));
-                                    var t = e.Graphics.Transform;
-
-                                    if (sp)
-                                        sx += .01f;
-                                    else
-                                        sx -= .01f;
-                                    if (sx < -.3) sp = true;
-                                    if (sx > .3) sp = false;
-
-                                    t.Shear(sx, 0);
-
-                                    e.Graphics.Transform = t;
-                                    e.Graphics.DrawString("......", new Font("Segoe UI", 12), Brushes.Black, new Point(clientWidth / 2, clientHeight / 2 + 10));
-
-                                    CheckConnection();
+                                    JoiningTable_Draw(sender, e);
                                 }
                                 break;
                             case WaitingState.TableFound:
                                 {
-                                    e.Graphics.FillRectangle(Brushes.White, new Rectangle(clientWidth / 2 - 225, clientHeight / 2 - 125, 450, 250));
-                                    e.Graphics.DrawString("Table found! Seating Players..", new Font("Segoe UI", 16), Brushes.Black, new Point(clientWidth / 2 - 150, clientHeight / 2 - 30));
+                                    TableFound_Draw(sender, e);
                                 }
                                 break;
                         }
@@ -123,8 +94,7 @@ namespace ClientGUI.Game_GUIs
                 case OverallState.Playing:
                     {
                         YourHand_Paint(sender, e, You);
-
-                        OtherPlayerHands_Paint(sender, e, OtherPlayers);
+                        OtherPlayerHands_Paint(sender, e, OtherPlayers, true);
 
                         e.Graphics.DrawString("Dealer", new Font("Segoe UI", 20), Brushes.White, new Point(clientWidth/2 - 60, cardHeight + 10));
                         dealerCardOffset = (DealerHand.Count * (cardWidth + 20)) / 2;
@@ -143,9 +113,8 @@ namespace ClientGUI.Game_GUIs
                         }
                         dealerCardsCount = DealerHand.Count - 1;
 
-                        switch (PS)
+                        switch (GS)
                         {
-
                             case GameState.Waiting:
                                 {
                                     e.Graphics.DrawString("Waiting on other players", new Font("Segoe UI", 16), Brushes.White, new Point(clientWidth / 2 - 150, clientHeight / 2 - 30));
@@ -164,6 +133,12 @@ namespace ClientGUI.Game_GUIs
 
                                     OS = OverallState.Distributing;
                                     RES = RoundEndState.Lose;
+                                }
+                                break;
+                            case GameState.Betting:
+                                {
+                                    e.Graphics.DrawRectangle(Pens.Black, clientWidth / 2 - 226, clientHeight / 2 - 126, 451, 251);
+                                    e.Graphics.FillRectangle(Brushes.White, new Rectangle(clientWidth / 2 - 225, clientHeight / 2 - 125, 450, 250));
                                 }
                                 break;
                             case GameState.Playing:
@@ -198,20 +173,20 @@ namespace ClientGUI.Game_GUIs
                     break;
                 case OverallState.Distributing:
                     {
-                        e.Graphics.DrawRectangle(Pens.Black, clientWidth / 2 - 301, clientHeight / 2 - 201, 601, 401);
-                        e.Graphics.FillRectangle(Brushes.White, new Rectangle(clientWidth / 2 - 300, clientHeight / 2 - 200, 600, 400));
+                        e.Graphics.DrawRectangle(Pens.Black, clientWidth / 2 - 226, clientHeight / 2 - 186, 451, 351);
+                        e.Graphics.FillRectangle(Brushes.White, new Rectangle(clientWidth / 2 - 225, clientHeight / 2 - 185, 450, 350));
 
                         e.Graphics.FillRectangle(Brushes.LightGray, clientWidth/2 - 65, clientHeight /2 + 60, 130, 40);
                         e.Graphics.DrawRectangle(Pens.Black, clientWidth / 2 - 66, clientHeight / 2 + 59, 131, 41);
 
-                        e.Graphics.DrawString("Play again?", new Font("Segoe UI", 18), Brushes.Black, new Point(clientWidth/2 - 65, clientHeight/2 + 62));
+                        e.Graphics.DrawString("Play again?", new Font("Segoe UI", 14), Brushes.Black, new Point(clientWidth/2 - 52, clientHeight/2 + 64));
 
                         if (hoverX > clientWidth / 2 - 65 && hoverX < clientWidth / 2 - 65 + 130)
                         {
                             if (hoverY > clientHeight / 2 + 60 && hoverY < clientHeight / 2 + 60 + 40)
                             {
                                 e.Graphics.FillRectangle(Brushes.DimGray, clientWidth / 2 - 65, clientHeight / 2 + 60, 130, 40);
-                                e.Graphics.DrawString("Play again?", new Font("Segoe UI", 18), Brushes.DarkGray, new Point(clientWidth / 2 - 65, clientHeight / 2 + 62));
+                                e.Graphics.DrawString("Play again?", new Font("Segoe UI", 14), Brushes.DarkGray, new Point(clientWidth / 2 - 52, clientHeight / 2 + 64));
                             }
                         }
 
@@ -220,9 +195,7 @@ namespace ClientGUI.Game_GUIs
                             case RoundEndState.Lose:
                                 {
                                     e.Graphics.DrawString("you lose", new Font("Segoe UI", 38), Brushes.Black, new Point(clientWidth / 2 - 95, clientHeight / 2 - 140));
-                                    e.Graphics.DrawString("-$" + bet, new Font("Segoe UI", 15), Brushes.Black, new Point(clientWidth / 2 - 15, clientHeight / 2 - 40));
-                                  
-
+                                    e.Graphics.DrawString("-$" + bet, new Font("Segoe UI", 15), Brushes.Black, new Point(clientWidth / 2 - 15, clientHeight / 2 - 40));                                 
                                     e.Graphics.DrawString("current buy in: $" + buyIn, new Font("Segoe UI", 13), Brushes.Black, new Point(clientWidth / 2 - 75, clientHeight / 2 - 20));
 
                                 }
@@ -235,6 +208,8 @@ namespace ClientGUI.Game_GUIs
                             case RoundEndState.Win:
                                 {
                                     e.Graphics.DrawString("you won!", new Font("Segoe UI", 38), Brushes.Black, new Point(clientWidth / 2 - 118, clientHeight / 2 - 140));
+                                    e.Graphics.DrawString("+$" + bet, new Font("Segoe UI", 15), Brushes.Black, new Point(clientWidth / 2 - 15, clientHeight / 2 - 40));
+                                    e.Graphics.DrawString("current buy in: $" + buyIn, new Font("Segoe UI", 13), Brushes.Black, new Point(clientWidth / 2 - 75, clientHeight / 2 - 20));
                                 }
                                 break;
                         }
@@ -242,8 +217,5 @@ namespace ClientGUI.Game_GUIs
                     break;
             }
         }
-
-
-
     }
 }

@@ -159,6 +159,7 @@
     <None Include="Images\cards\2_of_hearts.png" />
     <None Include="Images\cards\2_of_diamonds.png" />
     <None Include="Images\cards\2_of_clubs.png" />
+    <None Include="Images\cards\Back.png" />
     <Content Include="Images\Menu_Header.jpg" />
   </ItemGroup>
   <ItemGroup>

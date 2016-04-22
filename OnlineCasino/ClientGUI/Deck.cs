@@ -87,7 +87,6 @@ namespace ClientGUI
                     { CardRank.King, Properties.Resources.king_of_hearts   }
                 }
             }
-
         };
 
         public Bitmap CardImage(CardSuit s, CardRank r)

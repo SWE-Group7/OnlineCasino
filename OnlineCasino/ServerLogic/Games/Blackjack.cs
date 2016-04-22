@@ -229,27 +229,27 @@ namespace ServerLogic.Games
 
                     if(PlayersHand == 21)
                     {
-                        Console.WriteLine("You got blackjack! +$" + player.UserBet);
+                        Console.WriteLine("You got blackjack! +$" + player.Bet);
                         player.UpdateGameBalance(true);
                     }
                     else if (PlayersHand > 21)
                     {                       
-                        Console.WriteLine(player.GetFullName() + " busted. -$" + player.UserBet);
+                        Console.WriteLine(player.GetFullName() + " busted. -$" + player.Bet);
                         player.UpdateGameBalance(false);
                     }
                     else if (DealerAmount > 21)
                     {
-                        Console.WriteLine("Dealer busted. You win! +$" + player.UserBet);
+                        Console.WriteLine("Dealer busted. You win! +$" + player.Bet);
                         player.UpdateGameBalance(true);
                     }
                     else if (PlayersHand < 21 && DealerAmount < 21 && PlayersHand < DealerAmount)
                     {
-                        Console.WriteLine("You lose! -$" + player.UserBet);
+                        Console.WriteLine("You lose! -$" + player.Bet);
                         player.UpdateGameBalance(false);
                     }
                     else if (PlayersHand < 21 && DealerAmount < 21 && PlayersHand > DealerAmount)
                     {
-                        Console.WriteLine("You win! +$" + player.UserBet);
+                        Console.WriteLine("You win! +$" + player.Bet);
                         player.UpdateGameBalance(true);
                     }
                     else if(PlayersHand == DealerAmount)

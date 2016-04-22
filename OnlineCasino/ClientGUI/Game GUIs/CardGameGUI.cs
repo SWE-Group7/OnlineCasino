@@ -60,11 +60,11 @@ namespace ClientGUI.Game_GUIs
             yourCardsCount = You.Hand.Count - 1;
         }
 
-        protected void OtherPlayerHands_Paint(object sender, System.Windows.Forms.PaintEventArgs e, List<CardPlayer> OtherPlayers)
+        protected void OtherPlayerHands_Paint(object sender, System.Windows.Forms.PaintEventArgs e, List<CardPlayer> OtherPlayers, bool showCards)
         {
             otherPlayerCount = OtherPlayers.Count;
             bool leftSide = true;
-            foreach (BlackjackPlayer p in OtherPlayers)
+            foreach (CardPlayer p in OtherPlayers)
             {
                 otherPlayerCardCount = p.Hand.Count;
 
@@ -83,19 +83,34 @@ namespace ClientGUI.Game_GUIs
 
                 e.Graphics.DrawString("Player " + otherPlayerCount, new Font("Segoe UI", 20), Brushes.White, new Point(otherPlayerCardX, otherPlayerCardY + cardHeight));
 
-                foreach (Card c in p.Hand)
+                if (showCards)
                 {
-                    CardImage = Deck.CardImage(c.Suit, c.Rank);
-
-                    if (CardImage != null)
+                    foreach (Card c in p.Hand)
                     {
-                        e.Graphics.DrawImage(CardImage, new Rectangle(otherPlayerCardX, otherPlayerCardY, cardWidth - 20, cardHeight - 20));
-                    }
+                        CardImage = Deck.CardImage(c.Suit, c.Rank);
 
+                        if (CardImage != null)
+                        {
+                            e.Graphics.DrawImage(CardImage, new Rectangle(otherPlayerCardX, otherPlayerCardY, cardWidth - 20, cardHeight - 20));
+                        }
+
+                        if (leftSide) { otherPlayerCardX += (p.Hand.Count * (cardWidth)) / 2; }
+                        else { otherPlayerCardX -= (p.Hand.Count * (cardWidth)) / 2; }
+                    }
+                    otherPlayerCount--;
+                }
+                else
+                {
+                    foreach (Card c in p.Hand)
+                    {
+                        e.Graphics.DrawImage(Properties.Resources.Back, new Rectangle(otherPlayerCardX, otherPlayerCardY, cardWidth - 20, cardHeight - 20));
+                    }
+                     
                     if (leftSide) { otherPlayerCardX += (p.Hand.Count * (cardWidth)) / 2; }
                     else { otherPlayerCardX -= (p.Hand.Count * (cardWidth)) / 2; }
-                }
-                otherPlayerCount--;
+                
+                    otherPlayerCount--;
+               }
             }
         }
     }

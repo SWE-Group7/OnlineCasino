@@ -110,7 +110,7 @@ namespace ClientGUI
 
             UsernameTextBox = new TextBox();
             UsernameTextBox.Size = new Size(200, 20);
-            UsernameTextBox.Location = new Point(Width / 2 - 70, Height / 2 - 10);           
+            UsernameTextBox.Location = new Point(Width / 2 - 70, Height / 2 - 10);
             Controls.Add(UsernameTextBox);
 
             Label PasswordLabel = new Label();
@@ -143,7 +143,7 @@ namespace ClientGUI
             NewUser.Click += new System.EventHandler(NewUser_Click);
             Controls.Add(NewUser);
 
-            
+
             //Password = PasswordTextBox.Text;
         }
 
@@ -165,7 +165,7 @@ namespace ClientGUI
             UsernameLabel.Size = new Size(65, 20);
             UsernameLabel.Location = new Point(Width / 2 - 135, Height / 2 - 30);
             UsernameLabel.Font = new Font("Segoe UI", 8);
-            UsernameLabel.Text = " Username:";              
+            UsernameLabel.Text = " Username:";
             UsernameLabel.BackColor = Color.Transparent;
             Controls.Add(UsernameLabel);
 
@@ -235,13 +235,20 @@ namespace ClientGUI
             Controls.Add(ReturnToLogin);
         }
 
-
         public void Menu_Draw()
         {
             this.Controls.Clear();
             this.Invalidate();
 
             this.BackColor = Color.White;
+
+            Label Welcome = new Label();
+            Welcome.Size = new Size(550, 75);
+            Welcome.Location = new Point(Width / 2 - 275, Height / 2 - 180);
+            Welcome.Font = new Font("Segoe UI", 16);
+            Welcome.BackColor = Color.White;
+            Welcome.Text = "Hi " + FullName + "! Your balance is $" + balance + ".";
+            Controls.Add(Welcome);
 
             PictureBox MenuHeader = new PictureBox();
             MenuHeader.BackgroundImage = global::ClientGUI.Properties.Resources.Menu_Header;
@@ -250,7 +257,7 @@ namespace ClientGUI
             MenuHeader.Size = new Size(300, 30);
             Controls.Add(MenuHeader);
 
-            Button Blackjack = new Button();         
+            Button Blackjack = new Button();
             Blackjack.BackgroundImage = global::ClientGUI.Properties.Resources.Menu_Blackjack;
             Blackjack.BackgroundImageLayout = ImageLayout.Stretch;
             Blackjack.Size = new Size(175, 200);
@@ -315,11 +322,11 @@ namespace ClientGUI
                 this.Invalidate();
 
                 Label AreYouSure = new Label();
-                AreYouSure.Size = new Size(80,75);
+                AreYouSure.Size = new Size(80, 75);
                 AreYouSure.Location = new Point(15, Height - 160);
                 AreYouSure.Font = new Font("Segoe UI", 8);
                 AreYouSure.BackColor = Color.White;
-                AreYouSure.Text = "Are you sure? \n You'll lose your entire buy in! That's $" + buyIn + "!";
+                AreYouSure.Text = "Are you sure? \n You'll lose your entire bet! That's $" + bet + "!";
                 Controls.Add(AreYouSure);
 
                 Button Yes = new Button();
@@ -344,13 +351,13 @@ namespace ClientGUI
             {
                 case Game.Blackjack:
                     {
-                        
+
                     }
                     break;
             }
         }
 
-        public void BettingScreen_Draw()
+        public void BuyInScreen_Draw()
         {
             this.Controls.Clear();
             this.Invalidate();
@@ -371,49 +378,74 @@ namespace ClientGUI
             BettingLabel.Text = " BETTING ";
             Controls.Add(BettingLabel);
 
-            if (BlackjackGUI == null)
-            {
-                Label BuyInLabel = new Label();
-                BuyInLabel.Size = new Size(178, 20);
-                BuyInLabel.Location = new Point(Width / 2 - 178, Height / 2 - 30);
-                BuyInLabel.Font = new Font("Segoe UI", 8);
-                BuyInLabel.Text = "Enter your buy in for this game: $";
-                BuyInLabel.BackColor = Color.Transparent;
-                Controls.Add(BuyInLabel);
+            Label BuyInLabel = new Label();
+            BuyInLabel.Size = new Size(178, 20);
+            BuyInLabel.Location = new Point(Width / 2 - 179, Height / 2 - 30);
+            BuyInLabel.Font = new Font("Segoe UI", 8);
+            BuyInLabel.Text = "Choose a buy in for this game: $";
+            BuyInLabel.BackColor = Color.Transparent;
+            Controls.Add(BuyInLabel);
 
-                BuyInTextBox = new TextBox();
-                BuyInTextBox.Size = new Size(70, 20);
-                BuyInTextBox.Location = new Point(Width / 2, Height / 2 - 30);
-                Controls.Add(BuyInTextBox);
-            }
-            else
-            {
-                Label BuyInLabel = new Label();
-                BuyInLabel.Size = new Size(170, 20);
-                BuyInLabel.Location = new Point(Width / 2 - 30, Height / 2 - 30);
-                BuyInLabel.Font = new Font("Segoe UI", 8);
-                BuyInLabel.Text = "Available buy in: $" + buyIn;
-                BuyInLabel.BackColor = Color.Transparent;
-                Controls.Add(BuyInLabel);
-            }
+            BuyInTextBox = new TextBox();
+            BuyInTextBox.Size = new Size(70, 20);
+            BuyInTextBox.Location = new Point(Width / 2, Height / 2 - 30);
+            Controls.Add(BuyInTextBox);
+                     
+            Button SubmitBuyIn = new Button();
+            SubmitBuyIn.Size = new Size(70, 22);
+            SubmitBuyIn.BackColor = Color.White;
+            SubmitBuyIn.Location = new Point(Width / 2, Height / 2 - 6);
+            SubmitBuyIn.Text = "Pay Buy In";
+            SubmitBuyIn.Click += new System.EventHandler(SubmitBuyIn_Click);
+            Controls.Add(SubmitBuyIn);
+        }
+
+        public void BettingScreen_Draw()
+        {
+            this.Controls.Clear();
+            this.Invalidate();
+
+            Button ReturnToMenu = new Button();
+            ReturnToMenu.Size = new Size(50, 22);
+            ReturnToMenu.BackColor = Color.White;
+            ReturnToMenu.Location = new Point(20, Height - 75);
+            ReturnToMenu.Text = "< Back";
+            ReturnToMenu.Click += new System.EventHandler(ReturnToMenu_Click);
+            Controls.Add(ReturnToMenu);
+
+            Label BettingLabel = new Label();
+            BettingLabel.Size = new Size(250, 50);
+            BettingLabel.Location = new Point(Width / 2 - 70, Height / 2 - 70);
+            BettingLabel.Font = new Font("Segoe UI", 25);
+            BettingLabel.BackColor = Color.Transparent;
+            BettingLabel.Text = "  BETTING ";
+            Controls.Add(BettingLabel);
+
+            Label BuyInLabel = new Label();
+            BuyInLabel.Size = new Size(150, 20);
+            BuyInLabel.Location = new Point(Width / 2 - 45, Height / 2 - 10);
+            BuyInLabel.Font = new Font("Segoe UI", 8);
+            BuyInLabel.Text = "Available buy in: $" + buyIn;
+            BuyInLabel.BackColor = Color.Transparent;
+            Controls.Add(BuyInLabel);
 
             Label BetLabel = new Label();
-            BetLabel.Size = new Size(180, 20);
-            BetLabel.Location = new Point(Width / 2 - 180, Height / 2 - 8);
+            BetLabel.Size = new Size(40, 20);
+            BetLabel.Location = new Point(Width / 2 - 40, Height / 2 + 12);
             BetLabel.BackColor = Color.Transparent;
             BetLabel.Font = new Font("Segoe UI", 8);
-            BetLabel.Text = "Choose your bet for this round: $";
+            BetLabel.Text = "Bet: $";
             Controls.Add(BetLabel);
 
             BetTextBox = new TextBox();
             BetTextBox.Size = new Size(70, 20);
-            BetTextBox.Location = new Point(Width / 2, Height / 2 - 8);
+            BetTextBox.Location = new Point(Width / 2, Height / 2 + 12);
             Controls.Add(BetTextBox);
 
             Button SubmitBet = new Button();
             SubmitBet.Size = new Size(70, 22);
             SubmitBet.BackColor = Color.White;
-            SubmitBet.Location = new Point(Width / 2, Height / 2 + 14);
+            SubmitBet.Location = new Point(Width / 2, Height / 2 + 34);
             SubmitBet.Text = "Finalize Bet";
             SubmitBet.Click += new System.EventHandler(SubmitBet_Click);
             Controls.Add(SubmitBet);
