@@ -14,6 +14,7 @@ namespace ServerLogic.Players
 
         public BlackjackPlayerStatus Status;
         public bool inGame;
+        public decimal Bet;
         private List<Card> Cards;
         private BlackjackCH Commander;
 

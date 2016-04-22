@@ -1,4 +1,6 @@
-﻿using ClientGUI.Players;
+﻿using ClientGUI.Game_GUIs;
+using ClientLogic;
+using ClientLogic.Players;
 using SharedModels.GameComponents;
 using SharedModels.Players;
 using System;
@@ -9,13 +11,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ClientLogic.Game_GUIs
+namespace ClientGUI.Game_GUIs
 {
     public class TexasHoldEmGUI : CardGameGUI
     {
-        User u;
-        User f;
-        public new Players.TexasHoldEmPlayer You;
+        SharedModels.Players.User u;
+        SharedModels.Players.User f;
+        public new ClientLogic.Players.TexasHoldEmPlayer You;
         public new List<CardPlayer> OtherPlayers;
         public List<Card> DealerHand = new List<Card>();
 
@@ -24,14 +26,14 @@ namespace ClientLogic.Game_GUIs
             clientHeight = h;
             clientWidth = w;
 
-            u = new User(100, "n", "nadine", "omg", 100);
+            u = new SharedModels.Players.User(100, "n", "nadine", "omg", 100);
             SharedModels.Players.TexasHoldEmPlayer t = new SharedModels.Players.TexasHoldEmPlayer(u, 100, 100, 100);
-            f = new User(200, "f", "foster", "omgomg", 100);
+            f = new SharedModels.Players.User(200, "f", "foster", "omgomg", 100);
             SharedModels.Players.TexasHoldEmPlayer tf = new SharedModels.Players.TexasHoldEmPlayer(f, 100, 100, 100);
 
             Deck = new Deck();
-            You = new Players.TexasHoldEmPlayer(t);
-            OtherPlayers = new List<Players.TexasHoldEmPlayer>().ConvertAll(x => (CardPlayer)x);
+            You = new ClientLogic.Players.TexasHoldEmPlayer(t);
+            OtherPlayers = new List<ClientLogic.Players.TexasHoldEmPlayer>().ConvertAll(x => (CardPlayer)x);
 
             // Remove
             Card c = new Card(CardSuit.Clubs, CardRank.Ace);

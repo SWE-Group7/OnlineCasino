@@ -13,6 +13,7 @@ namespace ServerLogic.Players
         public TexasHoldEmPlayerStatus Status;
         private List<Card> Cards;
         public bool inGame;
+        public decimal Bet;
 
         public TexasHoldEmPlayer(User user, decimal buyIn)
             : base(user, buyIn)

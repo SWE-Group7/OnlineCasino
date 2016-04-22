@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
-using ClientGUI.Players;
+using ClientLogic.Players;
 
 namespace ClientGUI.Game_GUIs
 {

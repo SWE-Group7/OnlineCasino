@@ -1,4 +1,5 @@
 ﻿using ClientGUI.Game_GUIs;
+using ClientLogic;
 using SharedModels.GameComponents;
 using System;
 using System.Collections.Generic;

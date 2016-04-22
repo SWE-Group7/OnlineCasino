@@ -1,4 +1,5 @@
-﻿using ClientLogic.Players;
+﻿using ClientLogic;
+using ClientLogic.Players;
 using SharedModels.GameComponents;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ClientLogic.Game_GUIs
+namespace ClientGUI.Game_GUIs
 {
     public abstract class CardGameGUI : GameGUI
     {
@@ -103,7 +104,7 @@ namespace ClientLogic.Game_GUIs
                 {
                     foreach (Card c in p.Hand)
                     {
-                        e.Graphics.DrawImage(Properties.Resources.Back, new Rectangle(otherPlayerCardX, otherPlayerCardY, cardWidth - 20, cardHeight - 20));
+                        e.Graphics.DrawImage(global::ClientGUI.Properties.Resources.Back, new Rectangle(otherPlayerCardX, otherPlayerCardY, cardWidth - 20, cardHeight - 20));
                     }
                      
                     if (leftSide) { otherPlayerCardX += (p.Hand.Count * (cardWidth)) / 2; }

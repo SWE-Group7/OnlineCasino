@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
-using ClientGUI.Players;
+using ClientLogic.Players;
 using SharedModels.GameComponents;
 using SM = SharedModels.Players;
 
@@ -10,7 +10,7 @@ namespace ClientGUI.Game_GUIs
     public class BlackjackGUI : CardGameGUI
     {
         SM.User u;
-        public new Players.BlackjackPlayer You;
+        public new ClientLogic.Players.BlackjackPlayer You;
         public new List<CardPlayer> OtherPlayers;
         public List<Card> DealerHand = new List<Card>();
 
@@ -20,8 +20,8 @@ namespace ClientGUI.Game_GUIs
             SharedModels.Players.BlackjackPlayer b = new SharedModels.Players.BlackjackPlayer(u, 100, 100, 100);
             
             Deck = new Deck();
-            You = new Players.BlackjackPlayer(b);
-            OtherPlayers = new List<Players.BlackjackPlayer>().ConvertAll(x => (CardPlayer)x);
+            You = new ClientLogic.Players.BlackjackPlayer(b);
+            OtherPlayers = new List<ClientLogic.Players.BlackjackPlayer>().ConvertAll(x => (CardPlayer)x);
             clientHeight = h;
             clientWidth = w;
 
