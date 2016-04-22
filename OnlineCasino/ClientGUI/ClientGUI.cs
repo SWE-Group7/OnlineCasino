@@ -1,4 +1,4 @@
-﻿using ClientGUI.Game_GUIs;
+﻿using ClientLogic.Game_GUIs;
 using SharedModels.GameComponents;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ClientGUI
+namespace ClientLogic
 {
     public partial class ClientGUI : Form
     {
@@ -46,7 +46,7 @@ namespace ClientGUI
 
         private void ClientGUI_Load(object sender, EventArgs e)
         {
-            this.BackgroundImage = global::ClientGUI.Properties.Resources.CardsBackground;
+            this.BackgroundImage = global::ClientLogic.Properties.Resources.CardsBackground;
             Login_Draw();
         }
 
@@ -166,7 +166,7 @@ namespace ClientGUI
             else
             {
                 BlackjackGUI = null;
-                this.BackgroundImage = global::ClientGUI.Properties.Resources.CardsBackground;
+                this.BackgroundImage = global::ClientLogic.Properties.Resources.CardsBackground;
                 this.Controls.Clear();
                 this.Invalidate();
 
@@ -179,7 +179,7 @@ namespace ClientGUI
         private void Yes_Click(object sender, EventArgs e)
         {
             BlackjackGUI = null;
-            this.BackgroundImage = global::ClientGUI.Properties.Resources.CardsBackground;
+            this.BackgroundImage = global::ClientLogic.Properties.Resources.CardsBackground;
             this.Controls.Clear();
             this.Invalidate();
 
@@ -220,7 +220,7 @@ namespace ClientGUI
                 
                 this.Controls.Clear();
                 this.Invalidate();
-                this.BackgroundImage = global::ClientGUI.Properties.Resources.BlackjackBackground;
+                this.BackgroundImage = global::ClientLogic.Properties.Resources.BlackjackBackground;
 
                 ClientState = State.Game;
                 BlackjackGUI.OS = BlackjackGUI.OverallState.Playing;

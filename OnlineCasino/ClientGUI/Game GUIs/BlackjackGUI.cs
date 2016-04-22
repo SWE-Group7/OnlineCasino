@@ -2,15 +2,15 @@
 using System.Windows.Forms;
 using System.Collections.Generic;
 using ClientLogic;
-using ClientGUI.Players;
+using ClientLogic.Players;
 using SharedModels.GameComponents;
-using SharedModels.Players;
+using SM = SharedModels.Players;
 
-namespace ClientGUI.Game_GUIs
+namespace ClientLogic.Game_GUIs
 {
     public class BlackjackGUI : CardGameGUI
     {
-        User u;
+        SM.User u;
         public new Players.BlackjackPlayer You;
         public new List<CardPlayer> OtherPlayers;
         public List<Card> DealerHand = new List<Card>();
@@ -25,7 +25,7 @@ namespace ClientGUI.Game_GUIs
 
         public BlackjackGUI(int h, int w)
         {
-            u = new User(100, "n", "nadine", "omg", 100);
+            u = new SM.User(100, "n", "nadine", "omg", 100);
             SharedModels.Players.BlackjackPlayer b = new SharedModels.Players.BlackjackPlayer(u, 100, 100, 100);
             
             Deck = new Deck();

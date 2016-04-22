@@ -17,12 +17,12 @@ namespace ServerLogic.Players
         public decimal UserBet;
         public bool inGame;
         private List<Card> Cards;
-        private BlackJackCH Commander;
+        private BlackjackCH Commander;
 
         public BlackjackPlayer(User user)
             : base(user)
         {
-            Commander = new BlackJackCH(user.Connection);
+            Commander = new BlackjackCH(user.Connection);
             Cards = new List<Card>();
             user.InGame = true;
             inGame = true;

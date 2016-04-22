@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 
-namespace ClientGUI
+namespace ClientLogic
 {
     partial class ClientGUI
     {
@@ -244,14 +244,14 @@ namespace ClientGUI
             this.BackColor = Color.White;
 
             PictureBox MenuHeader = new PictureBox();
-            MenuHeader.BackgroundImage = global::ClientGUI.Properties.Resources.Menu_Header;
+            MenuHeader.BackgroundImage = global::ClientLogic.Properties.Resources.Menu_Header;
             MenuHeader.BackgroundImageLayout = ImageLayout.Stretch;
             MenuHeader.Location = new Point(Width / 2 - 150, Height / 2 - 100);
             MenuHeader.Size = new Size(300, 30);
             Controls.Add(MenuHeader);
 
             Button Blackjack = new Button();         
-            Blackjack.BackgroundImage = global::ClientGUI.Properties.Resources.Menu_Blackjack;
+            Blackjack.BackgroundImage = global::ClientLogic.Properties.Resources.Menu_Blackjack;
             Blackjack.BackgroundImageLayout = ImageLayout.Stretch;
             Blackjack.Size = new Size(175, 200);
             Blackjack.Location = new Point(Width / 2 - 274, Height / 2 - 50);
@@ -259,7 +259,7 @@ namespace ClientGUI
             Controls.Add(Blackjack);
 
             Button TexasHoldEm = new Button();
-            TexasHoldEm.BackgroundImage = global::ClientGUI.Properties.Resources.Menu_TexasHoldEm;
+            TexasHoldEm.BackgroundImage = global::ClientLogic.Properties.Resources.Menu_TexasHoldEm;
             TexasHoldEm.BackgroundImageLayout = ImageLayout.Stretch;
             TexasHoldEm.Size = new Size(175, 200);
             TexasHoldEm.Location = new Point(Width / 2 - 87, Height / 2 - 50);
@@ -267,7 +267,7 @@ namespace ClientGUI
             Controls.Add(TexasHoldEm);
 
             Button Roulette = new Button();
-            Roulette.BackgroundImage = global::ClientGUI.Properties.Resources.Menu_Roulette;
+            Roulette.BackgroundImage = global::ClientLogic.Properties.Resources.Menu_Roulette;
             Roulette.BackgroundImageLayout = ImageLayout.Stretch;
             Roulette.Size = new Size(175, 200);
             Roulette.Location = new Point(Width / 2 + 99, Height / 2 - 50);

@@ -48,5 +48,7 @@ namespace ServerLogic
         {
             CurrentUser.Balance += gift;
         }
+
+        private abstract class ClientHelper { }
     }
 }

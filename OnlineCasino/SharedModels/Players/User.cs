@@ -11,7 +11,7 @@ namespace SharedModels.Players
         readonly public int UserID;
         readonly public string Username;
         readonly public string FullName;
-        readonly public string EmailAddress;
+        readonly public string Email;
         readonly public decimal Balance;
         
 
@@ -20,7 +20,7 @@ namespace SharedModels.Players
             UserID = uID;
             Username = username;
             FullName = fullname;
-            EmailAddress = email;
+            Email = email;
             Balance = balance;
         }
 

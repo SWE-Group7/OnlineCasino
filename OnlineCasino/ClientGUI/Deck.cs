@@ -9,7 +9,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using SharedModels.GameComponents;
 
-namespace ClientGUI
+namespace ClientLogic
 {
     public class Deck
     {

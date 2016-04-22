@@ -2,9 +2,9 @@
 using System.Windows.Forms;
 using System.Collections.Generic;
 using ClientLogic;
-using ClientGUI.Players;
+using ClientLogic.Players;
 
-namespace ClientGUI.Game_GUIs
+namespace ClientLogic.Game_GUIs
 {
     public abstract class GameGUI
     {

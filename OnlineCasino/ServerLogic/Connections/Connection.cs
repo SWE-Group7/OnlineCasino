@@ -12,11 +12,13 @@ using System.Threading.Tasks;
 
 namespace ServerLogic.Connections
 {
+    
     public class Connection
     {
 
         public bool Connected;
-        public long LastComm;
+        public long LastRead;
+        public long LastWrite;
         private int RequestId = 1;
 
         private Thread Reader;
@@ -31,12 +33,10 @@ namespace ServerLogic.Connections
 
         private TcpClient Client;
         private User CurrentUser;
-        private bool Disconnect;
 
         public Connection(TcpClient client)
         {
             this.Client = client;
-            Disconnect = false;
             Connected = false;
 
             WriteQueue = new Queue<Payload>();
@@ -72,12 +72,16 @@ namespace ServerLogic.Connections
             lock (CurrentUser)
                 smUser = CurrentUser.GetSharedModelPrivate();
 
+            Connected = true;
             ImmediateWrite(new Payload(CommType.Return, reqId, true, smUser));
         }
 
         public void RejectLogin(int reqId)
         {
             ImmediateWrite(new Payload(CommType.Return, reqId, false, null));
+            Client.GetStream().Dispose();
+            Client.Close();
+            
         }
 
         public void Communicate()
@@ -87,6 +91,8 @@ namespace ServerLogic.Connections
             Writer.Start();
             StartReader();
         }
+
+        #region Write
 
         public RequestResult Request(ClientCommand cmd, object obj = null)
         {
@@ -104,21 +110,15 @@ namespace ServerLogic.Connections
             return ret;
         }
 
-        private void ReturnSuccess(int reqId, object obj)
+        private void Return(int reqId, bool success, object obj)
         {
-            Payload payload = new Payload(CommType.Return, reqId, true, obj);
+            Payload payload = new Payload(CommType.Return, reqId, success, obj);
             QueueWrite(payload);   
-        }
-
-        private void ReturnFailure(int reqId)
-        {
-            Payload payload = new Payload(CommType.Return, reqId, false, null);
-            QueueWrite(payload);
         }
 
         public void Command(ClientCommand cmd, object obj = null)
         {
-            VoidPayload payload = new VoidPayload((int)cmd, obj);
+            Payload payload = new Payload(CommType.Void, cmd, obj);
             QueueWrite(payload);
         }
 
@@ -130,108 +130,6 @@ namespace ServerLogic.Connections
                 WriteQueueEmpty = false;
             }
 
-        }
-
-        private void StartReader()
-        {
-            const int bufferSize = 4096;
-            byte[] buffer = new byte[bufferSize];
-
-            while (!Disconnect)
-            {
-                CommType commType;
-                ServerCommand cmd = 0;
-                int reqId = -1;
-
-                byte[] obj;
-                int index;
-                int bytesRead;
-                int bytesToRead;
-
-                //Get Comm Type
-                bytesRead = Client.GetStream().Read(buffer, 0, sizeof(int));
-                commType = (CommType)BitConverter.ToInt32(buffer, 0);
-
-                //Get CommType-specific data
-                switch (commType)
-                {
-                    case CommType.Void:
-                        bytesRead = Client.GetStream().Read(buffer, 0, sizeof(int));
-                        cmd = (ServerCommand)BitConverter.ToInt32(buffer, 0);
-                        break;
-                    case CommType.Request:
-                        bytesRead = Client.GetStream().Read(buffer, 0, sizeof(int));
-                        cmd = (ServerCommand)BitConverter.ToInt32(buffer, 0);
-
-                        bytesRead = Client.GetStream().Read(buffer, 0, sizeof(int));
-                        reqId = BitConverter.ToInt32(buffer, 0);
-                        break;
-                    case CommType.Return:
-                        bytesRead = Client.GetStream().Read(buffer, 0, sizeof(int));
-                        reqId = BitConverter.ToInt32(buffer, 0);
-                        break;
-                    default:
-                        break;
-                }
-
-                //Get Object Length
-                Client.GetStream().Read(buffer, 0, sizeof(int));
-                bytesToRead = BitConverter.ToInt32(buffer, 0);
-
-                //Get object bytes
-                obj = new byte[bytesToRead];
-                index = 0;
-                while (bytesToRead > 0)
-                {
-                    bytesRead = Client.GetStream().Read(buffer, 0,  Math.Min(bufferSize, bytesToRead));
-                    Array.ConstrainedCopy(buffer, 0, obj, index, bytesRead);
-                    index += bytesRead;
-                    bytesToRead -= bytesRead;
-                }
-
-                //Handle
-                switch (commType)
-                {
-                    case CommType.Return:
-                        HandleReturn(reqId, obj);
-                        break;
-                    case CommType.Request:
-                        HandleRequest(cmd, reqId, obj);
-                        break;
-                    case CommType.Void:
-                        HandleVoid(cmd, obj);
-                        break;
-                    default:
-                        break;
-
-                }
-            }
-        }
-
-        private void HandleVoid(ServerCommand cmd, byte[] obj)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void HandleRequest(ServerCommand cmd, int reqId, byte[] obj)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void HandleReturn(int reqId, byte[] objBytes)
-        {
-            RequestResult result;
-            lock (RequestedByServer)
-            {
-                if (RequestedByServer.TryGetValue(reqId, out result))
-                    RequestedByServer.Remove(reqId);
-            }
-
-            if(result != null)
-            {
-                object obj = Serializer.Deserialize(objBytes);
-                result.SetValue(obj);
-            }
         }
 
         private void StartWriter()
@@ -289,6 +187,101 @@ namespace ServerLogic.Connections
                 return false;
             }
         }
+
+        #endregion
+
+        #region Read
+        private void StartReader()
+        {
+            const int bufferSize = 4096;
+            byte[] buffer = new byte[bufferSize];
+
+            while (Connected)
+            {
+                CommType commType;
+                ServerCommand cmd = 0;
+                int reqId = -1;
+
+                byte[] obj;
+                int index;
+                int bytesRead;
+                int bytesToRead;
+
+                //Get Comm Type
+                bytesRead = Client.GetStream().Read(buffer, 0, sizeof(int));
+                commType = (CommType)BitConverter.ToInt32(buffer, 0);
+
+                //Get Command or 0/1 for return
+                bytesRead = Client.GetStream().Read(buffer, 0, sizeof(int));
+                cmd = (ServerCommand)BitConverter.ToInt32(buffer, 0);
+
+                //Get RequestId or 0 for void commands
+                bytesRead = Client.GetStream().Read(buffer, 0, sizeof(int));
+                reqId = BitConverter.ToInt32(buffer, 0);
+
+                //Get Object Length
+                Client.GetStream().Read(buffer, 0, sizeof(int));
+                bytesToRead = BitConverter.ToInt32(buffer, 0);
+
+                //Get object bytes
+                obj = new byte[bytesToRead];
+                index = 0;
+                while (bytesToRead > 0)
+                {
+                    bytesRead = Client.GetStream().Read(buffer, 0, Math.Min(bufferSize, bytesToRead));
+                    Array.ConstrainedCopy(buffer, 0, obj, index, bytesRead);
+                    index += bytesRead;
+                    bytesToRead -= bytesRead;
+                }
+
+                //Handle
+                switch (commType)
+                {
+                    case CommType.Return:
+                        HandleReturn(reqId, ((int)cmd == 1), obj);
+                        break;
+                    case CommType.Request:
+                        HandleRequest(cmd, reqId, obj);
+                        break;
+                    case CommType.Void:
+                        HandleVoid(cmd, obj);
+                        break;
+                    default:
+                        break;
+
+                }
+            }
+        }
+
+        private void HandleVoid(ServerCommand cmd, byte[] obj)
+        {
+            switch (cmd)
+            {
+                
+            }
+        }
+
+        private void HandleRequest(ServerCommand cmd, int reqId, byte[] obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void HandleReturn(int reqId, bool success, byte[] objBytes)
+        {
+            RequestResult result;
+            lock (RequestedByServer)
+            {
+                if (RequestedByServer.TryGetValue(reqId, out result))
+                    RequestedByServer.Remove(reqId);
+            }
+
+            if (result != null)
+            {
+                object obj = Serializer.Deserialize(objBytes);
+                result.SetValue(success, obj);
+            }
+        }
+        #endregion
 
 
     }

@@ -109,6 +109,11 @@ namespace ServerLogic
                 lock (ConnectedUsers)
                     ConnectedUsers.Add(user);
             }
+            else
+            {
+                connection.RejectLogin(reqId);
+                
+            }
         }
 
         static public void  WriteException(string throwingMethod, Exception ex)
@@ -116,6 +121,6 @@ namespace ServerLogic
             Console.WriteLine(String.Format("{0} threw an Exception : {1}", throwingMethod, ex.Message));
         }
 
-        static public void 
+        
     }
 }
