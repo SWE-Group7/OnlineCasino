@@ -18,9 +18,15 @@ namespace ServerLogic
         readonly public string EmailAddress;
         readonly private string HashedPassword;
         readonly private string Salt;
-        public Connection Connection;
+
+        private Connection CurrentConnection;
+
+        //Back references (Not sure if keeping)
+        private Player CurrentPlayer;
+        private Game CurrentGame;
         
         public bool InGame;
+        public bool Connected;
 
         private decimal balance;
         public decimal Balance
@@ -75,6 +81,24 @@ namespace ServerLogic
         {
             return (HashedPassword == DB.User.HashPassword(password, Salt));
         }
+
+        
+        public void ClientDisconnect()
+        {
+            if (InGame)
+            {
+                CurrentPlayer.ClientDisconnect();
+            }
+            InGame = false;
+            Connected = false;
+        }
+
+        public void SetPlayer(Player player)
+        {
+            CurrentPlayer = player;
+        }
+
+
 
         
 

@@ -18,7 +18,7 @@ namespace ClientLogic.Players
 
         public Player(SharedModels.Players.Player P, decimal buyIn, decimal bet)
         {
-            this.CurrentUser = P.CurrentUser;
+            this.CurrentUser = new User(P.CurrentUser);
             this.GameBalance = P.GameBalance;
 
             UserBuyIn = buyIn;

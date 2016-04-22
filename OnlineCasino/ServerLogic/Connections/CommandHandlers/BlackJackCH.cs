@@ -40,7 +40,7 @@ namespace ServerLogic.Connections.CommandHandlers
 
             if (!Waiting)
             {
-                bet = (decimal) BlockingReturn.GetValue();
+                //bet = (decimal) BlockingReturn.GetValue();
                 return true;
             } else
             {

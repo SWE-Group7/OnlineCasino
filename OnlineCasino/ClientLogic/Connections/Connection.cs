@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ClientLogic.Players;
+using System.Diagnostics;
 
 namespace ClientLogic.Connections
 {
@@ -27,7 +28,9 @@ namespace ClientLogic.Connections
 
         private Queue<Payload> WriteQueue;
         private volatile bool WriteQueueEmpty;
-        private Dictionary<int, RequestResult> RequestedByServer;
+        private Dictionary<int, RequestResult> RequestedByClient;
+
+        private Stopwatch Timer = new Stopwatch();
 
         public Connection()
         {
@@ -35,10 +38,15 @@ namespace ClientLogic.Connections
             Connected = true;
             WriteQueueEmpty = true;
 
+            WriteQueue = new Queue<Payload>();
+            RequestedByClient = new Dictionary<int, RequestResult>();
+
             Reader = Thread.CurrentThread;
             Writer = new Thread(() => StartWriter());
+            Writer.Name = "Writer";
             Writer.Start();
             Reader = new Thread(() => StartReader());
+            Reader.Name = "Reader";
             Reader.Start();
 
         }
@@ -58,7 +66,7 @@ namespace ClientLogic.Connections
         private User SyncLogin(ServerCommand cmd, Security security)
         {
             SM.User smUser;
-            RequestResult result = Request(cmd, security, true);
+            RequestResult result = Request(cmd, security);
 
             bool success = result.WaitForReturn<SM.User>(10000, out smUser);
 
@@ -78,20 +86,18 @@ namespace ClientLogic.Connections
         }
 
         #region Write
-        public RequestResult Request(ServerCommand cmd, object obj = null, bool immediate = false)
+        public RequestResult Request(ServerCommand cmd, object obj = null)
         {
             RequestResult ret = new RequestResult();
             int reqId = Interlocked.Increment(ref RequestId);
 
-            lock (RequestedByServer)
+            lock (RequestedByClient)
             {
-                RequestedByServer.Add(reqId, ret);
+                RequestedByClient.Add(reqId, ret);
             }
 
             Payload payload = new Payload(CommType.Request, cmd, reqId, obj);
-
-            if(immediate)
-                QueueWrite(payload);
+            QueueWrite(payload);
 
             return ret;
         }
@@ -120,21 +126,20 @@ namespace ClientLogic.Connections
 
         private void StartWriter()
         {
+            
             while (Connected)
-            {
-                //Wait if queue is empty
-                while (WriteQueueEmpty)
-                    Thread.Sleep(1);
-
-                Payload next;
-                lock (WriteQueue)
+            {               
+                if (!WriteQueueEmpty)
                 {
-                    next = WriteQueue.Dequeue();
-                    WriteQueueEmpty = !WriteQueue.Any();
+                    Payload next;
+                    lock (WriteQueue)
+                    {
+                        next = WriteQueue.Dequeue();
+                        WriteQueueEmpty = !WriteQueue.Any();
+                    }
+                    ImmediateWrite(next);
                 }
-
-                ImmediateWrite(next);
-
+                Thread.Sleep(1);
             }
         }
 
@@ -147,6 +152,10 @@ namespace ClientLogic.Connections
 
             try
             {
+                //Write Command Start
+                byte[] byteStart = BitConverter.GetBytes((int)CommType.Start);
+                Server.GetStream().Write(byteStart, 0, sizeof(int));
+
                 //Write CommType
                 byte[] byteType = BitConverter.GetBytes((int)type);
                 Server.GetStream().Write(byteType, 0, sizeof(int));
@@ -180,29 +189,53 @@ namespace ClientLogic.Connections
         {
             const int bufferSize = 4096;
             byte[] buffer = new byte[bufferSize];
+            CommType commType;
+            ClientCommand cmd = 0;
+            int reqId = -1;
+            byte[] obj;
+            int index;
+            int bytesRead;
+            int bytesToRead;
 
             while (Connected)
             {
-                CommType commType;
-                ClientCommand cmd = 0;
-                int reqId = -1;
+                //If no data, continue
+                if (!Server.GetStream().DataAvailable)
+                {
+                    Thread.Sleep(1);
+                    continue;
+                }
 
-                byte[] obj;
-                int index;
-                int bytesRead;
-                int bytesToRead;
+                //Ensure Command Start
+                bytesRead = Server.GetStream().Read(buffer, 0, sizeof(int));
+                commType = (CommType)BitConverter.ToInt32(buffer, 0);
+                if (commType != CommType.Start)
+                    continue;
+
+                //Ensure Reader isnt stuck
+                if (!Server.GetStream().DataAvailable && ReaderStuck())
+                    continue;
 
                 //Get Comm Type
                 bytesRead = Server.GetStream().Read(buffer, 0, sizeof(int));
                 commType = (CommType)BitConverter.ToInt32(buffer, 0);
 
+                if (!Server.GetStream().DataAvailable && ReaderStuck())
+                    continue;
+
                 //Get Command or 0/1 for return
                 bytesRead = Server.GetStream().Read(buffer, 0, sizeof(int));
                 cmd = (ClientCommand)BitConverter.ToInt32(buffer, 0);
 
+                if (!Server.GetStream().DataAvailable && ReaderStuck())
+                    continue;
+
                 //Get RequestId or 0 for void commands
                 bytesRead = Server.GetStream().Read(buffer, 0, sizeof(int));
                 reqId = BitConverter.ToInt32(buffer, 0);
+
+                if (!Server.GetStream().DataAvailable && ReaderStuck())
+                    continue;
 
                 //Get Object Length
                 Server.GetStream().Read(buffer, 0, sizeof(int));
@@ -213,6 +246,9 @@ namespace ClientLogic.Connections
                 index = 0;
                 while (bytesToRead > 0)
                 {
+                    if (!Server.GetStream().DataAvailable && ReaderStuck())
+                        continue;
+
                     bytesRead = Server.GetStream().Read(buffer, 0, Math.Min(bufferSize, bytesToRead));
                     Array.ConstrainedCopy(buffer, 0, obj, index, bytesRead);
                     index += bytesRead;
@@ -238,6 +274,18 @@ namespace ClientLogic.Connections
             }
         }
 
+        private bool ReaderStuck()
+        {
+            Timer.Restart();
+            while (Timer.ElapsedMilliseconds < ConnectionStatics.InbetweenReadTimeout)
+            {
+                Thread.Sleep(5);
+                if (Server.GetStream().DataAvailable)
+                    return false;
+            }
+            return true;
+        }
+
         private void HandleVoid(ClientCommand cmd, byte[] obj)
         {
             throw new NotImplementedException();
@@ -251,10 +299,10 @@ namespace ClientLogic.Connections
         private void HandleReturn(int reqId, bool success, byte[] objBytes)
         {
             RequestResult result;
-            lock (RequestedByServer)
+            lock (RequestedByClient)
             {
-                if (RequestedByServer.TryGetValue(reqId, out result))
-                    RequestedByServer.Remove(reqId);
+                if (RequestedByClient.TryGetValue(reqId, out result))
+                    RequestedByClient.Remove(reqId);
             }
 
             if(result != null)

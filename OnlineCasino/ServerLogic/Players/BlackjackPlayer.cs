@@ -19,10 +19,10 @@ namespace ServerLogic.Players
         private List<Card> Cards;
         private BlackjackCH Commander;
 
-        public BlackjackPlayer(User user)
-            : base(user)
+        public BlackjackPlayer(User user, decimal buyIn)
+            : base(user, buyIn)
         {
-            Commander = new BlackjackCH(user.Connection);
+
             Cards = new List<Card>();
             user.InGame = true;
             inGame = true;

@@ -13,7 +13,7 @@ namespace SharedModels
     {
         private bool hasReturned = false;
         private bool success = false;
-        private object value = null;
+        private object value = new object();
 
         public RequestResult()
         {

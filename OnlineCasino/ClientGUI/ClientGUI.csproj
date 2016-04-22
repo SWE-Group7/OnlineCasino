@@ -57,11 +57,6 @@
     <Compile Include="Game GUIs\CardGameGUI.cs" />
     <Compile Include="Game GUIs\GameGUI.cs" />
     <Compile Include="Game GUIs\TexasHoldEmGUI.cs" />
-    <Compile Include="Players\BlackjackPlayer.cs" />
-    <Compile Include="Players\CardPlayer.cs" />
-    <Compile Include="Players\Player.cs" />
-    <Compile Include="Players\RoulettePlayer.cs" />
-    <Compile Include="Players\TexasHoldEmPlayer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RouletteGUI.cs">

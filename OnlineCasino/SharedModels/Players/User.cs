@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace SharedModels.Players
 {
+    [Serializable]
     public class User
     {
         readonly public int UserID;

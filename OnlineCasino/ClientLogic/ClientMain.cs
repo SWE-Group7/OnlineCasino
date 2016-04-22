@@ -23,7 +23,7 @@ namespace ClientLogic
             return MainConnection.TrySyncLogin(security, out MainUser);
         }
 
-        public static bool TrySyncLogin(string username, string password, string fullName, string email)
+        public static bool TrySyncRegister(string username, string password, string fullName, string email)
         {
             MainConnection = new Connection();
             Security security = new Security(username, password, fullName, email);

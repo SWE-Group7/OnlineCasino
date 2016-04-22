@@ -41,10 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClientMain.cs" />
     <Compile Include="Connections\Connection.cs" />
     <Compile Include="Games\Blackjack.cs" />
     <Compile Include="Games\Game.cs" />
     <Compile Include="Games\GameComponents\CardHelper.cs" />
+    <Compile Include="Players\BlackjackPlayer.cs" />
+    <Compile Include="Players\CardPlayer.cs" />
+    <Compile Include="Players\Player.cs" />
+    <Compile Include="Players\RoulettePlayer.cs" />
+    <Compile Include="Players\TexasHoldEmPlayer.cs" />
+    <Compile Include="Players\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

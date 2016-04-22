@@ -41,6 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncBuffer.cs" />
+    <Compile Include="Connection\ConnectionStatics.cs" />
+    <Compile Include="Connection\Enums\GameType.cs" />
     <Compile Include="RequestResult.cs" />
     <Compile Include="Connection\Enums\ClientCommand.cs" />
     <Compile Include="Connection\Payload.cs" />
