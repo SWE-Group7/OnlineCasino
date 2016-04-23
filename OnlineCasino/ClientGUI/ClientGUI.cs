@@ -110,11 +110,19 @@ namespace ClientGUI
         // LOGIN PAGE BUTTON EVENTS
         private void Submit_Click(object sender, EventArgs e)
         {
-            Username = UsernameTextBox.Text;
+            Username = UsernameTextBox.Text;      
             Password = PasswordTextBox.Text;
 
-            ClientState = State.Menu;
-            Menu_Draw();
+            if (ClientMain.TrySyncLogin(Username, Password))
+            {
+                ClientState = State.Menu;
+                Menu_Draw();
+            }
+            else
+            {
+
+            }
+            
         }
         private void NewUser_Click(object sender, EventArgs e)
         {

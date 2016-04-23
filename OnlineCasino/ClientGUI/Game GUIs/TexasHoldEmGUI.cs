@@ -1,6 +1,6 @@
 ﻿using ClientGUI.Game_GUIs;
 using ClientLogic;
-using ClientLogic.Players;
+using CLP = ClientLogic.Players;
 using SharedModels.GameComponents;
 using SharedModels.Players;
 using System;
@@ -17,8 +17,8 @@ namespace ClientGUI.Game_GUIs
     {
         SharedModels.Players.User u;
         SharedModels.Players.User f;
-        public new ClientLogic.Players.TexasHoldEmPlayer You;
-        public new List<CardPlayer> OtherPlayers;
+        public new CLP.TexasHoldEmPlayer You;
+        public new List<CLP.CardPlayer> OtherPlayers;
         public List<Card> DealerHand = new List<Card>();
 
         public TexasHoldEmGUI(int h, int w)
@@ -28,20 +28,24 @@ namespace ClientGUI.Game_GUIs
 
             u = new SharedModels.Players.User(100, "n", "nadine", "omg", 100);
             SharedModels.Players.TexasHoldEmPlayer t = new SharedModels.Players.TexasHoldEmPlayer(u, 100, 100, 100);
-            f = new SharedModels.Players.User(200, "f", "foster", "omgomg", 100);
+
+            f = new SharedModels.Players.User(200, "foster", "foster", "omgomg", 100);
             SharedModels.Players.TexasHoldEmPlayer tf = new SharedModels.Players.TexasHoldEmPlayer(f, 100, 100, 100);
 
             Deck = new Deck();
             You = new ClientLogic.Players.TexasHoldEmPlayer(t);
-            OtherPlayers = new List<ClientLogic.Players.TexasHoldEmPlayer>().ConvertAll(x => (CardPlayer)x);
+            OtherPlayers = new List<ClientLogic.Players.TexasHoldEmPlayer>().ConvertAll(x => (CLP.CardPlayer)x);
 
+            OtherPlayers.Add(new ClientLogic.Players.TexasHoldEmPlayer(tf));
             // Remove
             Card c = new Card(CardSuit.Clubs, CardRank.Ace);
             Card d = new Card(CardSuit.Diamonds, CardRank.King);
             You.Hand.Add(c);
             You.Hand.Add(d);
 
-            
+            OtherPlayers[0].Hand.Add(c);
+            OtherPlayers[0].Hand.Add(d);
+
 
             yourCardX = clientWidth / 2 - cardWidth / 2;
             yourCardY = clientHeight - 200;
@@ -73,7 +77,7 @@ namespace ClientGUI.Game_GUIs
                     {
                         YourHand_Paint(sender, e, You);
 
-                        OtherPlayerHands_Paint(sender, e, OtherPlayers, true);
+                        OtherPlayerHands_Paint(sender, e, OtherPlayers, false);
 
                         switch (GS)
                         {

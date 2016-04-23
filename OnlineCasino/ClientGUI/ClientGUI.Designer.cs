@@ -142,9 +142,17 @@ namespace ClientGUI
             NewUser.Text = "New User?";
             NewUser.Click += new System.EventHandler(NewUser_Click);
             Controls.Add(NewUser);
+        }
 
-
-            //Password = PasswordTextBox.Text;
+        public void ErrorLogin_Draw()
+        {
+            Label ErrorLoginLabel = new Label();
+            ErrorLoginLabel.Size = new Size(65, 20);
+            ErrorLoginLabel.Location = new Point(Width / 2 - 135, Height / 2 - 10);
+            ErrorLoginLabel.Font = new Font("Segoe UI", 8);
+            ErrorLoginLabel.Text = "Username/Password do not match.";
+            ErrorLoginLabel.BackColor = Color.Transparent;
+            Controls.Add(ErrorLoginLabel);
         }
 
         public void Register_Draw()
@@ -250,18 +258,11 @@ namespace ClientGUI
             Welcome.Text = "Hi " + FullName + "! Your balance is $" + balance + ".";
             Controls.Add(Welcome);
 
-            PictureBox MenuHeader = new PictureBox();
-            MenuHeader.BackgroundImage = global::ClientGUI.Properties.Resources.Menu_Header;
-            MenuHeader.BackgroundImageLayout = ImageLayout.Stretch;
-            MenuHeader.Location = new Point(Width / 2 - 150, Height / 2 - 100);
-            MenuHeader.Size = new Size(300, 30);
-            Controls.Add(MenuHeader);
-
             Button Blackjack = new Button();
             Blackjack.BackgroundImage = global::ClientGUI.Properties.Resources.Menu_Blackjack;
             Blackjack.BackgroundImageLayout = ImageLayout.Stretch;
             Blackjack.Size = new Size(175, 200);
-            Blackjack.Location = new Point(Width / 2 - 274, Height / 2 - 50);
+            Blackjack.Location = new Point(Width / 2 - 274, Height / 2 - 100);
             Blackjack.Click += new System.EventHandler(Blackjack_Click);
             Controls.Add(Blackjack);
 
@@ -269,7 +270,7 @@ namespace ClientGUI
             TexasHoldEm.BackgroundImage = global::ClientGUI.Properties.Resources.Menu_TexasHoldEm;
             TexasHoldEm.BackgroundImageLayout = ImageLayout.Stretch;
             TexasHoldEm.Size = new Size(175, 200);
-            TexasHoldEm.Location = new Point(Width / 2 - 87, Height / 2 - 50);
+            TexasHoldEm.Location = new Point(Width / 2 - 87, Height / 2 - 100);
             TexasHoldEm.Click += new System.EventHandler(TexasHoldEm_Click);
             Controls.Add(TexasHoldEm);
 
@@ -277,7 +278,7 @@ namespace ClientGUI
             Roulette.BackgroundImage = global::ClientGUI.Properties.Resources.Menu_Roulette;
             Roulette.BackgroundImageLayout = ImageLayout.Stretch;
             Roulette.Size = new Size(175, 200);
-            Roulette.Location = new Point(Width / 2 + 99, Height / 2 - 50);
+            Roulette.Location = new Point(Width / 2 + 99, Height / 2 - 100);
             Roulette.Click += new System.EventHandler(Roulette_Click);
             Controls.Add(Roulette);
 

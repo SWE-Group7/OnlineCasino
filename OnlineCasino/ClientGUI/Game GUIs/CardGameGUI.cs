@@ -81,12 +81,12 @@ namespace ClientGUI.Game_GUIs
                     if (otherPlayerCount == 1) { otherPlayerCardX = 30; leftSide = true; }
                     else { otherPlayerCardX = clientWidth - cardWidth - 30; leftSide = false; }
                 }
-
-                e.Graphics.DrawString("Player " + otherPlayerCount, new Font("Segoe UI", 20), Brushes.White, new Point(otherPlayerCardX, otherPlayerCardY + cardHeight));
+                 
+                e.Graphics.DrawString(p.getUsername(), new Font("Segoe UI", 20), Brushes.White, new Point(otherPlayerCardX, otherPlayerCardY + cardHeight));
 
                 if (showCards)
                 {
-                    foreach (Card c in p.Hand)
+                    foreach (Card c in p.Hand) 
                     {
                         CardImage = Deck.CardImage(c.Suit, c.Rank);
 
@@ -105,10 +105,11 @@ namespace ClientGUI.Game_GUIs
                     foreach (Card c in p.Hand)
                     {
                         e.Graphics.DrawImage(global::ClientGUI.Properties.Resources.Back, new Rectangle(otherPlayerCardX, otherPlayerCardY, cardWidth - 20, cardHeight - 20));
+                        if (leftSide) { otherPlayerCardX += (p.Hand.Count * (cardWidth)) / 2; }
+                        else { otherPlayerCardX -= (p.Hand.Count * (cardWidth)) / 2; }
                     }
                      
-                    if (leftSide) { otherPlayerCardX += (p.Hand.Count * (cardWidth)) / 2; }
-                    else { otherPlayerCardX -= (p.Hand.Count * (cardWidth)) / 2; }
+                   
                 
                     otherPlayerCount--;
                }
