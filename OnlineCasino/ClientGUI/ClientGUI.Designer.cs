@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using ClientLogic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace ClientGUI
@@ -147,10 +148,11 @@ namespace ClientGUI
         public void ErrorLogin_Draw()
         {
             Label ErrorLoginLabel = new Label();
-            ErrorLoginLabel.Size = new Size(65, 20);
-            ErrorLoginLabel.Location = new Point(Width / 2 - 135, Height / 2 - 10);
+            ErrorLoginLabel.Size = new Size(202, 20);
+            ErrorLoginLabel.Location = new Point(Width / 2 - 71, Height / 2 + 80);
             ErrorLoginLabel.Font = new Font("Segoe UI", 8);
             ErrorLoginLabel.Text = "Username/Password do not match.";
+            ErrorLoginLabel.ForeColor = Color.Red;
             ErrorLoginLabel.BackColor = Color.Transparent;
             Controls.Add(ErrorLoginLabel);
         }
@@ -255,7 +257,7 @@ namespace ClientGUI
             Welcome.Location = new Point(Width / 2 - 275, Height / 2 - 180);
             Welcome.Font = new Font("Segoe UI", 16);
             Welcome.BackColor = Color.White;
-            Welcome.Text = "Hi " + FullName + "! Your balance is $" + balance + ".";
+            Welcome.Text = "Hi " + ClientMain.MainUser.FullName + "! Your balance is $" + ClientMain.MainUser.Balance.ToString("#.####") + ".";
             Controls.Add(Welcome);
 
             Button Blackjack = new Button();
@@ -327,7 +329,7 @@ namespace ClientGUI
                 AreYouSure.Location = new Point(15, Height - 160);
                 AreYouSure.Font = new Font("Segoe UI", 8);
                 AreYouSure.BackColor = Color.White;
-                AreYouSure.Text = "Are you sure? \n You'll lose your entire bet! That's $" + bet + "!";
+                AreYouSure.Text = "Are you sure? \n You'll lose your entire bet! That's $" + ClientMain.MainPlayer.UserBet + "!";
                 Controls.Add(AreYouSure);
 
                 Button Yes = new Button();
@@ -399,6 +401,17 @@ namespace ClientGUI
             SubmitBuyIn.Text = "Pay Buy In";
             SubmitBuyIn.Click += new System.EventHandler(SubmitBuyIn_Click);
             Controls.Add(SubmitBuyIn);
+        }
+        public void BuyInError_Draw()
+        {
+            Label ErrorLoginLabel = new Label();
+            ErrorLoginLabel.Size = new Size(202, 20);
+            ErrorLoginLabel.Location = new Point(Width / 2 - 71, Height / 2 + 80);
+            ErrorLoginLabel.Font = new Font("Segoe UI", 8);
+            ErrorLoginLabel.Text = "Username/Password do not match.";
+            ErrorLoginLabel.ForeColor = Color.Red;
+            ErrorLoginLabel.BackColor = Color.Transparent;
+            Controls.Add(ErrorLoginLabel);
         }
 
         public void BettingScreen_Draw()

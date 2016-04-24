@@ -1,5 +1,6 @@
 ﻿using ClientGUI.Game_GUIs;
 using ClientLogic;
+using ClientLogic.Players;
 using SharedModels.GameComponents;
 using System;
 using System.Collections.Generic;
@@ -120,7 +121,7 @@ namespace ClientGUI
             }
             else
             {
-
+                ErrorLogin_Draw();
             }
             
         }
@@ -138,8 +139,15 @@ namespace ClientGUI
             EmailAddress = EmailTextBox.Text;
             FullName = FullNameTextBox.Text;
 
-            ClientState = State.Menu;
-            Menu_Draw();
+            if (ClientMain.TrySyncRegister(Username, Password, FullName, EmailAddress))
+            {
+                ClientState = State.Menu;
+                Menu_Draw();
+            }
+            else
+            {
+                ErrorLogin_Draw();
+            }
         }
         private void ReturnToLogin_Click(object sender, EventArgs e)
         {
@@ -151,7 +159,6 @@ namespace ClientGUI
         private void LogOut_Click(object sender, EventArgs e)
         {
             // Add account log out funcationality
-
             ClientState = State.Login;
             Login_Draw();
         }
@@ -268,6 +275,10 @@ namespace ClientGUI
             if (!decimal.TryParse(buyInString, out buyIn))
             {
                 
+            }
+            else if(buyIn > ClientMain.MainUser.Balance)
+            {
+
             }
             else
             {

@@ -24,5 +24,10 @@ namespace ClientLogic.Players
             UserBuyIn = buyIn;
             UserBet = bet;
         }
+
+        public string getUsername()
+        {
+            return CurrentUser.Username;
+        }
     }
 }
