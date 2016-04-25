@@ -65,7 +65,7 @@ namespace ServerLogic.Games
                 if(no connections) break;*/
 
                 Deck deck = new Deck();
-
+                
                 TexasHoldEmState = TexasHoldEmStates.Betting;
                 GameState = GameStates.Playing;
 
@@ -132,15 +132,15 @@ namespace ServerLogic.Games
                 tablecards.Add(tablecard2);
                 tablecards.Add(tablecard3);
 
-           
 
-                
 
-                
+
+
+
 
                 //PLAYING
-               
-                 if ( !noBet)
+               int Round = 1;
+                 while ( !noBet && Round <3)
                 {
                     TexasHoldEmState = TexasHoldEmStates.Playing;
 
@@ -175,16 +175,50 @@ namespace ServerLogic.Games
                             switch (decison)
                             {
                                 case "check":
-                                    //bet what everyone else has
+                                    Console.WriteLine("----------------------------");
+                                    Console.Out.Write(player.GetFullName() + "'s Balance: $" + player.GetBalance() + "\n");
+                                    Console.Out.Write("Enter your buy in: $");
+
+                                    string betStr = Console.ReadLine();
+                                    decimal thebet;
+
+                                    while (!decimal.TryParse(betStr, out thebet) || thebet > player.GetBalance())
+                                    {
+                                        Console.Out.Write("You can't afford that buy in. Try Again: \n");
+                                        Console.Out.Write("Enter your buy in: $");
+
+                                        betStr = Console.ReadLine();
+                                    }
+                                    player.SetUserBet(player.Bet + thebet);
+                                    break;
                                 case "raise":
-                                    //add more to the bet
+                                    Console.WriteLine("----------------------------");
+                                    Console.Out.Write(player.GetFullName() + "'s Balance: $" + player.GetBalance() + "\n");
+                                    Console.Out.Write("Enter your buy in: $");
+
+                                    string betStrR = Console.ReadLine();
+                                    decimal thebetR;
+
+                                    while (!decimal.TryParse(betStrR, out thebetR) || thebetR > player.GetBalance())
+                                    {
+                                        Console.Out.Write("You can't afford that buy in. Try Again: \n");
+                                        Console.Out.Write("Enter your buy in: $");
+
+                                        betStrR = Console.ReadLine();
+                                    }
+                                    player.SetUserBet(player.Bet + thebetR);
+                                    break;
                                 case "fold":
-                                    //quit
+                                    Players.Remove(player);
+                                    break;
                                 default:
                                     player.IndicateWait();
                                     done = true;
                                     break;
                             }
+                            Card tablecard4 = deck.DealCard();
+                            tablecards.Add(tablecard4);
+                            Round++;
                         }
                     }
                 }
@@ -196,19 +230,30 @@ namespace ServerLogic.Games
 
                 //GAME CONCLUSION
                 TexasHoldEmState = TexasHoldEmStates.GainsOrLoses;
+                int BestHand = 0;
+                foreach (TexasHoldEmPlayer player in Players)
+                {
+                    int PlayersHand = CardHelper.HandValue(player.GetCards(), tablecards);
+                    if (PlayersHand > BestHand)
+                    {
+
+                        BestHand = PlayersHand;
+                    }
+                }
                 foreach (TexasHoldEmPlayer player in Players)
                 {
                     Console.Out.Write("\n-------" + player.GetFullName() + " Conclusion-------- \n");
-                    int PlayersHand = CardHelper.CountHand(player.GetCards());
+                    int PlayersHand = CardHelper.HandValue(player.GetCards(), tablecards);
 
-                    if (PlayersHand == 21)
+                    if (PlayersHand == BestHand)
                     {
-                        Console.WriteLine("You got TexasHoldEm! +$" + player.Bet);
+                       
+                        Console.WriteLine("You Won +$" + player.Bet);
                         player.UpdateGameBalance(true);
                     }
-                    else if (PlayersHand > 21)
+                    else if (PlayersHand < BestHand)
                     {
-                        Console.WriteLine(player.GetFullName() + " busted. -$" + player.Bet);
+                        Console.WriteLine(player.GetFullName() + " Lost. -$" + player.Bet);
                         player.UpdateGameBalance(false);
                     }
                    
