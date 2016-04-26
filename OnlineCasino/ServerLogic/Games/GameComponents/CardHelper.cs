@@ -46,7 +46,7 @@ namespace ServerLogic.Games.GameComponents
         public static int HandValue(List<Card> hand, List<Card> tablecards)
         {
 
-            CardSuit suit;
+            CardSuit suit = CardSuit.Clubs;
             bool king = false;
             bool queen = false;
             bool jack = false;
@@ -349,8 +349,8 @@ namespace ServerLogic.Games.GameComponents
             int samecards = 0;
             int samecards2 = 0;
             int samecards3 = 0;
-            CardSuit suit2;
-            CardSuit suit3;
+            CardSuit suit2= CardSuit.Clubs;
+            CardSuit suit3 = CardSuit.Clubs;
             
             foreach (Card card in hand) {
                 if (temp == 0)
