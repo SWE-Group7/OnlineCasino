@@ -347,23 +347,54 @@ namespace ServerLogic.Games.GameComponents
 
             }
             int samecards = 0;
+            int samecards2 = 0;
+            int samecards3 = 0;
+            CardSuit suit2;
+            CardSuit suit3;
             
             foreach (Card card in hand) {
                 if (temp == 0)
                 { suit = card.Suit; temp = 1; }
+                if (temp == 1)
+                { if (card.Suit != suit) { suit2 = card.Suit;temp++; } }
+                if(temp == 3)
+                { if(card.Suit != suit && card.Suit != suit2) { suit3 = card.Suit;temp++; } }
+
+
                 if (card.Suit == suit)
                 {
                     samecards++;
                     }
+                else if (card.Suit == suit2)
+                {
+                    samecards2++;
+                }
+                else if (card.Suit == suit3)
+                {
+                    samecards3++;
+                }
             }
+
+          
+
             foreach (Card card in tablecards)
-            {              
+            {
+
                 if (card.Suit == suit)
                 {
                     samecards++;
                 }
+                else if (card.Suit == suit2)
+                {
+                    samecards2++;
+                }
+                else if (card.Suit == suit3)
+                {
+                    samecards3++;
+                }
             }
-            if (samecards >= 5)
+        
+            if (samecards >= 5 || samecards2 >=5 ||samecards3 >=5)
                 samesuit = true;
             else
                 samesuit = false;
