@@ -15,6 +15,11 @@ namespace ClientGUI.Game_GUIs
         public new List<CardPlayer> OtherPlayers;
         public List<Card> DealerHand = new List<Card>();
 
+        protected int dealerCardX;
+        protected int dealerCardY;
+        protected int dealerCardsCount = 0;
+        protected int dealerCardOffset;
+
         public BlackjackGUI(int h, int w)
         {
             u = new SM.User(100, "n", "nadine", "omg", 100);
@@ -63,9 +68,7 @@ namespace ClientGUI.Game_GUIs
             yourCardY = clientHeight - 200;
             yourCardsCount = You.Hand.Count - 1;
 
-            dealerCardX = clientWidth / 2 - (cardWidth - 20) / 2;
-            dealerCardY = 20;
-            dealerCardOffset = DealerHand.Count - 1;
+            
 
             otherPlayerCardX = (cardWidth - 20) + 50;
             otherPlayerCardY = 100;
@@ -196,8 +199,8 @@ namespace ClientGUI.Game_GUIs
                             case RoundEndState.Lose:
                                 {
                                     e.Graphics.DrawString("you lose", new Font("Segoe UI", 38), Brushes.Black, new Point(clientWidth / 2 - 95, clientHeight / 2 - 140));
-                                    e.Graphics.DrawString("-$" + ClientMain.MainPlayer.UserBet , new Font("Segoe UI", 15), Brushes.Black, new Point(clientWidth / 2 - 15, clientHeight / 2 - 40));
-                                    e.Graphics.DrawString("current buy in: $" + ClientMain.MainPlayer.UserBuyIn, new Font("Segoe UI", 13), Brushes.Black, new Point(clientWidth / 2 - 75, clientHeight / 2 - 20));
+                                    e.Graphics.DrawString("-$" + bet , new Font("Segoe UI", 15), Brushes.Black, new Point(clientWidth / 2 - 15, clientHeight / 2 - 40));
+                                    e.Graphics.DrawString("current buy in: $" + buyIn, new Font("Segoe UI", 13), Brushes.Black, new Point(clientWidth / 2 - 75, clientHeight / 2 - 20));
 
                                 }
                                 break;
@@ -209,8 +212,8 @@ namespace ClientGUI.Game_GUIs
                             case RoundEndState.Win:
                                 {
                                     e.Graphics.DrawString("you won!", new Font("Segoe UI", 38), Brushes.Black, new Point(clientWidth / 2 - 118, clientHeight / 2 - 140));
-                                    e.Graphics.DrawString("+$" + ClientMain.MainPlayer.UserBet, new Font("Segoe UI", 15), Brushes.Black, new Point(clientWidth / 2 - 15, clientHeight / 2 - 40));
-                                    e.Graphics.DrawString("current buy in: $" + ClientMain.MainPlayer.UserBuyIn, new Font("Segoe UI", 13), Brushes.Black, new Point(clientWidth / 2 - 75, clientHeight / 2 - 20));
+                                    e.Graphics.DrawString("+$" + bet, new Font("Segoe UI", 15), Brushes.Black, new Point(clientWidth / 2 - 15, clientHeight / 2 - 40));
+                                    e.Graphics.DrawString("current buy in: $" + buyIn, new Font("Segoe UI", 13), Brushes.Black, new Point(clientWidth / 2 - 75, clientHeight / 2 - 20));
                                 }
                                 break;
                         }

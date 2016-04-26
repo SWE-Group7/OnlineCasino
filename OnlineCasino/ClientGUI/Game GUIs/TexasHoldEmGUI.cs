@@ -19,13 +19,21 @@ namespace ClientGUI.Game_GUIs
         SharedModels.Players.User f;
         public new CLP.TexasHoldEmPlayer You;
         public new List<CLP.CardPlayer> OtherPlayers;
-        public List<Card> DealerHand = new List<Card>();
+        public List<Card> MiddleHand = new List<Card>();
+
+        int middleCardX;
+        int middleCardY;
+        int middleCardsCount = 0;
+        protected int middleCardOffset;
+ 
 
         public TexasHoldEmGUI(int h, int w)
         {
             clientHeight = h;
             clientWidth = w;
-
+            middleCardX = clientWidth / 2 - (cardWidth - 20) / 2;
+            middleCardY = 100; 
+            
             u = new SharedModels.Players.User(100, "n", "nadine", "omg", 100);
             SharedModels.Players.TexasHoldEmPlayer t = new SharedModels.Players.TexasHoldEmPlayer(u, 100, 100, 100);
 
@@ -46,6 +54,8 @@ namespace ClientGUI.Game_GUIs
             OtherPlayers[0].Hand.Add(c);
             OtherPlayers[0].Hand.Add(d);
 
+            MiddleHand.Add(c);
+            MiddleHand.Add(c);
 
             yourCardX = clientWidth / 2 - cardWidth / 2;
             yourCardY = clientHeight - 200;
@@ -109,7 +119,67 @@ namespace ClientGUI.Game_GUIs
                                 break;
                             case GameState.Playing:
                                 {
+                                    middleCardOffset = (MiddleHand.Count * (cardWidth + 20)) / 2;
+                                    foreach (Card c in MiddleHand)
+                                    {
+                                        CardImage = Deck.CardImage(c.Suit, c.Rank);
+                                        middleCardX += (middleCardsCount * cardWidth + middleCardsCount * 20);
 
+                                        if (CardImage != null)
+                                        {
+                                             e.Graphics.DrawImage(CardImage, new Rectangle(middleCardX, middleCardY, cardWidth - 20, cardHeight - 20));
+                                        }
+
+                                        middleCardsCount--;
+                                        middleCardX = clientWidth / 2 - middleCardOffset;
+                                    }
+                                    middleCardsCount = MiddleHand.Count - 1;
+
+                                    e.Graphics.DrawString("your turn", new Font("Segoe UI", 38), Brushes.White, new Point(clientWidth / 2 - 130, clientHeight / 2 - 40));
+
+                                    e.Graphics.FillRectangle(Brushes.OldLace, clientWidth - 150, clientHeight - 175, 100, 35);
+                                    e.Graphics.DrawRectangle(Pens.Black, clientWidth - 151, clientHeight - 176, 102, 37);
+                                    e.Graphics.DrawString("call", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 125, clientHeight - 178));
+
+                                    e.Graphics.FillRectangle(Brushes.OldLace, clientWidth - 150, clientHeight - 120, 100, 35);
+                                    e.Graphics.DrawRectangle(Pens.Black, clientWidth - 151, clientHeight - 121, 102, 37);
+                                    e.Graphics.DrawString("raise", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 135, clientHeight - 125));
+
+                                    if (hoverX < clientWidth - 50 && hoverX > clientWidth - 150)
+                                    {
+                                         if (hoverY < clientHeight - 175 + 35 && hoverY > clientHeight - 175)
+                                        {
+                                            e.Graphics.FillRectangle(Brushes.DimGray, clientWidth - 150, clientHeight - 175, 100, 35);
+                                            e.Graphics.DrawString("call", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 125, clientHeight - 178));
+                                        }
+                                        else if ((hoverY < clientHeight - 120 + 35 && hoverY > clientHeight - 120))
+                                        {
+                                            e.Graphics.FillRectangle(Brushes.DimGray, clientWidth - 150, clientHeight - 120, 100, 35);
+                                            e.Graphics.DrawString("raise", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 135, clientHeight - 125));
+                                        }
+                                    }
+
+                                    e.Graphics.FillRectangle(Brushes.OldLace, clientWidth - 260, clientHeight - 175, 100, 35);
+                                    e.Graphics.DrawRectangle(Pens.Black, clientWidth - 261, clientHeight - 176, 102, 37);
+                                    e.Graphics.DrawString("fold", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 238, clientHeight - 178));
+
+                                    e.Graphics.FillRectangle(Brushes.OldLace, clientWidth - 260, clientHeight - 120, 100, 35);
+                                    e.Graphics.DrawRectangle(Pens.Black, clientWidth - 261, clientHeight - 121, 102, 37);
+                                    e.Graphics.DrawString("check", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 248, clientHeight - 125));
+
+                                    if (hoverX < clientWidth - 160 && hoverX > clientWidth - 260)
+                                    {
+                                        if (hoverY < clientHeight - 175 + 35 && hoverY > clientHeight - 175)
+                                        {
+                                            e.Graphics.FillRectangle(Brushes.DimGray, clientWidth - 260, clientHeight - 175, 100, 35);
+                                            e.Graphics.DrawString("fold", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 238, clientHeight - 178));
+                                        }
+                                        else if ((hoverY < clientHeight - 120 + 35 && hoverY > clientHeight - 120))
+                                        {
+                                            e.Graphics.FillRectangle(Brushes.DimGray, clientWidth - 260, clientHeight - 120, 100, 35);
+                                            e.Graphics.DrawString("check", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 248, clientHeight - 125));
+                                        }
+                                    }
                                 }
                                 break;
                         }

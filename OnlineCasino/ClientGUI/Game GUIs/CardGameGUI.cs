@@ -22,11 +22,6 @@ namespace ClientGUI.Game_GUIs
         protected int yourCardsCount = 0;
         protected int yourCardOffset;
 
-        protected int dealerCardX;
-        protected int dealerCardY;
-        protected int dealerCardsCount = 0;
-        protected int dealerCardOffset;
-
         protected int otherPlayerCardX;
         protected int otherPlayerCardY;
         protected int otherPlayerCardCount = 0;
@@ -41,8 +36,8 @@ namespace ClientGUI.Game_GUIs
         {
             e.Graphics.DrawLine(Pens.Black, new Point(0, clientHeight - cardHeight - 60), new Point(1500, clientHeight - cardHeight - 60));
 
-            e.Graphics.DrawString("Buy In: $" + ClientMain.MainPlayer.UserBuyIn, new Font("Segoe UI", 12), Brushes.White, new Point(100, clientHeight - cardHeight));
-            e.Graphics.DrawString("   Bet: $" + ClientMain.MainPlayer.UserBet, new Font("Segoe UI", 12), Brushes.White, new Point(106, clientHeight - cardHeight + 20));
+            e.Graphics.DrawString("Buy In: $" + buyIn, new Font("Segoe UI", 12), Brushes.White, new Point(100, clientHeight - cardHeight));
+            e.Graphics.DrawString("   Bet: $" + bet, new Font("Segoe UI", 12), Brushes.White, new Point(106, clientHeight - cardHeight + 20));
 
             yourCardOffset = (You.Hand.Count * (cardWidth + 20)) / 2;
             foreach (Card c in You.Hand)

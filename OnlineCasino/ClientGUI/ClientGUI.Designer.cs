@@ -244,6 +244,17 @@ namespace ClientGUI
             ReturnToLogin.Click += new System.EventHandler(ReturnToLogin_Click);
             Controls.Add(ReturnToLogin);
         }
+        protected void RegisterError_Draw()
+        {
+            Label ErrorLoginLabel = new Label();
+            ErrorLoginLabel.Size = new Size(202, 50);
+            ErrorLoginLabel.Location = new Point(Width / 2 - 71, Height / 2 + 80);
+            ErrorLoginLabel.Font = new Font("Segoe UI", 8);
+            ErrorLoginLabel.Text = "Your account registration was unsuccessful . Please review your form and resubmit.";
+            ErrorLoginLabel.ForeColor = Color.Red;
+            ErrorLoginLabel.BackColor = Color.Transparent;
+            Controls.Add(ErrorLoginLabel);
+        }
 
         public void Menu_Draw()
         {
@@ -329,7 +340,7 @@ namespace ClientGUI
                 AreYouSure.Location = new Point(15, Height - 160);
                 AreYouSure.Font = new Font("Segoe UI", 8);
                 AreYouSure.BackColor = Color.White;
-                AreYouSure.Text = "Are you sure? \n You'll lose your entire bet! That's $" + ClientMain.MainPlayer.UserBet + "!";
+                AreYouSure.Text = "Are you sure? \n You'll lose your entire bet! That's $" + bet + "!";
                 Controls.Add(AreYouSure);
 
                 Button Yes = new Button();
