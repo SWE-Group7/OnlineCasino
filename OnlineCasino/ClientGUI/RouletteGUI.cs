@@ -159,16 +159,26 @@ namespace ClientLogic
            // Form1_MouseClick(sender, e);
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)//Ready button on Roulette InitialBet() screen
         {  
             //resets background
             this.BackgroundImage = null;
             this.BackColor = System.Drawing.Color.ForestGreen;
+           // Application.Exit();
+            if (textBox1.Text == null || textBox1.Text == " ")
+            {
+                //Console.WriteLine("I am within the IF statement");
+                //Console.WriteLine("this was the result of textbox1 " + textBox1.Text);
+            }
+            else
+            {
+                //start table
+                InitializeComponent();
+                //working on checking that there is a value in betin box
+                //Console.WriteLine("I am within the ELSE statement");
+                //Console.WriteLine("this was the result of textbox1 " + textBox1.Text);
 
-            //start table
-            InitializeComponent();
-            Console.WriteLine(this.textBox1.Text); Console.WriteLine(this.textBox2.Text);
-
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)//back button on start screen
