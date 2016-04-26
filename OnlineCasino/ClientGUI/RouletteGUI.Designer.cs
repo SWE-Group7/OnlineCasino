@@ -27,8 +27,8 @@ namespace ClientLogic
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
-        {   
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RouletteGUI));
+        {
+            this.Controls.Clear(); this.Invalidate();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -41,7 +41,7 @@ namespace ClientLogic
             // 
             // pictureBox2
             // 
-            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
+            this.pictureBox2.Image = global::ClientGUI.Properties.Resources.Roulette_table;
             this.pictureBox2.Location = new System.Drawing.Point(106, 0);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(754, 398);
@@ -59,7 +59,7 @@ namespace ClientLogic
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(100, 23);
             this.label5.TabIndex = 7;
-            this.label5.Text = "Bet-In Amt:";
+            this.label5.Text = "Bet-In Amt:" + textBox1.Text;
             // 
             // label6
             // 
@@ -70,7 +70,7 @@ namespace ClientLogic
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(100, 23);
             this.label6.TabIndex = 6;
-            this.label6.Text = "Current Bet:";
+            this.label6.Text = "Current Bet: " + textBox2.Text;
             // 
             // button3
             // 
@@ -80,6 +80,7 @@ namespace ClientLogic
             this.button3.TabIndex = 5;
             this.button3.Text = "Change Current bet";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // label7
             // 
@@ -145,6 +146,16 @@ namespace ClientLogic
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button button5;
+        //for change bet screen
+        private System.Windows.Forms.Button done;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox input;
 
         private void InitialBet()
         {
@@ -179,7 +190,7 @@ namespace ClientLogic
             this.label2.BackColor = System.Drawing.Color.Transparent;
             this.label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.label2.Font = new System.Drawing.Font("Modern No. 20", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.Color.Yellow;
+            this.label2.ForeColor = System.Drawing.Color.White;
             this.label2.Location = new System.Drawing.Point(25, 139);
             this.label2.Margin = new System.Windows.Forms.Padding(3);
             this.label2.Name = "label2";
@@ -193,7 +204,7 @@ namespace ClientLogic
             this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.label3.Font = new System.Drawing.Font("Modern No. 20", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.ForeColor = System.Drawing.Color.Yellow;
+            this.label3.ForeColor = System.Drawing.Color.White;
             this.label3.Location = new System.Drawing.Point(25, 178);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(319, 21);
@@ -234,7 +245,7 @@ namespace ClientLogic
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.Firebrick;//this.BackgroundImage = Properties.Resources.RouletteWheel;//((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+            this.BackgroundImage = ClientGUI.Properties.Resources.Menu_Roulette;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(773, 372);
             this.Controls.Add(this.button2);
@@ -244,16 +255,51 @@ namespace ClientLogic
             this.Controls.Add(this.label2);
             this.Controls.Add(this.button1);
             this.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Name = "Form1";
             this.Text = "InitialBet";
             this.ResumeLayout(false);
             this.PerformLayout();
     }//ends InitialBet()
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button5;
+        
+
+        private void ChangingBet() //background pic can be added if wanted. Or color can be changed. not very good with making things "pretty"
+        {
+             this.Controls.Clear(); this.Invalidate();
+             this.done = new System.Windows.Forms.Button();
+             this.label1 = new System.Windows.Forms.Label();
+             this.input = new System.Windows.Forms.TextBox();
+             this.SuspendLayout();
+           
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.ClientSize = new System.Drawing.Size(491, 352);
+            this.BackColor = System.Drawing.Color.Cornsilk;
+            this.Text = "Change Bet";
+
+            this.done.Location = new System.Drawing.Point(189, 194);
+            this.done.Name = "button1";
+            this.done.Size = new System.Drawing.Size(93, 28);
+            this.done.Text = "OK";
+            this.done.BackColor = System.Drawing.Color.LightGray;
+            this.done.Click += new System.EventHandler(this.Done_Click);
+
+            this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.Transparent;
+            this.label1.Font = new System.Drawing.Font("Modern No. 20", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label1.Location = new System.Drawing.Point(22, 79);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(447, 29);
+            this.label1.Text = "Enter your bet for this round (in $)";
+
+            this.input.Location = new System.Drawing.Point(126, 145);
+            this.input.Name = "textBox1";
+            this.input.Size = new System.Drawing.Size(215, 20);
+
+            this.Controls.Add(input);
+            this.Controls.Add(done);
+            this.Controls.Add(label1);
+
+        }
     }
 }

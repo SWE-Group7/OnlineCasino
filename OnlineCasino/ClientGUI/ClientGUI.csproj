@@ -81,6 +81,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="RouletteGUI.resx">
+      <DependentUpon>RouletteGUI.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -99,6 +102,7 @@
     <None Include="Images\CardsBackground.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Roulette_table.jpg" />
     <None Include="Images\Menu_Roulette.jpg" />
     <None Include="Images\Menu_TexasHoldEm.jpg" />
     <None Include="Images\BlackjackBackground.jpg" />
@@ -155,6 +159,7 @@
     <None Include="Images\cards\2_of_diamonds.png" />
     <None Include="Images\cards\2_of_clubs.png" />
     <None Include="Images\cards\Back.png" />
+    <Content Include="Resources\change_bet_Roulette.jpg" />
     <Content Include="Images\Menu_Header.jpg" />
   </ItemGroup>
   <ItemGroup>

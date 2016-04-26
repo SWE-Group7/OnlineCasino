@@ -30,7 +30,7 @@ namespace ClientLogic
 
             if (e.Clicks != 0)
             {
-                Application.Exit();
+                //Application.Exit();
                 Console.WriteLine(e.Location);
 
                 //get case for x
@@ -64,86 +64,86 @@ namespace ClientLogic
             switch (x)
             {
                 case 1:
-                    if (y >= 202 && y <= 295) { Console.WriteLine("you placed your bet on #1"); }
-                    if (y >= 107 && y < 202) { Console.WriteLine("you placed your bet on #2"); }
-                    if (y >= 14 && y < 107) { Console.WriteLine("you placed your bet on #3"); }
+                    if (y >= 202 && y <= 295) { label7.Text= "YOUR BET:\r\n\r\n#1\r\n"; }
+                    if (y >= 107 && y < 202) { label7.Text = "YOUR BET:\r\n\r\n#2\r\n"; }
+                    if (y >= 14 && y < 107) { label7.Text = "YOUR BET:\r\n\r\n#3\r\n"; }
 
                     break;
 
                 case 2:
-                    if (y >= 202 && y <= 295) { Console.WriteLine("you placed your bet on #4"); }
-                    if (y >= 107 && y < 202) { Console.WriteLine("you placed your bet on #5"); }
-                    if (y >= 14 && y < 107) { Console.WriteLine("you placed your bet on #6"); }
+                    if (y >= 202 && y <= 295) { label7.Text = "YOUR BET:\r\n\r\n#4\r\n"; }
+                    if (y >= 107 && y < 202) { label7.Text = "YOUR BET:\r\n\r\n#5\r\n"; }
+                    if (y >= 14 && y < 107) { label7.Text = "YOUR BET:\r\n\r\n#6\r\n"; }
                     break;
 
                 case 3:
-                    if (y >= 202 && y <= 295) { Console.WriteLine("you placed your bet on #7"); }
-                    if (y >= 107 && y < 202) { Console.WriteLine("you placed your bet on #8"); }
-                    if (y >= 14 && y < 107) { Console.WriteLine("you placed your bet on #9"); }
+                    if (y >= 202 && y <= 295) { label7.Text = "YOUR BET:\r\n\r\n#7\r\n"; }
+                    if (y >= 107 && y < 202) { label7.Text = "YOUR BET:\r\n\r\n#8\r\n"; }
+                    if (y >= 14 && y < 107) { label7.Text = "YOUR BET:\r\n\r\n#9\r\n"; }
 
                     break;
 
                 case 4:
-                    if (y >= 202 && y <= 295) { Console.WriteLine("you placed your bet on #10"); }
-                    if (y >= 107 && y <= 202) { Console.WriteLine("you placed your bet on #11"); }
-                    if (y >= 14 && y <= 107) { Console.WriteLine("you placed your bet on #12"); }
+                    if (y >= 202 && y <= 295) { label7.Text = "YOUR BET:\r\n\r\n#10\r\n"; }
+                    if (y >= 107 && y <= 202) { label7.Text = "YOUR BET:\r\n\r\n#11\r\n"; }
+                    if (y >= 14 && y <= 107) { label7.Text = "YOUR BET:\r\n\r\n#12\r\n"; }
                     break;
 
                 case 5:
-                    if (y >= 202 && y <= 295) { Console.WriteLine("you placed your bet on #13"); }
-                    if (y >= 107 && y <= 202) { Console.WriteLine("you placed your bet on #14"); }
-                    if (y >= 14 && y <= 107) { Console.WriteLine("you placed your bet on #15"); }
+                    if (y >= 202 && y <= 295) { label7.Text = "YOUR BET:\r\n\r\n#13\r\n"; }
+                    if (y >= 107 && y <= 202) { label7.Text = "YOUR BET:\r\n\r\n#14\r\n"; }
+                    if (y >= 14 && y <= 107) { label7.Text = "YOUR BET:\r\n\r\n#15\r\n"; }
 
                     break;
 
                 case 6:
-                    if (y >= 202 && y <= 295) { Console.WriteLine("you placed your bet on #16"); }
-                    if (y >= 107 && y <= 202) { Console.WriteLine("you placed your bet on #17"); }
-                    if (y >= 14 && y <= 107) { Console.WriteLine("you placed your bet on #18"); }
+                    if (y >= 202 && y <= 295) { label7.Text = "YOUR BET:\r\n\r\n#16\r\n"; }
+                    if (y >= 107 && y <= 202) { label7.Text = "YOUR BET:\r\n\r\n#17\r\n"; }
+                    if (y >= 14 && y <= 107) { label7.Text = "YOUR BET:\r\n\r\n#18\r\n"; }
                     break;
 
                 case 7:
-                    if (y >= 202 && y <= 295) { Console.WriteLine("you placed your bet on #19"); }
-                    if (y >= 107 && y <= 202) { Console.WriteLine("you placed your bet on #20"); }
-                    if (y >= 14 && y <= 107) { Console.WriteLine("you placed your bet on #21"); }
+                    if (y >= 202 && y <= 295) { label7.Text = "YOUR BET:\r\n\r\n#19\r\n"; }
+                    if (y >= 107 && y <= 202) { label7.Text = "YOUR BET:\r\n\r\n#20\r\n"; }
+                    if (y >= 14 && y <= 107) { label7.Text = "YOUR BET:\r\n\r\n#21\r\n"; }
 
                     break;
 
                 case 8:
-                    if (y >= 202 && y <= 295) { Console.WriteLine("you placed your bet on #22"); }
-                    if (y >= 107 && y < 202) { Console.WriteLine("you placed your bet on #23"); }
-                    if (y >= 14 && y < 107) { Console.WriteLine("you placed your bet on #24"); }
+                    if (y >= 202 && y <= 295) { label7.Text = "YOUR BET:\r\n\r\n#22\r\n"; }
+                    if (y >= 107 && y < 202) { label7.Text = "YOUR BET:\r\n\r\n#23\r\n"; }
+                    if (y >= 14 && y < 107) { label7.Text = "YOUR BET:\r\n\r\n#24\r\n"; }
 
                     break;
 
                 case 9:
-                    if (y >= 202 && y <= 295) { Console.WriteLine("you placed your bet on #25"); }
-                    if (y >= 107 && y < 202) { Console.WriteLine("you placed your bet on #26"); }
-                    if (y >= 14 && y < 107) { Console.WriteLine("you placed your bet on #27"); }
+                    if (y >= 202 && y <= 295) { label7.Text = "YOUR BET:\r\n\r\n#25\r\n"; }
+                    if (y >= 107 && y < 202) { label7.Text = "YOUR BET:\r\n\r\n#26\r\n"; }
+                    if (y >= 14 && y < 107) { label7.Text = "YOUR BET:\r\n\r\n#27\r\n"; }
                     break;
 
                 case 10:
-                    if (y >= 202 && y <= 295) { Console.WriteLine("you placed your bet on #28"); }
-                    if (y >= 107 && y < 202) { Console.WriteLine("you placed your bet on #29"); }
-                    if (y >= 14 && y < 107) { Console.WriteLine("you placed your bet on #30"); }
+                    if (y >= 202 && y <= 295) { label7.Text = "YOUR BET:\r\n\r\n#28\r\n"; }
+                    if (y >= 107 && y < 202) { label7.Text = "YOUR BET:\r\n\r\n#29\r\n"; }
+                    if (y >= 14 && y < 107) { label7.Text = "YOUR BET:\r\n\r\n#30\r\n"; }
 
                     break;
 
                 case 11:
-                    if (y >= 202 && y <= 295) { Console.WriteLine("you placed your bet on #31"); }
-                    if (y >= 107 && y <= 202) { Console.WriteLine("you placed your bet on #32"); }
-                    if (y >= 14 && y <= 107) { Console.WriteLine("you placed your bet on #33"); }
+                    if (y >= 202 && y <= 295) { label7.Text = "YOUR BET:\r\n\r\n#31\r\n"; }
+                    if (y >= 107 && y <= 202) { label7.Text = "YOUR BET:\r\n\r\n#32\r\n"; }
+                    if (y >= 14 && y <= 107) { label7.Text = "YOUR BET:\r\n\r\n#33\r\n"; }
                     break;
 
                 case 12:
-                    if (y >= 202 && y <= 295) { Console.WriteLine("you placed your bet on #34"); }
-                    if (y >= 107 && y <= 202) { Console.WriteLine("you placed your bet on #35"); }
-                    if (y >= 14 && y <= 107) { Console.WriteLine("you placed your bet on #36"); }
+                    if (y >= 202 && y <= 295) { label7.Text = "YOUR BET:\r\n\r\n#34\r\n"; }
+                    if (y >= 107 && y <= 202) { label7.Text = "YOUR BET:\r\n\r\n#35\r\n"; }
+                    if (y >= 14 && y <= 107) { label7.Text = "YOUR BET:\r\n\r\n#36\r\n"; }
 
                     break;
 
                 case 13:
-                    Console.WriteLine("you picked one to of the 2-to-1 choices");
+                    label7.Text = "YOUR BET:\r\n\r\n2-to-1\r\n"; ;
                     break;
             }
         }
@@ -161,14 +161,11 @@ namespace ClientLogic
 
         private void button1_Click(object sender, EventArgs e)
         {  
-            //hides labels from start screen
-            this.label2.Hide();
-            this.label3.Hide();
-            this.button1.Hide();
-            this.button2.Hide();
-            this.textBox1.Hide();
-            this.textBox2.Hide();
-            //start table form
+            //resets background
+            this.BackgroundImage = null;
+            this.BackColor = System.Drawing.Color.ForestGreen;
+
+            //start table
             InitializeComponent();
             Console.WriteLine(this.textBox1.Text); Console.WriteLine(this.textBox2.Text);
 
@@ -200,7 +197,15 @@ namespace ClientLogic
 
         private void button3_Click(object sender, EventArgs e)//allows user to change bet while in table screen
         {
-            //textBox2.Text= "400";
+            //create new form that will allow user to enter new bet
+            ChangingBet();
+        }
+
+        private void Done_Click(object sender, EventArgs e)
+        {
+            //this.Close();
+            textBox2.Text = input.Text;
+            InitializeComponent();
         }
 
         private void button5_Click(object sender, EventArgs e)//Exit Button on table screen

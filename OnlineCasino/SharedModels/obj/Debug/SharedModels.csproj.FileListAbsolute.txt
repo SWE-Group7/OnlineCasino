@@ -18,3 +18,8 @@ C:\Users\Foster\Documents\Visual Studio 2015\GitHub\OnlineCasino\OnlineCasino\Sh
 C:\Users\Foster\Documents\Visual Studio 2015\GitHub\OnlineCasino\OnlineCasino\SharedModels\obj\Debug\SharedModels.csprojResolveAssemblyReference.cache
 C:\Users\Foster\Documents\Visual Studio 2015\GitHub\OnlineCasino\OnlineCasino\SharedModels\obj\Debug\SharedModels.dll
 C:\Users\Foster\Documents\Visual Studio 2015\GitHub\OnlineCasino\OnlineCasino\SharedModels\obj\Debug\SharedModels.pdb
+C:\Users\sbece\Source\Repos\OnlineCasino\OnlineCasino\SharedModels\bin\Debug\SharedModels.dll
+C:\Users\sbece\Source\Repos\OnlineCasino\OnlineCasino\SharedModels\bin\Debug\SharedModels.pdb
+C:\Users\sbece\Source\Repos\OnlineCasino\OnlineCasino\SharedModels\obj\Debug\SharedModels.csprojResolveAssemblyReference.cache
+C:\Users\sbece\Source\Repos\OnlineCasino\OnlineCasino\SharedModels\obj\Debug\SharedModels.dll
+C:\Users\sbece\Source\Repos\OnlineCasino\OnlineCasino\SharedModels\obj\Debug\SharedModels.pdb
