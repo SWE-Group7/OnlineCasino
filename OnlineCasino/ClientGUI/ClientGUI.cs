@@ -146,7 +146,7 @@ namespace ClientGUI
             }
             else
             {
-                ErrorLogin_Draw();
+                RegisterError_Draw();
             }
         }
         private void ReturnToLogin_Click(object sender, EventArgs e)
@@ -243,7 +243,7 @@ namespace ClientGUI
             }
             else if (GameChoice == Game.TexasHoldEm)
             {
-
+                TexasHoldEmGUI = null;
             }
             else if (GameChoice == Game.Roulette)
             {
@@ -429,7 +429,54 @@ namespace ClientGUI
             }
             else if (GameChoice == Game.TexasHoldEm)
             {
-
+                if(TexasHoldEmGUI != null)
+                {
+                    TexasHoldEmGUI.clickX = e.X;
+                    TexasHoldEmGUI.clickY = e.Y;
+                }
+                switch(TexasHoldEmGUI.OS)
+                {
+                    case TexasHoldEmGUI.OverallState.Playing:
+                    {
+                        if (TexasHoldEmGUI.clickX < Width - 50 && TexasHoldEmGUI.clickX > Width - 150)
+                        {
+                            if (TexasHoldEmGUI.clickY < Height - 175 + 35 && TexasHoldEmGUI.clickY > Height - 175)
+                            {
+                                 // call
+                            }
+                            else if ((TexasHoldEmGUI.clickY < Height - 120 + 35 && TexasHoldEmGUI.clickY > Height - 120))
+                            {
+                                 // raise
+                            }
+                        }
+                        if (TexasHoldEmGUI.clickX < Width - 160 && TexasHoldEmGUI.clickX > Width - 260)
+                        {
+                            if (TexasHoldEmGUI.clickY < Height - 175 + 35 && TexasHoldEmGUI.clickY > Height - 175)
+                            {
+                                 // fold
+                            }
+                            else if ((TexasHoldEmGUI.clickY < Height - 120 + 35 && TexasHoldEmGUI.clickY > Height - 120))
+                            {
+                                 // check
+                            }
+                        }
+                    }
+                    break;
+                    case TexasHoldEmGUI.OverallState.Waiting:
+                        break;
+                    case TexasHoldEmGUI.OverallState.Distributing:
+                        {
+                        if (TexasHoldEmGUI.clickX > Width / 2 - 65 && TexasHoldEmGUI.clickX < Width / 2 - 65 + 130)
+                        {
+                            if (TexasHoldEmGUI.clickY > Height / 2 + 60 && TexasHoldEmGUI.clickY < Height / 2 + 60 + 40)
+                            {
+                                TexasHoldEmGUI.You.RefreshHand();
+                                BettingScreen_Draw();
+                            } 
+                        }
+                        break;
+                    }
+                }
             }
             else if (GameChoice == Game.Roulette)
             {
@@ -449,7 +496,11 @@ namespace ClientGUI
             }
             else if (GameChoice == Game.TexasHoldEm)
             {
-
+                if (TexasHoldEmGUI != null)
+                {
+                    TexasHoldEmGUI.hoverX = e.X;
+                    TexasHoldEmGUI.hoverY = e.Y;
+                }
             }
             else if (GameChoice == Game.Roulette)
             {

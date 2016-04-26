@@ -68,6 +68,7 @@ namespace ServerTest
                     Console.WriteLine("\t 1: Add Another User");
                     Console.WriteLine("\t 2: Play Blackjack");
                     Console.WriteLine("\t 3: Play Roulette");
+                    Console.WriteLine("\t 4: Play Texas Hold'Em");
                     input2 = Console.ReadLine();
                     Console.WriteLine();
 
@@ -84,6 +85,11 @@ namespace ServerTest
                         case "3":
                             Roulette roulette = new Roulette(users);
                             roulette.Start();
+                            Console.Read();
+                            break;
+                        case "4":
+                            TexasHoldEm texasHoldem = new TexasHoldEm(users);
+                            texasHoldem.Start();
                             Console.Read();
                             break;
                         default:
