@@ -7,15 +7,18 @@ using System.Threading.Tasks;
 namespace SharedModels.Players
 {
     [Serializable]
-    public abstract class Player
+    public class Player
     {
         public readonly User CurrentUser;
+        public readonly byte Seat;
         public readonly decimal GameBalance;
 
-        public Player(User u, decimal gb)
+        public Player(User user, int seat, decimal gameBalance)
         {
-            CurrentUser = u;
-            GameBalance = gb;
+            CurrentUser = user;
+            Seat = (byte) seat;
+            GameBalance = gameBalance;
         }
+
     }
 }

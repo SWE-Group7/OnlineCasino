@@ -11,8 +11,8 @@ namespace ClientLogic.Players
     {
         public List<Card> Hand;
 
-        public CardPlayer(SharedModels.Players.Player P, decimal buyIn, decimal bet):
-            base(P, buyIn, bet)
+        public CardPlayer(SharedModels.Players.Player P)
+            :base(P)
         {
             Hand = new List<Card>();
         }

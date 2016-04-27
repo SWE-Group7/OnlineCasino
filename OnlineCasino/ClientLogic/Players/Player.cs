@@ -5,24 +5,22 @@ using System.Text;
 using System.Threading.Tasks;
 using SharedModels.Players;
 using SharedModels.GameComponents;
+using SMP = SharedModels.Players;
 
 namespace ClientLogic.Players
 {
     public abstract class Player
     {
         protected readonly User CurrentUser;
-        protected readonly decimal GameBalance;
+        public decimal GameBalance;
+        public decimal Bet;
+        public readonly int Seat;
 
-        public decimal UserBuyIn;
-        public decimal UserBet;
-
-        public Player(SharedModels.Players.Player P, decimal buyIn, decimal bet)
+        public Player(SMP.Player player)
         {
-            this.CurrentUser = new User(P.CurrentUser);
-            this.GameBalance = P.GameBalance;
-
-            UserBuyIn = buyIn;
-            UserBet = bet;
+            this.CurrentUser = new User(player.CurrentUser);
+            this.GameBalance = player.GameBalance;
+            this.Seat = player.Seat;
         }
     }
 }

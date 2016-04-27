@@ -17,7 +17,7 @@ namespace ClientGUI.Game_GUIs
         public BlackjackGUI(int h, int w)
         {
             u = new SM.User(100, "n", "nadine", "omg", 100);
-            SharedModels.Players.BlackjackPlayer b = new SharedModels.Players.BlackjackPlayer(u, 100, 100, 100);
+            SM.Player b = new SM.Player(u, 1, 1000);
             
             Deck = new Deck();
             You = new ClientLogic.Players.BlackjackPlayer(b);

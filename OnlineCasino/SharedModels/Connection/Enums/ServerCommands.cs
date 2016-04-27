@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace SharedModels.Connection
 {
-    public enum ServerCommand
+    public enum ServerCommands
     {
         Login,
         Register,
         GetUserInfo,
-        GetGameList,
+        
+        QuitGame,
         Disconnect
     }
 

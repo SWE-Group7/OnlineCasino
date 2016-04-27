@@ -11,14 +11,14 @@ namespace SharedModels
 
     public class RequestResult
     {
-        private bool hasReturned = false;
-        private bool success = false;
+        private volatile bool hasReturned = false;
+        private volatile bool success = false;
         private object value = new object();
 
-        public RequestResult()
+        public bool HasReturned()
         {
+            return hasReturned;
         }
-
         public bool GetValue<T>(out T obj)
         {
             if (hasReturned && success)
@@ -32,23 +32,6 @@ namespace SharedModels
                 return false;
             }
         }
-
-        public bool WaitForReturn<T>(long maxWaitTimeMillis, out T obj)
-        {
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-
-            while(sw.ElapsedMilliseconds < maxWaitTimeMillis)
-            {
-                if (hasReturned)
-                    break;
-
-                Thread.Sleep(5);
-            }
-
-            return GetValue<T>(out obj);
-        }
-    
         public bool SetValue(bool success, object value)
         {
             if (!hasReturned)
@@ -64,13 +47,21 @@ namespace SharedModels
 
             return false;
         }
-
-        public bool HasReturned()
+        public bool WaitForReturn<T>(long maxWaitTimeMillis, out T obj)
         {
-            return hasReturned;
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
+            while(sw.ElapsedMilliseconds < maxWaitTimeMillis)
+            {
+                if (hasReturned)
+                    break;
+
+                Thread.Sleep(5);
+            }
+
+            return GetValue<T>(out obj);
         }
-
         
-
     }
 }

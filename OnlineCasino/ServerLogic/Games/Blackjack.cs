@@ -9,330 +9,298 @@ using System.IO;
 using ServerLogic.Games.GameComponents;
 using SharedModels.GameComponents;
 using System.Diagnostics;
+using SharedModels.Connection.Enums;
+using SM = SharedModels;
+using SMP = SharedModels.Players;
+using SharedModels.Games;
+using SMG = SharedModels.Games;
+using SharedModels.Connection;
+using SharedModels.Games.Enums;
 
 namespace ServerLogic.Games
 {
-    public enum BlackjackStates
-    {
-        Betting,
-        Dealing,
-        Playing,
-        GainsOrLoses
-    }
-
     public class Blackjack : Game
     {
+      
+        protected override int MaxSeats { get; }
+        private BlackjackStates BlackjackState;
+        private Deck deck;
         private List<Card> DealerHand;
-        public BlackjackStates BlackjackState;
+        private const int TimeLimit = 15000;
+        private List<int> Naturals;
 
-        public Blackjack(List<User> users)
+        public Blackjack(int Id)
+            :base(Id)
         {
             DealerHand = new List<Card>();
             BlackjackState = BlackjackStates.Betting;
-
-            foreach (User u in users)
-            {
-                Console.WriteLine("----------------------------");
-                Console.Out.Write(u.FullName + "'s Balance: $" + u.Balance + "\n");
-                Console.Out.Write("Enter your buy in: $");
-
-                string buyInStr = Console.ReadLine();
-                decimal buyIn;
-
-                while (!decimal.TryParse(buyInStr, out buyIn) || buyIn > u.Balance)
-                {
-                    Console.Out.Write("You can't afford that buy in. Try Again: \n");
-                    Console.Out.Write("Enter your buy in: $");
-
-                    buyInStr = Console.ReadLine();
-                }
-
-                Players.Add(new BlackjackPlayer(u, buyIn));
-            }
+            Naturals = new List<int>();
         }
-
-        public void Start()
+        
+        protected override void Run()
         {
-            while (true)
+
+            //Wait for player
+            bool playersExist = false;
+            while (!playersExist)
             {
-                bool DealerWin = false;
-                bool noBet = false;
+                playersExist = Players.AsEnumerable().Where(p => p.Value.GetState() != SMP.PlayerStates.Joining).Any();
+                Thread.Sleep(100);
+            }
 
-                //step1: wait for players.  Game state set to waiting
-                //set_Game_State(GameStates.Waiting);
+            GameState = GameStates.Playing;
+            GameEvent gameEvent = BlackjackEvent.StartGame();
+            Broadcast(gameEvent);
 
-                /*SERVER CHECKS FOR CONNECTIONS 
-                if(no connections) break;*/
 
-                Deck deck = new Deck();
+            while (!EndGame)
+            {
+                //Round Start
+                ResetRoundVariables();
+                BlackjackState = BlackjackStates.RoundStart;
+                deck = new Deck();
+                ClientCommands cmd;
+                gameEvent = BlackjackEvent.ChangeState(BlackjackState);
+                Broadcast(gameEvent);
 
+                //Start Betting
                 BlackjackState = BlackjackStates.Betting;
-                GameState = GameStates.Playing;
+                gameEvent = BlackjackEvent.ChangeState(BlackjackState);
+                Broadcast(gameEvent);
 
-                foreach (BlackjackPlayer player in Players)
+                //Request Bets
+                cmd = ClientCommands.Blackjack_GetBet;
+                foreach (BlackjackPlayer player in ActivePlayers)
                 {
-                    player.IndicateBet();
+                    player.Request(cmd);
                 }
 
-                //BETTING
-                decimal bet;
-                
-                foreach (BlackjackPlayer player in Players)
+                //Recieve Bets
+                List<Player> NoResponse = ActivePlayers;
+                sw.Restart();
+                foreach (BlackjackPlayer player in NoResponse)
                 {
-                    Console.WriteLine("------" + player.GetFullName() + "'s Turn -----");
-                    string output = " ";
-                    do
-                    {
-                        try
-                        {
-                            Console.WriteLine("Place your bet: \n");
-                            Reader();
-                            output = ReadLine(30000);
-                        }
-                        catch (TimeoutException)
-                        {
-                            Console.WriteLine("You waited too long...Sit this one out.\n");
-                            player.ForceNoBet();
-                        }
-                    }
-                    while (!decimal.TryParse(output, out bet));
+                    int bet;
 
-                    if (bet > player.getGameBalance())
+                    //Response!
+                    if (player.TryGetResult(cmd, out bet))
                     {
-                        bet = player.getGameBalance();
-                        Console.Out.Write("Over your balance, bet set to: " + bet + "\n");
+                        player.SetBet(bet);
+                        gameEvent = BlackjackEvent.PlayerBet(player.Seat, bet);
+                        Broadcast(gameEvent);
+                        NoResponse.RemoveAll(p => p.Seat == player.Seat);
+
                     }
 
-                    player.SetUserBet(bet);
+                    if (sw.ElapsedMilliseconds > TimeLimit)
+                        break;
+
+                    Thread.Sleep(1);
                 }
-                Console.Clear();
+
+                //Force NoResponses to bet 0
+                foreach (BlackjackPlayer player in NoResponse)
+                {
+                    int bet = 0;
+                    player.SetBet(bet);
+                    gameEvent = BlackjackEvent.PlayerBet(player.Seat, bet);
+                    Broadcast(gameEvent);
+                }
+
 
                 //DEALING
                 BlackjackState = BlackjackStates.Dealing;
-        
-                foreach (BlackjackPlayer player in Players)
+                gameEvent = BlackjackEvent.ChangeState(BlackjackState);
+                Broadcast(gameEvent);
+
+                Dictionary<int, Card[]> seatToCards = new Dictionary<int, Card[]>();
+                foreach (BlackjackPlayer player in ActivePlayers)
                 {
                     Card card1 = deck.DealCard();
                     Card card2 = deck.DealCard();
-
+                    player.ClearCards();
                     player.DealCard(card1);
                     player.DealCard(card2);
-
-                    Console.WriteLine("-------------------------------------");
-                    Console.Out.Write("\n " + player.GetFullName() +" hand: \n");
-                    CardHelper.PrintHand(player.GetCards());
-                    Console.WriteLine("Count: " + CardHelper.CountHand(player.GetCards()));
+                    seatToCards.Add(player.Seat, new Card[] { card1, card2 });
+                    if (player.CardCount == 21)
+                        Naturals.Add(player.Seat);
                 }
 
-                Card dealercard1 = deck.DealCard();
-                Card dealercard2 = deck.DealCard();
+                DealerHand.Clear();
+                DealerHand.Add(deck.DealCard());
+                DealerHand.Add(deck.DealCard());
 
-                DealerHand.Add(dealercard1);
-                DealerHand.Add(dealercard2);
+                seatToCards.Add(0, new Card[] { DealerHand[0] });
 
-                Console.Out.Write("\n Dealer cards: \n HIDDEN of HIDDEN \n" + dealercard2.Rank + " of " + dealercard2.Suit + "\n");
-                
-                int DealerAmount = CardHelper.CountHand(DealerHand);
+                gameEvent = BlackjackEvent.Deal(seatToCards);
+                Broadcast(gameEvent);
 
+                Thread.Sleep(1000);
                 //PLAYING
-                if (DealerAmount == 21)
-                {
-                    DealerWin = true;
-                    Console.Out.Write("Dealer has blackjack.\n GAME OVER\n");                   
-                }
-                else if (!DealerWin && !noBet)
-                {
-                    BlackjackState = BlackjackStates.Playing;
+                BlackjackState = BlackjackStates.Playing;
+                gameEvent = BlackjackEvent.ChangeState(BlackjackState);
 
-                    foreach (BlackjackPlayer player in Players)
+                int DealerCount = CardHelper.CountHand(DealerHand);
+                bool DealerBlackjack = (DealerCount == 21);
+                if (!DealerBlackjack)
+                {
+                    cmd = ClientCommands.Blackjack_GetAction;
+
+                    foreach (BlackjackPlayer player in ActivePlayers)
                     {
-                        Console.WriteLine("---------" + player.GetFullName() + "'s Turn --------");
-                        bool stay = false;
-                         
-                        while (stay == false)
+                        //Show Turn
+                        gameEvent = BlackjackEvent.PlayerTurn(player.Seat);
+                        Broadcast(gameEvent);
+
+                        bool StayOrBust = false;
+                        do
                         {
-                            string hitOrStay;
+                            BlackjackEvents action = (BlackjackEvents)0;
 
-                            if (CardHelper.CountHand(player.GetCards()) > 21)
+                            //Get Action
+                            player.Request(cmd);
+                            sw.Restart();
+                            while (sw.ElapsedMilliseconds < TimeLimit)
                             {
-                                hitOrStay = "stay";
-                                Console.Out.Write("\n" + player.GetFullName() + "'s hand: \n");
-                                CardHelper.PrintHand(player.GetCards());
-                                Console.WriteLine("Count: " + CardHelper.CountHand(player.GetCards()));
+                                if (player.TryGetResult(cmd, out action))
+                                    break;
+
+                                Thread.Sleep(5);
                             }
-                            else if (CardHelper.CountHand(player.GetCards()) == 21)
-                            {
-                                hitOrStay = "stay";
 
-                                Console.WriteLine("BLACKJACK");
-                                Console.Out.Write("\n" + player.GetFullName() + "'s hand: \n");
-                                CardHelper.PrintHand(player.GetCards());
-                                Console.WriteLine("Count: " + CardHelper.CountHand(player.GetCards()));
-                            }
-                            else
+                            switch (action)
                             {
-                                try
-                                {
-                                    Console.Out.Write("\n" + player.GetFullName() + "'s hand: \n");
-                                    CardHelper.PrintHand(player.GetCards());
-                                    Console.WriteLine("Count: " + CardHelper.CountHand(player.GetCards()));
-
-                                    Console.WriteLine("'hit' or 'stay' \n");
-                                    Reader();
-                                    hitOrStay = ReadLine(30000);
-                                }
-                                catch (TimeoutException)
-                                {
-                                    Console.WriteLine("You waited too long... You will stay.");
-                                    hitOrStay = "stay";
-                                }
-                            }                            
-
-                            switch (hitOrStay)
-                            {
-                                case "hit":
+                                case BlackjackEvents.PlayerHit:
                                     Card card = deck.DealCard();
                                     player.DealCard(card);
+                                    gameEvent = BlackjackEvent.PlayerHit(player.Seat, card);
                                     break;
+                                case BlackjackEvents.PlayerDouble:
+                                case BlackjackEvents.PlayerStay:
                                 default:
-                                    player.IndicateWait();
-                                    stay = true;
+                                    gameEvent = BlackjackEvent.PlayerStay(player.Seat);
+                                    StayOrBust = true;
                                     break;
                             }
-                        }
+                            Broadcast(gameEvent);
+
+                            if (player.CardCount == 21)
+                                StayOrBust = true;
+                            else if (player.CardCount > 21)
+                            {
+                                StayOrBust = true;
+                                gameEvent = BlackjackEvent.PlayerBust(player.Seat);
+                                Broadcast(gameEvent);
+                            }
+                        } while (!StayOrBust);
+
                     }
                 }
 
-                //DEALER DRAW
-                
-                Console.WriteLine("-------------------------------------");
-                Console.Out.Write("\nDealer's hand: \n");
-                CardHelper.PrintHand(DealerHand);            
-                 
-                while (DealerAmount < 17)
-                {
-                    Card drawn = deck.DealCard();
-                    DealerHand.Add(drawn);
+                //DEALER TURN
+                gameEvent = BlackjackEvent.PlayerTurn(0);
+                Broadcast(gameEvent);
 
-                    Console.Out.Write("\nDealer draws: " + drawn.Rank + " of " + drawn.Suit + "\n");
-                    DealerAmount = CardHelper.CountHand(DealerHand);
+                while (DealerCount < 17)
+                {
+                    Card card = deck.DealCard();
+                    DealerHand.Add(card);
+                    DealerCount = CardHelper.CountHand(DealerHand);
+                    gameEvent = BlackjackEvent.PlayerHit(0, card);
+                    Broadcast(gameEvent);
                 }
 
-                Console.WriteLine("Dealer's count: " + DealerAmount);
+                if (DealerCount <= 21)
+                    gameEvent = BlackjackEvent.PlayerStay(0);
+                else
+                    gameEvent = BlackjackEvent.PlayerBust(0);
+
+                Broadcast(gameEvent);
 
                 //GAME CONCLUSION
-                BlackjackState = BlackjackStates.GainsOrLoses;
-                foreach (BlackjackPlayer player in Players)
+                BlackjackState = BlackjackStates.Payout;
+                gameEvent = BlackjackEvent.ChangeState(BlackjackState);
+                Broadcast(gameEvent);
+
+                Dictionary<int, int> seatToWinnings = new Dictionary<int, int>();
+                foreach (BlackjackPlayer player in ActivePlayers)
                 {
-                    Console.Out.Write("\n-------" + player.GetFullName() + " Conclusion-------- \n");
-                    int PlayersHand = CardHelper.CountHand(player.GetCards());
+                    int PlayerCount = player.CardCount;
+                    bool playerBlackjack = Naturals.Contains(player.Seat);
+                    decimal mult = 0;
 
-                    if(PlayersHand == 21)
-                    {
-                        Console.WriteLine("You got blackjack! +$" + player.Bet);
-                        player.UpdateGameBalance(true);
-                    }
-                    else if (PlayersHand > 21)
-                    {                       
-                        Console.WriteLine(player.GetFullName() + " busted. -$" + player.Bet);
-                        player.UpdateGameBalance(false);
-                    }
-                    else if (DealerAmount > 21)
-                    {
-                        Console.WriteLine("Dealer busted. You win! +$" + player.Bet);
-                        player.UpdateGameBalance(true);
-                    }
-                    else if (PlayersHand < 21 && DealerAmount < 21 && PlayersHand < DealerAmount)
-                    {
-                        Console.WriteLine("You lose! -$" + player.Bet);
-                        player.UpdateGameBalance(false);
-                    }
-                    else if (PlayersHand < 21 && DealerAmount < 21 && PlayersHand > DealerAmount)
-                    {
-                        Console.WriteLine("You win! +$" + player.Bet);
-                        player.UpdateGameBalance(true);
-                    }
-                    else if(PlayersHand == DealerAmount)
-                    {
-                        BlackjackState = BlackjackStates.GainsOrLoses;
-                        Console.WriteLine("You tied.\n");
-                    }
+                    if (PlayerCount > 21)
+                        mult = -1;
+                    else if (DealerCount <= 21 && PlayerCount < DealerCount)
+                        mult = -1;
+                    else if (DealerBlackjack && !playerBlackjack)
+                        mult = -1;
+                    else if (DealerCount == PlayerCount && DealerCount != 21)
+                        mult = 0;
+                    else if (DealerBlackjack && playerBlackjack)
+                        mult = 0;
+                    else if (!DealerBlackjack && playerBlackjack)
+                        mult = 1.5m;
+                    else
+                        mult = 1m;
 
-                    Console.WriteLine(player.GetFullName() + "'s game balance: $" + player.getGameBalance());
-
-                    player.ClearCards();
-                    player.UpdateUserBalance();
-                  
-                    if (player.GetBalance() <= 0)
-                    {
-                        Console.WriteLine(player.GetFullName() + "'s total balance is now 0. Adding $10..");
-                        player.GiftMoney(10);
-                    }
-
-                    if (player.getGameBalance() <= 0)
-                    {
-                        Console.WriteLine("\nYour game balance is 0! You lose the game!");
-                        player.inGame = false;
-                        
-                        if(Players.Count == 0)
-                        {
-                            Console.WriteLine("Press any key to exit the console..");
-                            Console.ReadKey();
-                            Environment.Exit(0);
-                        }
-                    }
+                    int balance = player.UpdateGameBalance(mult);
+                    seatToWinnings[player.Seat] = balance;
                 }
 
-                foreach(BlackjackPlayer p in Players)
-                {
-                    if (!p.inGame) Players.Remove(p);
-                }
+                gameEvent = BlackjackEvent.Payout(seatToWinnings);
+                Broadcast(gameEvent);
 
-                if(Players.Count == 0)
-                {
-                    Console.ReadKey();
-                    Environment.Exit(0);
-                }
+                gameEvent = BlackjackEvent.ChangeState(BlackjackStates.RoundFinish);
+                Broadcast(gameEvent);
 
-                //step8: loop back through game, check connections, if no connections break out of loop
-
-                DealerHand = new List<Card>();
+                PurgeQuitters();
             }
                        
         }
 
-        private static Thread inputThread;
-        private static AutoResetEvent getInput, gotInput;
-        private static string input;
-
-        static void Reader()
+        public override Player TakeSeat(User user, int buyIn)
         {
-            getInput = new AutoResetEvent(false);
-            gotInput = new AutoResetEvent(false);
+            int seat = TakeNextSeat();
 
-            inputThread = new Thread(reader);
-            inputThread.IsBackground = true;
-            inputThread.Start();
+            //No open seats
+            if (seat < 0)
+                return null;
+
+            BlackjackPlayer player = new BlackjackPlayer(user, this, seat, buyIn);
+
+            lock (Players)
+                Players.TryAdd(seat, player);
+            
+            return player;
         }
-         
-        private static void reader()
+        protected override SM.Games.Game GetSharedModel()
         {
-            while (true)
-            {
-                getInput.WaitOne();
-                input = Console.ReadLine();
-                gotInput.Set();
-            }
+            SMG.Game game;
+            List<Player> players;
+            List<SMP.Player> smPlayers = new List<SMP.Player>();
+
+            players = Players.AsEnumerable()
+                             .Select(p => p.Value)
+                             .ToList();
+
+            foreach(Player p in players)
+                smPlayers.Add(p.GetSharedModel());
+
+            game = new SMG.Blackjack(smPlayers, GameState, BlackjackState, DealerHand);
+            return game;
+
         }
-        
-        public static string ReadLine(int timeOutMillisecs)
+
+        private string ReadLine(int v)
         {
-            getInput.Set();
-
-            bool success = gotInput.WaitOne(timeOutMillisecs);
-
-            if (success) return input;
-            else throw new TimeoutException("User did not provide input within the time limit.");
+            throw new NotImplementedException();
         }
+
+        private void Reader()
+        {
+            throw new NotImplementedException();
+        }
+
     }
  }

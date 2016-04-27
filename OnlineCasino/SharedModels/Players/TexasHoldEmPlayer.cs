@@ -9,16 +9,13 @@ namespace SharedModels.Players
 {
     public class TexasHoldEmPlayer : Player
     {
-        public List<Card> Hand;
-        public decimal UserBuyIn;
+        public readonly List<Card> Hand;
+        public readonly decimal UserBuyIn;
         public decimal UserBet;
 
-        public TexasHoldEmPlayer(User u, decimal gameBalance, decimal buy, decimal bet) :
-            base(u, gameBalance)
-        {
-            Hand = new List<Card>();
-            UserBuyIn = buy;
-            UserBet = bet;
-        }
+        public TexasHoldEmPlayer(User user, int seat, decimal gameBalance)
+            :base(user, seat, gameBalance)
+        { }
+        
     }
 }

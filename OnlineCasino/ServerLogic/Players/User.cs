@@ -1,12 +1,14 @@
 ﻿using ServerLogic.Connections;
+using ServerLogic.Players;
+using SharedModels.Connection.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using DB = ServerLogic.EntityFrameworks;
 using SM = SharedModels;
-
+using SMG = SharedModels.Games;
+using SharedModels.Connection;
 
 namespace ServerLogic
 {
@@ -18,26 +20,23 @@ namespace ServerLogic
         readonly public string EmailAddress;
         readonly private string HashedPassword;
         readonly private string Salt;
-
-        private Connection CurrentConnection;
-
-        //Back references (Not sure if keeping)
-        private Player CurrentPlayer;
-        private Game CurrentGame;
-        
+        public int GameID;
         public bool InGame;
         public bool Connected;
+
+        private Connection CurrentConnection;
+        private UserCache Cache;
+        private object Lock;
+        private Player CurrentPlayer;
+        private Game CurrentGame;
 
         private decimal balance;
         public decimal Balance
         {
-            get { return balance; }
-            set
+            get
             {
-                decimal val = Math.Min(value, 0);
-
-                if(DB.User.UpdateBalance(UserID, val))
-                    balance = value;
+                lock(Lock)
+                    return balance;
             }
         }
 
@@ -51,6 +50,9 @@ namespace ServerLogic
             this.Salt = dbUser.Salt;
             this.balance = dbUser.Balance;
             this.InGame = false;
+            this.Lock = new object();
+
+            Cache = new UserCache();
         }
 
         public static User Register(string username, string password, string email, string fullName)
@@ -71,46 +73,107 @@ namespace ServerLogic
             else
                 return null;
         }
-        
-        public SM.Players.User GetSharedModelPrivate()
-        {
-            return new SM.Players.User(UserID, Username, FullName, EmailAddress, Balance);
-        } 
-        
         public bool Authenticate(string password)
         {
             return (HashedPassword == DB.User.HashPassword(password, Salt));
         }
 
-        
+        public void JoinGame(GameTypes gameType, int buyIn, int reqId)
+        {
+            CurrentPlayer = null;
+
+            while (CurrentPlayer == null)
+            {
+                CurrentGame = ServerMain.GetGameForUser(gameType);
+                CurrentPlayer = CurrentGame.TakeSeat(this, buyIn);
+            }
+            InGame = true;
+            SMG.Game smGame = CurrentGame.GetRoundSnapshot();
+            CurrentConnection.Return(reqId, true, smGame);
+
+            CurrentGame.ShareRoundEvents(CurrentPlayer);
+
+            CurrentPlayer.FinalizeJoin();
+            GameID = CurrentGame.GameID;
+
+        }
+
+        public SM.RequestResult Request(ClientCommands cmd)
+        {
+            return CurrentConnection.Request(cmd);
+        }
+
+        public void AddToBalance(decimal value)
+        {
+            lock (Lock)
+            {
+                balance += value;
+                balance = Math.Max(value, 0);
+                value = balance;
+            }
+
+            DB.User.UpdateBalance(UserID, value);
+        }
+        public void ShareEvent(SMG.GameEvent gameEvent)
+        {
+            if (InGame)
+                CurrentConnection.Command(ClientCommands.SendEvent, gameEvent);
+        }
+        public void FinalizeQuit()
+        {
+            GameID = 0;
+            InGame = false;
+        }
+        public void ForceQuit()
+        {
+            InGame = false;
+            CurrentConnection.Command(ClientCommands.ForceQuit);
+        }
+
+        public void ClientQuitGame(bool hardQuit)
+        {
+            if (hardQuit)
+                InGame = false;
+
+            CurrentPlayer.UserQuit(hardQuit);
+        }
         public void ClientDisconnect()
         {
             if (InGame)
-            {
-                CurrentPlayer.ClientDisconnect();
-            }
+                CurrentPlayer.UserQuit(true);
+                
             InGame = false;
             Connected = false;
         }
 
-        public void SetPlayer(Player player)
+        public SM.Players.User GetSharedModelPrivate()
         {
-            CurrentPlayer = player;
+            if (Cache.Old)
+            {
+                lock (Lock)
+                    Cache.smUserPrivate = new SM.Players.User(UserID, Username, FullName, EmailAddress, balance);
+            }
+
+            return Cache.smUserPrivate;
         }
-
-
-
+        public SM.Players.User GetSharedModelPublic()
+        {
+            if (Cache.Old)
+            {
+                lock (Lock)
+                    Cache.smUser = new SM.Players.User(UserID, Username, FullName);
+            }
+            return Cache.smUser;
+        }
+        private class UserCache
+        {
+            internal SM.Players.User smUser;
+            internal SM.Players.User smUserPrivate;
+            internal volatile bool Old = true;
+        }
+           
         
-
-
-
-
-       
-
-
-    
-
-       
+        
 
     }
 }

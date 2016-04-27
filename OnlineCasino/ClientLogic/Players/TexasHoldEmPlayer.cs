@@ -9,8 +9,8 @@ namespace ClientLogic.Players
 {
     public class TexasHoldEmPlayer : CardPlayer
     {
-        public TexasHoldEmPlayer(SharedModels.Players.TexasHoldEmPlayer T):
-            base(T, T.UserBuyIn, T.UserBet)
+        public TexasHoldEmPlayer(SharedModels.Players.TexasHoldEmPlayer player)
+            :base(player)
         {
         }
 

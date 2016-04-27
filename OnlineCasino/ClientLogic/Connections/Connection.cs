@@ -42,28 +42,29 @@ namespace ClientLogic.Connections
             RequestedByClient = new Dictionary<int, RequestResult>();
 
             Reader = Thread.CurrentThread;
-            Writer = new Thread(() => StartWriter());
-            Writer.Name = "Writer";
-            Writer.Start();
             Reader = new Thread(() => StartReader());
             Reader.Name = "Reader";
             Reader.Start();
+
+            Writer = new Thread(() => StartWriter());
+            Writer.Name = "Writer";
+            Writer.Start();
 
         }
 
         public bool TrySyncLogin(Security security, out User user)
         {
-            user = SyncLogin(ServerCommand.Login, security);
+            user = SyncLogin(ServerCommands.Login, security);
             return (user != null);
         }
 
         public bool TrySyncRegister(Security security, out User user)
         {
-            user = SyncLogin(ServerCommand.Register, security);
+            user = SyncLogin(ServerCommands.Register, security);
             return (user != null);
         }
 
-        private User SyncLogin(ServerCommand cmd, Security security)
+        private User SyncLogin(ServerCommands cmd, Security security)
         {
             SM.User smUser;
             RequestResult result = Request(cmd, security);
@@ -86,7 +87,7 @@ namespace ClientLogic.Connections
         }
 
         #region Write
-        public RequestResult Request(ServerCommand cmd, object obj = null)
+        public RequestResult Request(ServerCommands cmd, object obj = null)
         {
             RequestResult ret = new RequestResult();
             int reqId = Interlocked.Increment(ref RequestId);
@@ -96,7 +97,7 @@ namespace ClientLogic.Connections
                 RequestedByClient.Add(reqId, ret);
             }
 
-            Payload payload = new Payload(CommType.Request, cmd, reqId, obj);
+            Payload payload = new Payload(CommTypes.Request, cmd, reqId, obj);
             QueueWrite(payload);
 
             return ret;
@@ -104,13 +105,13 @@ namespace ClientLogic.Connections
 
         private void Return(int reqId, bool success, object obj)
         {
-            Payload payload = new Payload(CommType.Return, reqId, success, obj);
+            Payload payload = new Payload(CommTypes.Return, reqId, success, obj);
             QueueWrite(payload);
         }
 
-        public void Command(ServerCommand cmd, object obj = null)
+        public void Command(ClientCommands cmd, object obj = null)
         {
-            Payload payload = new Payload(CommType.Void, cmd, obj);
+            Payload payload = new Payload(CommTypes.Void, cmd, obj);
             QueueWrite(payload);
         }
 
@@ -145,15 +146,15 @@ namespace ClientLogic.Connections
 
         private bool ImmediateWrite(Payload payload)
         {
-            CommType type = payload.Type;
-            ServerCommand cmd = (ServerCommand)payload.Command;
+            CommTypes type = payload.Type;
+            ServerCommands cmd = (ServerCommands)payload.Command;
             int reqId = payload.RequestId;
             object obj = payload.Object;
 
             try
             {
                 //Write Command Start
-                byte[] byteStart = BitConverter.GetBytes((int)CommType.Start);
+                byte[] byteStart = BitConverter.GetBytes((int)CommTypes.Start);
                 Server.GetStream().Write(byteStart, 0, sizeof(int));
 
                 //Write CommType
@@ -189,8 +190,8 @@ namespace ClientLogic.Connections
         {
             const int bufferSize = 4096;
             byte[] buffer = new byte[bufferSize];
-            CommType commType;
-            ClientCommand cmd = 0;
+            CommTypes commType;
+            ClientCommands cmd = 0;
             int reqId = -1;
             byte[] obj;
             int index;
@@ -208,8 +209,8 @@ namespace ClientLogic.Connections
 
                 //Ensure Command Start
                 bytesRead = Server.GetStream().Read(buffer, 0, sizeof(int));
-                commType = (CommType)BitConverter.ToInt32(buffer, 0);
-                if (commType != CommType.Start)
+                commType = (CommTypes)BitConverter.ToInt32(buffer, 0);
+                if (commType != CommTypes.Start)
                     continue;
 
                 //Ensure Reader isnt stuck
@@ -218,14 +219,14 @@ namespace ClientLogic.Connections
 
                 //Get Comm Type
                 bytesRead = Server.GetStream().Read(buffer, 0, sizeof(int));
-                commType = (CommType)BitConverter.ToInt32(buffer, 0);
+                commType = (CommTypes)BitConverter.ToInt32(buffer, 0);
 
                 if (!Server.GetStream().DataAvailable && ReaderStuck())
                     continue;
 
                 //Get Command or 0/1 for return
                 bytesRead = Server.GetStream().Read(buffer, 0, sizeof(int));
-                cmd = (ClientCommand)BitConverter.ToInt32(buffer, 0);
+                cmd = (ClientCommands)BitConverter.ToInt32(buffer, 0);
 
                 if (!Server.GetStream().DataAvailable && ReaderStuck())
                     continue;
@@ -258,13 +259,13 @@ namespace ClientLogic.Connections
                 //Handle
                 switch (commType)
                 {
-                    case CommType.Return:
+                    case CommTypes.Return:
                         HandleReturn(reqId, ((int)cmd == 1), obj);
                         break;
-                    case CommType.Request:
+                    case CommTypes.Request:
                         HandleRequest(cmd, reqId, obj);
                         break;
-                    case CommType.Void:
+                    case CommTypes.Void:
                         HandleVoid(cmd, obj);
                         break;
                     default:
@@ -286,12 +287,12 @@ namespace ClientLogic.Connections
             return true;
         }
 
-        private void HandleVoid(ClientCommand cmd, byte[] obj)
+        private void HandleVoid(ClientCommands cmd, byte[] obj)
         {
             throw new NotImplementedException();
         }
 
-        private void HandleRequest(ClientCommand cmd, int reqId, byte[] objBytes)
+        private void HandleRequest(ClientCommands cmd, int reqId, byte[] objBytes)
         {
             throw new NotImplementedException();
         }

@@ -111,10 +111,9 @@ namespace ServerLogic.EntityFrameworks
 
         private static string GenerateSalt()
         {
-            Random random = new Random();
+            RNGCryptoServiceProvider random = new RNGCryptoServiceProvider();
             byte[] bytes = new byte[32];
-            random.NextBytes(bytes);
-
+            random.GetNonZeroBytes(bytes);
             return Convert.ToBase64String(bytes);
         }
     }
