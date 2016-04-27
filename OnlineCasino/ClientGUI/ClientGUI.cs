@@ -18,7 +18,7 @@ namespace ClientGUI
     {
         BlackjackGUI BlackjackGUI;
         TexasHoldEmGUI TexasHoldEmGUI;
-        RouletteGUI RouletteGUI;
+        Game_GUIs.RouletteGUI RouletteGUI;
 
         public int mouseX;
         public int mouseY;
@@ -50,7 +50,7 @@ namespace ClientGUI
 
         private void ClientGUI_Load(object sender, EventArgs e)
         {
-            this.BackgroundImage = global::ClientGUI.Properties.Resources.CardsBackground;
+            this.BackgroundImage = global::ClientGUI.Properties.Resources.Possible_Background;
             Login_Draw();
         }
 
@@ -60,19 +60,18 @@ namespace ClientGUI
             {
                 case State.Login:
                     {
-                        e.Graphics.DrawRectangle(Pens.Black, Width / 2 - 226, Height / 2 - 126, 451, 251);
-                        e.Graphics.FillRectangle(Brushes.White, new Rectangle(Width / 2 - 225, Height / 2 - 125, 450, 250));
+                        e.Graphics.DrawRectangle(Pens.Black, Width / 2 - 276, Height / 2 - 176, 551, 351);
+                        e.Graphics.FillRectangle(Brushes.White, new Rectangle(Width / 2 - 275, Height / 2 - 175, 550, 350));
                     }
                     break;
                 case State.Register:
                     {
-                        e.Graphics.DrawRectangle(Pens.Black, Width / 2 - 226, Height / 2 - 126, 451, 251);
-                        e.Graphics.FillRectangle(Brushes.White, new Rectangle(Width / 2 - 225, Height / 2 - 125, 450, 250));
+                        e.Graphics.DrawRectangle(Pens.Black, Width / 2 - 276, Height / 2 - 176, 551, 351);
+                        e.Graphics.FillRectangle(Brushes.White, new Rectangle(Width / 2 - 275, Height / 2 - 175, 550, 350));
                     }
                     break;
                 case State.Menu:
-                    {
-                        // add welcome text with name and balance
+                    {                        
                         e.Graphics.DrawRectangle(Pens.Black, Width / 2 - 301, Height / 2 - 201, 601, 401);
                         e.Graphics.FillRectangle(Brushes.White, new Rectangle(Width / 2 - 300, Height / 2 - 200, 600, 400));
                     }
@@ -99,7 +98,7 @@ namespace ClientGUI
                                 break;
                             case Game.Roulette:
                                 {
-
+                                    RouletteGUI.RouletteGUI_Paint(sender, e);
                                 }
                                 break;
                         }
@@ -111,7 +110,7 @@ namespace ClientGUI
         // LOGIN PAGE BUTTON EVENTS
         private void Submit_Click(object sender, EventArgs e)
         {
-            Username = UsernameTextBox.Text;      
+            Username = UsernameTextBox.Text;
             Password = PasswordTextBox.Text;
 
             if (ClientMain.TrySyncLogin(Username, Password))
@@ -123,7 +122,7 @@ namespace ClientGUI
             {
                 ErrorLogin_Draw();
             }
-            
+
         }
         private void NewUser_Click(object sender, EventArgs e)
         {
@@ -183,7 +182,7 @@ namespace ClientGUI
         private void AccountInfo_Click(object sender, EventArgs e)
         {
             // Create account information page
-
+            AccountInfo_Draw();
         }
 
         // IN GAME BUTTONS EVENTS
@@ -199,7 +198,7 @@ namespace ClientGUI
                 else
                 {
                     BlackjackGUI = null;
-                    this.BackgroundImage = global::ClientGUI.Properties.Resources.CardsBackground;
+                    this.BackgroundImage = global::ClientGUI.Properties.Resources.Possible_Background;
                     this.Controls.Clear();
                     this.Invalidate();
 
@@ -211,15 +210,15 @@ namespace ClientGUI
             }
             else if (GameChoice == Game.TexasHoldEm)
             {
-                if(TexasHoldEmGUI != null && ClientState != State.Betting && TexasHoldEmGUI.OS != GameGUI.OverallState.Distributing)
+                if (TexasHoldEmGUI != null && ClientState != State.Betting && TexasHoldEmGUI.OS != GameGUI.OverallState.Distributing)
                 {
                     check = true;
                     Game_Draw();
-                } 
+                }
                 else
                 {
                     TexasHoldEmGUI = null;
-                    this.BackgroundImage = global::ClientGUI.Properties.Resources.CardsBackground;
+                    this.BackgroundImage = global::ClientGUI.Properties.Resources.Possible_Background;
                     this.Controls.Clear();
                     this.Invalidate();
 
@@ -231,9 +230,35 @@ namespace ClientGUI
             }
             else if (GameChoice == Game.Roulette)
             {
+                if (RouletteGUI != null && ClientState != State.Betting && RouletteGUI.OS != GameGUI.OverallState.Distributing)
+                {
+                    check = true;
+                    Game_Draw();
+                }
+                else
+                {
+                    RouletteGUI = null;
+                    this.BackgroundImage = global::ClientGUI.Properties.Resources.Possible_Background;
+                    this.Controls.Clear();
+                    this.Invalidate();
 
+                    ClientState = State.Menu;
+                    Menu_Draw();
+
+                    GameChoice = Game.None;
+                }
             }
+            else
+            {
+                this.BackgroundImage = global::ClientGUI.Properties.Resources.Possible_Background;
+                this.Controls.Clear();
+                this.Invalidate();
 
+                ClientState = State.Menu;
+                Menu_Draw();
+
+                GameChoice = Game.None;
+            }
         }
         private void Yes_Click(object sender, EventArgs e)
         {
@@ -247,7 +272,7 @@ namespace ClientGUI
             }
             else if (GameChoice == Game.Roulette)
             {
-
+                RouletteGUI = null;
             }
 
             this.BackgroundImage = global::ClientGUI.Properties.Resources.CardsBackground;
@@ -271,12 +296,12 @@ namespace ClientGUI
         private void SubmitBuyIn_Click(object sender, EventArgs e)
         {
             buyInString = BuyInTextBox.Text;
-          
+
             if (!decimal.TryParse(buyInString, out buyIn))
             {
-                
+
             }
-            else if(buyIn > ClientMain.MainUser.Balance)
+            else if (buyIn > ClientMain.MainUser.Balance)
             {
 
             }
@@ -289,7 +314,7 @@ namespace ClientGUI
                         BlackjackGUI = new BlackjackGUI(Height, Width);
                         BlackjackGUI.buyIn = buyIn;
                     }
-                  
+
                     this.Controls.Clear();
                     this.Invalidate();
                     this.BackgroundImage = global::ClientGUI.Properties.Resources.BlackjackBackground;
@@ -328,16 +353,34 @@ namespace ClientGUI
                 }
                 else if (GameChoice == Game.Roulette)
                 {
+                    if(RouletteGUI == null)
+                    {
+                        RouletteGUI = new RouletteGUI(Height, Width);
+                        RouletteGUI.buyIn = buyIn;
+                    }
 
+                    this.Controls.Clear();
+                    this.Invalidate();
+                    this.BackgroundImage = global::ClientGUI.Properties.Resources.RouletteBackground;
+
+                    ClientState = State.Game;
+                    RouletteGUI.OS = GameGUI.OverallState.Playing;
+
+                    // RouletteGUI.WS = GameGUI.WaitingState.NoConnection;
+
+                    // Wait for table to be found, then move to betting stage
+
+                    RouletteGUI.GS = GameGUI.GameState.Betting;
+                    Game_Draw();
                 }
-            } 
+            }
         }
         private void SubmitBet_Click(object sender, EventArgs e)
         {
             betString = BetTextBox.Text;
-            if(!decimal.TryParse(betString, out bet))
-            {               
-                
+            if (!decimal.TryParse(betString, out bet))
+            {
+
             }
             else if (bet > buyIn)
             {
@@ -351,6 +394,9 @@ namespace ClientGUI
                 if (GameChoice == Game.Blackjack)
                 {
                     BlackjackGUI.bet = bet;
+
+                    ClientState = State.Game;
+                    BlackjackGUI.OS = GameGUI.OverallState.Playing;
                     BlackjackGUI.GS = GameGUI.GameState.Playing;
 
                     Game_Draw();
@@ -358,13 +404,12 @@ namespace ClientGUI
                 else if (GameChoice == Game.TexasHoldEm)
                 {
                     TexasHoldEmGUI.bet = bet;
+
+                    ClientState = State.Game;
+                    TexasHoldEmGUI.OS = GameGUI.OverallState.Playing;
                     TexasHoldEmGUI.GS = GameGUI.GameState.Playing;
 
                     Game_Draw();
-                }
-                else if (GameChoice == Game.Roulette)
-                {
-
                 }
             }
         }
@@ -379,7 +424,7 @@ namespace ClientGUI
             mouseX = e.X;
             mouseY = e.Y;
 
-            if(GameChoice == Game.Blackjack)
+            if (GameChoice == Game.Blackjack)
             {
                 if (BlackjackGUI != null)
                 {
@@ -401,7 +446,7 @@ namespace ClientGUI
                                     }
                                     else if ((BlackjackGUI.clickY < Height - 120 + 35 && BlackjackGUI.clickY > Height - 120))
                                     {
-                                        BlackjackGUI.GS = BlackjackGUI.GameState.Waiting;
+                                        BlackjackGUI.GS = GameGUI.GameState.Waiting;
                                     }
                                 }
                             }
@@ -429,58 +474,164 @@ namespace ClientGUI
             }
             else if (GameChoice == Game.TexasHoldEm)
             {
-                if(TexasHoldEmGUI != null)
+                if (TexasHoldEmGUI != null)
                 {
                     TexasHoldEmGUI.clickX = e.X;
                     TexasHoldEmGUI.clickY = e.Y;
-                }
-                switch(TexasHoldEmGUI.OS)
-                {
-                    case TexasHoldEmGUI.OverallState.Playing:
+
+                    switch (TexasHoldEmGUI.OS)
                     {
-                        if (TexasHoldEmGUI.clickX < Width - 50 && TexasHoldEmGUI.clickX > Width - 150)
-                        {
-                            if (TexasHoldEmGUI.clickY < Height - 175 + 35 && TexasHoldEmGUI.clickY > Height - 175)
+                        case TexasHoldEmGUI.OverallState.Playing:
                             {
-                                 // call
+                                if (TexasHoldEmGUI.clickX < Width - 50 && TexasHoldEmGUI.clickX > Width - 150)
+                                {
+                                    if (TexasHoldEmGUI.clickY < Height - 175 + 35 && TexasHoldEmGUI.clickY > Height - 175)
+                                    {
+                                        // call
+                                    }
+                                    else if ((TexasHoldEmGUI.clickY < Height - 120 + 35 && TexasHoldEmGUI.clickY > Height - 120))
+                                    {
+                                        // raise
+                                    }
+                                }
+                                if (TexasHoldEmGUI.clickX < Width - 160 && TexasHoldEmGUI.clickX > Width - 260)
+                                {
+                                    if (TexasHoldEmGUI.clickY < Height - 175 + 35 && TexasHoldEmGUI.clickY > Height - 175)
+                                    {
+                                        // fold
+                                    }
+                                    else if ((TexasHoldEmGUI.clickY < Height - 120 + 35 && TexasHoldEmGUI.clickY > Height - 120))
+                                    {
+                                        // check
+                                    }
+                                }
                             }
-                            else if ((TexasHoldEmGUI.clickY < Height - 120 + 35 && TexasHoldEmGUI.clickY > Height - 120))
+                            break;
+                        case TexasHoldEmGUI.OverallState.Waiting:
+                            break;
+                        case TexasHoldEmGUI.OverallState.Distributing:
                             {
-                                 // raise
+                                if (TexasHoldEmGUI.clickX > Width / 2 - 65 && TexasHoldEmGUI.clickX < Width / 2 - 65 + 130)
+                                {
+                                    if (TexasHoldEmGUI.clickY > Height / 2 + 60 && TexasHoldEmGUI.clickY < Height / 2 + 60 + 40)
+                                    {
+                                        TexasHoldEmGUI.You.RefreshHand();
+                                        BettingScreen_Draw();
+                                    }
+                                }
+                                break;
                             }
-                        }
-                        if (TexasHoldEmGUI.clickX < Width - 160 && TexasHoldEmGUI.clickX > Width - 260)
-                        {
-                            if (TexasHoldEmGUI.clickY < Height - 175 + 35 && TexasHoldEmGUI.clickY > Height - 175)
-                            {
-                                 // fold
-                            }
-                            else if ((TexasHoldEmGUI.clickY < Height - 120 + 35 && TexasHoldEmGUI.clickY > Height - 120))
-                            {
-                                 // check
-                            }
-                        }
-                    }
-                    break;
-                    case TexasHoldEmGUI.OverallState.Waiting:
-                        break;
-                    case TexasHoldEmGUI.OverallState.Distributing:
-                        {
-                        if (TexasHoldEmGUI.clickX > Width / 2 - 65 && TexasHoldEmGUI.clickX < Width / 2 - 65 + 130)
-                        {
-                            if (TexasHoldEmGUI.clickY > Height / 2 + 60 && TexasHoldEmGUI.clickY < Height / 2 + 60 + 40)
-                            {
-                                TexasHoldEmGUI.You.RefreshHand();
-                                BettingScreen_Draw();
-                            } 
-                        }
-                        break;
                     }
                 }
             }
             else if (GameChoice == Game.Roulette)
             {
+                if (RouletteGUI != null)
+                {
+                    RouletteGUI.clickX = e.X;
+                    RouletteGUI.clickY = e.Y;
 
+                    int gridX = 0;
+                    int gridY = 0;
+
+                    int startX = 473;
+                    int startY = 305;
+
+                    int Chosen = 0;
+                    switch (RouletteGUI.OS)
+                    {
+                        case RouletteGUI.OverallState.Playing:
+                            {
+                                switch (RouletteGUI.GS)
+                                {
+                                    case RouletteGUI.GameState.Waiting:
+                                        {
+                                         
+                                        }
+                                        break;
+                                    case RouletteGUI.GameState.Betting:
+                                        {
+                                            if (RouletteGUI.clickX >= startX - 36 && RouletteGUI.clickX <= startX) { gridX = 1; }
+                                            else if (RouletteGUI.clickX > startX && RouletteGUI.clickX <= startX + 49) { gridX = 2; }
+                                            else if (RouletteGUI.clickX > startX + 49 && RouletteGUI.clickX <= startX + 49 * 2) { gridX = 3; }
+                                            else if (RouletteGUI.clickX > startX + 49 * 2 && RouletteGUI.clickX <= startX + 49 * 3) { gridX = 4; }
+                                            else if (RouletteGUI.clickX > startX + 49 * 3 && RouletteGUI.clickX <= startX + 49 * 4) { gridX = 5; }
+                                            else if (RouletteGUI.clickX > startX + 49 * 4 && RouletteGUI.clickX <= startX + 49 * 5) { gridX = 6; }
+                                            else if (RouletteGUI.clickX > startX + 49 * 5 && RouletteGUI.clickX <= startX + 49 * 6) { gridX = 7; }
+                                            else if (RouletteGUI.clickX > startX + 49 * 6 && RouletteGUI.clickX <= startX + 49 * 7) { gridX = 8; }
+                                            else if (RouletteGUI.clickX > startX + 49 * 7 && RouletteGUI.clickX <= startX + 49 * 8) { gridX = 9; }
+                                            else if (RouletteGUI.clickX > startX + 49 * 8 && RouletteGUI.clickX <= startX + 49 * 9) { gridX = 10; }
+                                            else if (RouletteGUI.clickX > startX + 49 * 9 && RouletteGUI.clickX <= startX + 49 * 10) { gridX = 11; }
+                                            else if (RouletteGUI.clickX > startX + 49 * 10 && RouletteGUI.clickX <= startX + 49 * 11) { gridX = 12; }
+                                            else if (RouletteGUI.clickX > startX + 49 * 11 && RouletteGUI.clickX <= startX + 49 * 12) { gridX = 13; }
+                                            else if (RouletteGUI.clickX > startX + 49 * 12 && RouletteGUI.clickX <= startX + 49 * 13) { gridX = 14; }
+
+                                            if (gridX != 1)
+                                            {
+                                                if (RouletteGUI.clickY >= startY && RouletteGUI.clickY <= startY + 58)
+                                                {
+                                                    gridY = 1;
+                                                }
+                                                else if (RouletteGUI.clickY >= startY + 58 && RouletteGUI.clickY < startY + 58 * 2)
+                                                {
+                                                    gridY = 2;
+                                                }
+                                                else if (RouletteGUI.clickY >= startY + 58 * 2 && RouletteGUI.clickY < startY + 58 * 3)
+                                                {
+                                                    gridY = 3;
+                                                }
+                                                else if (RouletteGUI.clickY >= startY + 58 * 3 + 36 && RouletteGUI.clickY < startY + 58 * 3 + 36 * 2)
+                                                {
+                                                    gridY = 4;
+                                                }
+                                                else if (RouletteGUI.clickY >= startY + 58 * 3 + 36 * 2 && RouletteGUI.clickY < startY + 58 * 3 + 36 * 3)
+                                                {
+                                                    gridY = 5;
+                                                }
+
+                                                Chosen = RouletteGUI.ChosenNumber(gridX, gridY);
+                                            }
+                                            else
+                                            {
+                                                if (RouletteGUI.clickY >= startY && RouletteGUI.clickY <= startY + 88)
+                                                {
+                                                    Chosen = -1;
+                                                    RouletteGUI.Choice = RouletteGUI.Choices.DoubleZero;
+                                                }
+                                                else if (RouletteGUI.clickY >= startY + 88 && RouletteGUI.clickY <= startY + 88 * 2)
+                                                {
+                                                    Chosen = 0;
+                                                    RouletteGUI.NumberChosen = 0;
+                                                }
+                                            }                                              
+                                        }
+                                        break;
+                                    case RouletteGUI.GameState.Playing:
+                                        {
+                                           
+                                        }
+                                        break;
+                                }
+                            }
+                            break;
+                        case RouletteGUI.OverallState.Waiting:
+                            {
+
+                            }
+                            break;
+                        case RouletteGUI.OverallState.Distributing:
+                            {
+                                if (RouletteGUI.clickX > Width / 2 - 65 && RouletteGUI.clickX < Width / 2 - 65 + 130)
+                                {
+                                    if (RouletteGUI.clickY > Height / 2 + 60 && RouletteGUI.clickY < Height / 2 + 60 + 40)
+                                    {
+                                        
+                                    }
+                                }
+                                break;
+                            }
+                    }
+                }
             }
         }
 

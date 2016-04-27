@@ -137,11 +137,11 @@ namespace ClientGUI.Game_GUIs
 
                                     e.Graphics.DrawString("your turn", new Font("Segoe UI", 38), Brushes.White, new Point(clientWidth / 2 - 130, clientHeight / 2 - 40));
 
-                                    e.Graphics.FillRectangle(Brushes.OldLace, clientWidth - 150, clientHeight - 175, 100, 35);
+                                    e.Graphics.FillRectangle(Brushes.White, clientWidth - 150, clientHeight - 175, 100, 35);
                                     e.Graphics.DrawRectangle(Pens.Black, clientWidth - 151, clientHeight - 176, 102, 37);
                                     e.Graphics.DrawString("call", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 125, clientHeight - 178));
 
-                                    e.Graphics.FillRectangle(Brushes.OldLace, clientWidth - 150, clientHeight - 120, 100, 35);
+                                    e.Graphics.FillRectangle(Brushes.White, clientWidth - 150, clientHeight - 120, 100, 35);
                                     e.Graphics.DrawRectangle(Pens.Black, clientWidth - 151, clientHeight - 121, 102, 37);
                                     e.Graphics.DrawString("raise", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 135, clientHeight - 125));
 

@@ -298,4 +298,28 @@
   <data name="Roulette_table" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Roulette_table.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="RouletteBackground" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\RouletteBackground.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="roulette_numbers" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\roulette_numbers.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="roulette_wheel" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\roulette_wheel.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="button" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\button.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Possible_Background" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\Possible_Background.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Risiko" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\Risiko.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="textbox" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\textbox.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="textbox2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\textbox2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

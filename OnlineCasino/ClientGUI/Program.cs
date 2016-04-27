@@ -16,8 +16,7 @@ namespace ClientGUI
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-           Application.Run(new ClientGUI());
-           //Application.Run(new ClientLogic.RouletteGUI()); //for testing roulette gui
+            Application.Run(new ClientGUI());
         }
     }
 }

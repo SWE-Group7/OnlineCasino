@@ -15,8 +15,6 @@ namespace ClientGUI.Game_GUIs
         public Bitmap CardImage;
         protected Deck Deck;
 
-        public decimal buyIn;
-        public decimal bet;
         protected int yourCardX;
         protected int yourCardY;
         protected int yourCardsCount = 0;
