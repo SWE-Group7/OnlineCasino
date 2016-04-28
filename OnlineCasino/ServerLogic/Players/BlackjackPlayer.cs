@@ -1,115 +1,71 @@
-﻿using ServerLogic.Connections.CommandHandlers;
+﻿using ServerLogic.Games;
+using ServerLogic.Games.GameComponents;
+using SharedModels.Connection.Enums;
 using SharedModels.GameComponents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-//using Intermediate.Communications;
+using SMP = SharedModels.Players;
 
 namespace ServerLogic.Players
 {
     public class BlackjackPlayer : Player
     {
 
-        public BlackjackPlayerStatus Status;
-        public bool inGame;
-        public decimal Bet;
+        public const GameTypes GameType = GameTypes.Blackjack;
+        public readonly new Blackjack CurrentGame;
+        private int _CardCount = 0;
+        public int CardCount
+        {
+            get
+            {
+                if (_CardCount == 0)
+                    _CardCount = CardHelper.CountHand(Cards);
+
+                return _CardCount;
+
+            }
+        }
         private List<Card> Cards;
-        private BlackjackCH Commander;
 
-        public BlackjackPlayer(User user, decimal BuyIn)
-            : base(user, BuyIn)
+        public BlackjackPlayer(User user, Blackjack game, int seat, int buyIn)
+            : base(user, game, seat, buyIn)
         {
-
             Cards = new List<Card>();
-            user.InGame = true;
-            inGame = true;
-            
-        }
-        
-        public bool SetUserBet(decimal amount)
-        {
-            if (Status == BlackjackPlayerStatus.Betting)
-            {
-                Bet = amount;
-                Status = BlackjackPlayerStatus.Waiting;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
         }
 
-        public void UpdateGameBalance(bool won)
-        {
-            if (won) GameBalance += Bet;
-            else GameBalance -= Bet;
-        }
-
-        public void IndicateBet()
-        {
-            Status = BlackjackPlayerStatus.Betting;
-            
-        }
-
-        public void IndicatePlaying()
-        {
-            Status = BlackjackPlayerStatus.Playing;
-            //CurrentUser.Client.IndicatePlaying();
-        }
-
-        public void IndicateWait()
-        {
-            Status = BlackjackPlayerStatus.Waiting;
-            //CurrentUser.Client.IndicateWaiting();
-        }
 
         public List<Card> GetCards()
         {
             List<Card> CardsCopy = new List<Card>();
-
             foreach (Card C in Cards)
-            {
                 CardsCopy.Add(new Card(C.Suit, C.Rank));
-            }
-
+            
             return CardsCopy;
         }
-
         public void DealCard(Card card)
         {
             Cards.Add(card);
+            _CardCount = CardHelper.CountHand(Cards);
         }
-
-        public void ForceNoBet()
-        {
-            Console.Out.Write("\nNo bet\n");
-            Status = BlackjackPlayerStatus.Waiting;
-            Bet = 0;
-        }
-
         public void ClearCards()
         {
-            Cards = new List<Card>();
+            Cards.Clear();
+            _CardCount = 0;
         }
-
-        public class Request
+        public int GetCardCount()
         {
-            public Request()
-            {
-                
-            }
+            return CardCount;
         }
+      
+
+    
+
     }
 
-    public enum BlackjackPlayerStatus
-    {
-        Waiting,
-        Betting,
-        Playing
-    }
+   
 
     
 }

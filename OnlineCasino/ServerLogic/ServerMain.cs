@@ -11,20 +11,30 @@ using System.Runtime.Serialization.Formatters.Binary;
 using SharedModels;
 using ServerLogic.Connections;
 using System.Diagnostics;
-
+using SharedModels.Connection.Enums;
+using ServerLogic.Games;
+using System.Collections.Concurrent;
 namespace ServerLogic
 {
     public static class ServerMain
     {
-        public static List<User> ConnectedUsers;
-        public static List<Game> OpenTables;
+        private static List<User> ConnectedUsers;
+        private static ConcurrentDictionary<GameTypes, List<Game>> AllGames;
         private static TcpListener Listener;
         private static Stopwatch Timer = new Stopwatch();
+        private static volatile int NextGameID = 1;
 
         public static void Start()
         {
             ConnectedUsers = new List<User>();
-            OpenTables = new List<Game>();
+            AllGames = new ConcurrentDictionary<GameTypes, List<Game>>();
+
+            //Initialize list of game for each GameType 
+            GameTypes[] gameTypes = (GameTypes[]) Enum.GetValues(typeof(GameTypes));
+            gameTypes = gameTypes.Where(i => (int)i != 0).ToArray();
+            foreach (GameTypes game in gameTypes)
+                AllGames.TryAdd(game, new List<Game>());
+            
             Listener = new TcpListener(IPAddress.Any, 47689);
             ListenForClients();
         }
@@ -40,8 +50,8 @@ namespace ServerLogic
 
             Listener.Start();
 
-            CommType commType;
-            ServerCommand cmd;
+            CommTypes commType;
+            ServerCommands cmd;
             int reqId;
             while (true)
             {
@@ -53,8 +63,8 @@ namespace ServerLogic
 
                 //Ensure Command Start
                 bytesRead = client.GetStream().Read(buffer, 0, sizeof(int));
-                commType = (CommType)BitConverter.ToInt32(buffer, 0);
-                if (commType != CommType.Start)
+                commType = (CommTypes)BitConverter.ToInt32(buffer, 0);
+                if (commType != CommTypes.Start)
                     continue;
 
                 if (!client.GetStream().DataAvailable && ReaderStuck(client))
@@ -62,10 +72,10 @@ namespace ServerLogic
                     
                 //Get CommType
                 bytesRead = client.GetStream().Read(buffer, 0, sizeof(int));
-                commType = (CommType) BitConverter.ToInt32(buffer, 0);
+                commType = (CommTypes) BitConverter.ToInt32(buffer, 0);
 
                 //If not Request, Close
-                if(commType != CommType.Request)
+                if(commType != CommTypes.Request)
                 {
                     client.GetStream().Dispose();
                     client.Close();
@@ -77,10 +87,10 @@ namespace ServerLogic
 
                 //Get Command
                 bytesRead = client.GetStream().Read(buffer, 0, sizeof(int));
-                cmd = (ServerCommand) BitConverter.ToInt32(buffer, 0);
+                cmd = (ServerCommands) BitConverter.ToInt32(buffer, 0);
 
                 //If not Login or Register, Close
-                if (!(cmd == ServerCommand.Login || cmd == ServerCommand.Register))
+                if (!(cmd == ServerCommands.Login || cmd == ServerCommands.Register))
                 {
                     client.GetStream().Dispose();
                     client.Close();
@@ -121,13 +131,12 @@ namespace ServerLogic
                 if (stuck)
                     continue;
 
-                Thread thread = new Thread(() => Login(client, cmd, reqId, obj));
+                Thread thread = new Thread(() => HandleClientLogin(client, cmd, reqId, obj));
                 thread.Start();
 
             }
         }
-
-        private static void Login(TcpClient client, ServerCommand cmd, int reqId, byte[] obj)
+        private static void HandleClientLogin(TcpClient client, ServerCommands cmd, int reqId, byte[] obj)
         {
             Connection connection = new Connection(client);
             User user;
@@ -147,7 +156,6 @@ namespace ServerLogic
                 
             }
         }
-
         private static bool ReaderStuck(TcpClient client)
         {
             Timer.Restart();
@@ -164,7 +172,37 @@ namespace ServerLogic
             return true;
         }
 
-        static public void  WriteException(string throwingMethod, Exception ex)
+        public static Game GetGameForUser(GameTypes gameType)
+        {
+            Game game;
+            List<Game> specificGames = AllGames[gameType];
+
+            lock (specificGames)
+            {
+                game = specificGames.AsEnumerable()
+                                    .FirstOrDefault(g => g.HasOpenSeat());
+                if (game == null)
+                {
+                    switch (gameType)
+                    {
+                        case GameTypes.Blackjack:
+                            game = new Blackjack(NextGameID++);
+                            break;
+                        case GameTypes.Roulette:
+                            //game = new Roulette(NextGameID++);
+                            break;
+                        case GameTypes.TexasHoldEm:
+                            //game = new TexasHoldEm(NextGameID++);
+                            break;
+                    }
+                    specificGames.Add(game);
+                }
+            }
+            return game;
+
+        }
+
+        public static void  WriteException(string throwingMethod, Exception ex)
         {
             Console.WriteLine(String.Format("{0} threw an Exception : {1}", throwingMethod, ex.Message));
         }

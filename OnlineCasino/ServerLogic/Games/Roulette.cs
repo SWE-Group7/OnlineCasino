@@ -6,15 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using ServerLogic.Games.GameComponents;
 using System.Threading;
+using SharedModels.Connection.Enums;
 
 namespace ServerLogic.Games
 {
-    public enum RouletteStates
-    {
-        Betting,
-        Spinning,
-        GainsOrLoses
-    }
+    
     public class Roulette : Game
     {
         public RouletteStates rouletteState;
@@ -161,7 +157,7 @@ namespace ServerLogic.Games
                     player.ClearBets();
                     player.UpdateUserBalance();
 
-                    if (player.GetBalance() <= 0)
+                    if (player.GetGameBalance() <= 0)
                     {
                         Console.WriteLine(player.GetFullName() + "'s total balance is now 0. Adding $10..");
                         player.GiftMoney(10);

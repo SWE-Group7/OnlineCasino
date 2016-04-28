@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SharedModels.Connection.Enums
 {
-    public enum GameType
+    public enum GameTypes
     {
         None = 0,
         Blackjack,

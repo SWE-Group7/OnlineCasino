@@ -29,6 +29,7 @@ namespace ClientGUI.Game_GUIs
         public BlackjackGUI(int h, int w)
         {
             u = new SM.User(100, "n", "nadine", "omg", 100);
+
             SharedModels.Players.BlackjackPlayer ba = new SharedModels.Players.BlackjackPlayer(u, 100, 100, 100);
 
             v = new SM.User(100, "f", "Foster", "omg", 100);
@@ -42,6 +43,9 @@ namespace ClientGUI.Game_GUIs
 
             y = new SM.User(100, "s", "Gino", "omg", 100);
             SharedModels.Players.BlackjackPlayer be = new SharedModels.Players.BlackjackPlayer(y, 100, 100, 100);
+
+            SM.Player b = new SM.Player(u, 1, 1000);
+
 
             Deck = new Deck();
             You = new ClientLogic.Players.BlackjackPlayer(ba);

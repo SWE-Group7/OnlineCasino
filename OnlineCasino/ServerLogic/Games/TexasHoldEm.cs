@@ -9,19 +9,22 @@ using System.IO;
 using ServerLogic.Games.GameComponents;
 using SharedModels.GameComponents;
 using System.Diagnostics;
+using SharedModels.Connection.Enums;
 
 namespace ServerLogic.Games
 {
-    public enum TexasHoldEmStates
-    {
-        Betting,
-        Dealing,
-        Playing,
-        GainsOrLoses
-    }
+
 
     public class TexasHoldEm : Game
     {
+        public TexasHoldEm(int Id) 
+            : base(Id)
+        {
+
+        }
+
+        #region Stuff
+        /*
         public List<Card> tablecards;
                 public TexasHoldEmStates TexasHoldEmState;
 
@@ -61,8 +64,8 @@ namespace ServerLogic.Games
                 //step1: wait for players.  Game state set to waiting
                 //set_Game_State(GameStates.Waiting);
 
-                /*SERVER CHECKS FOR CONNECTIONS 
-                if(no connections) break;*/
+                //SERVER CHECKS FOR CONNECTIONS 
+                //if(no connections) break;
 
                 Deck deck = new Deck();
                 
@@ -263,7 +266,7 @@ namespace ServerLogic.Games
                     player.ClearCards();
                     player.UpdateUserBalance();
 
-                    if (player.GetBalance() <= 0)
+                    if (player.GetGameBalance() <= 0)
                     {
                         Console.WriteLine(player.GetFullName() + "'s total balance is now 0. Adding $10..");
                         player.GiftMoney(10);
@@ -334,5 +337,8 @@ namespace ServerLogic.Games
             if (success) return input;
             else throw new TimeoutException("User did not provide input within the time limit.");
         }
+        */
+        #endregion
+
     }
 }

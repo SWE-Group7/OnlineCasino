@@ -35,10 +35,10 @@ namespace ClientGUI.Game_GUIs
             middleCardY = 100; 
             
             u = new SharedModels.Players.User(100, "n", "nadine", "omg", 100);
-            SharedModels.Players.TexasHoldEmPlayer t = new SharedModels.Players.TexasHoldEmPlayer(u, 100, 100, 100);
 
-            f = new SharedModels.Players.User(200, "foster", "foster", "omgomg", 100);
-            SharedModels.Players.TexasHoldEmPlayer tf = new SharedModels.Players.TexasHoldEmPlayer(f, 100, 100, 100);
+            SharedModels.Players.TexasHoldEmPlayer t = new SharedModels.Players.TexasHoldEmPlayer(u, 1, 100);
+            f = new SharedModels.Players.User(200, "f", "foster", "omgomg", 100);
+            SharedModels.Players.TexasHoldEmPlayer tf = new SharedModels.Players.TexasHoldEmPlayer(u, 1, 100);
 
             Deck = new Deck();
             You = new ClientLogic.Players.TexasHoldEmPlayer(t);

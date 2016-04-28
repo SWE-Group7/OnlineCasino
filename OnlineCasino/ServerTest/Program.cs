@@ -77,21 +77,21 @@ namespace ServerTest
                         case "1":
                             addAnotherUser = true;
                             break;
-                        case "2":
-                            Blackjack bjack = new Blackjack(users);
-                            bjack.Start();
-                            Console.Read();
-                            break;
-                        case "3":
-                            Roulette roulette = new Roulette(users);
-                            roulette.Start();
-                            Console.Read();
-                            break;
-                        case "4":
-                            TexasHoldEm texasHoldem = new TexasHoldEm(users);
-                            texasHoldem.Start();
-                            Console.Read();
-                            break;
+                        //case "2":
+                        //    Blackjack bjack = new Blackjack();
+                        //    bjack.Start();
+                        //    Console.Read();
+                        //    break;
+                        //case "3":
+                        //    Roulette roulette = new Roulette(users);
+                        //    roulette.Start();
+                        //    Console.Read();
+                        //    break;
+                        //case "4":
+                        //    TexasHoldEm texasHoldem = new TexasHoldEm(users);
+                        //    texasHoldem.Start();
+                        //    Console.Read();
+                        //    break;
                         default:
                             Console.WriteLine("Error - Invalid Input");
                             break;

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SharedModels.Connection
 {
-    public enum CommType
+    public enum CommTypes
     {
         Void,
         Request,
