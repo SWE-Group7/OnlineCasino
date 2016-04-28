@@ -52,6 +52,9 @@ namespace ClientGUI.Game_GUIs
         public Player You;
         public List<Player> OtherPlayers;
 
+        public decimal buyIn;
+        public decimal bet;
+
         protected float sx = 0;
         protected bool sp = true;
         protected void JoiningTable_Draw(object sender, PaintEventArgs e)

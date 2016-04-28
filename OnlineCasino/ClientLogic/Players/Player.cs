@@ -22,5 +22,10 @@ namespace ClientLogic.Players
             this.GameBalance = player.GameBalance;
             this.Seat = player.Seat;
         }
+
+        public string getUsername()
+        {
+            return CurrentUser.Username;
+        }
     }
 }

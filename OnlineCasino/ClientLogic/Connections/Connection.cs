@@ -34,7 +34,7 @@ namespace ClientLogic.Connections
 
         public Connection()
         {
-            Server = new TcpClient("127.0.0.1", 47689);
+            Server = new TcpClient("192.168.0.16", 47689);
             Connected = true;
             WriteQueueEmpty = true;
 
