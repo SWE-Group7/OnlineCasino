@@ -275,7 +275,7 @@ namespace ClientGUI
                 RouletteGUI = null;
             }
 
-            this.BackgroundImage = global::ClientGUI.Properties.Resources.CardsBackground;
+            this.BackgroundImage = global::ClientGUI.Properties.Resources.Possible_Background;
             this.Controls.Clear();
             this.Invalidate();
 
@@ -290,7 +290,8 @@ namespace ClientGUI
         private void No_Click(object sender, EventArgs e)
         {
             check = false;
-            Game_Draw();
+            if (ClientState != State.Betting) Game_Draw();
+            else BettingScreen_Draw();
         }
 
         private void SubmitBuyIn_Click(object sender, EventArgs e)
@@ -319,7 +320,7 @@ namespace ClientGUI
                     this.Invalidate();
                     this.BackgroundImage = global::ClientGUI.Properties.Resources.BlackjackBackground;
 
-                    ClientState = State.Game;
+                    ClientState = State.Betting;
                     BlackjackGUI.OS = GameGUI.OverallState.Playing;
                     //BlackjackGUI.WS = GameGUI.WaitingState.NoConnection;
 
@@ -341,7 +342,7 @@ namespace ClientGUI
                     this.Invalidate();
                     this.BackgroundImage = global::ClientGUI.Properties.Resources.BlackjackBackground;
 
-                    ClientState = State.Game;
+                    ClientState = State.Betting;
                     TexasHoldEmGUI.OS = GameGUI.OverallState.Playing;
                     //TexasHoldEmGUI.WS = GameGUI.WaitingState.NoConnection;
 
@@ -363,7 +364,7 @@ namespace ClientGUI
                     this.Invalidate();
                     this.BackgroundImage = global::ClientGUI.Properties.Resources.RouletteBackground;
 
-                    ClientState = State.Game;
+                    ClientState = State.Betting;
                     RouletteGUI.OS = GameGUI.OverallState.Playing;
 
                     // RouletteGUI.WS = GameGUI.WaitingState.NoConnection;
@@ -371,7 +372,7 @@ namespace ClientGUI
                     // Wait for table to be found, then move to betting stage
 
                     RouletteGUI.GS = GameGUI.GameState.Betting;
-                    Game_Draw();
+                    BettingScreen_Draw();
                 }
             }
         }
@@ -408,6 +409,16 @@ namespace ClientGUI
                     ClientState = State.Game;
                     TexasHoldEmGUI.OS = GameGUI.OverallState.Playing;
                     TexasHoldEmGUI.GS = GameGUI.GameState.Playing;
+
+                    Game_Draw();
+                }
+                else if (GameChoice == Game.Roulette)
+                {
+                    RouletteGUI.bet = bet;
+
+                    ClientState = State.Game;
+                    RouletteGUI.OS = GameGUI.OverallState.Playing;
+                    RouletteGUI.GS = GameGUI.GameState.Playing;
 
                     Game_Draw();
                 }

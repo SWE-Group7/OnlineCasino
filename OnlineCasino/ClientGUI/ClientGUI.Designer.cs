@@ -542,12 +542,26 @@ namespace ClientGUI
                 this.Invalidate();
 
                 Button ReturnToMenu = new Button();
-                ReturnToMenu.Size = new Size(50, 22);
-                ReturnToMenu.BackColor = Color.White;
+                ReturnToMenu.Size = new Size(55, 22);
+                ReturnToMenu.FlatStyle = FlatStyle.Flat;
+                ReturnToMenu.FlatAppearance.BorderSize = 0;
+                ReturnToMenu.FlatAppearance.MouseDownBackColor = Color.Transparent;
+                ReturnToMenu.FlatAppearance.MouseOverBackColor = Color.Transparent;
+                ReturnToMenu.Image = Properties.Resources.button;
+                ReturnToMenu.BackColor = Color.Transparent;
+                ReturnToMenu.Font = new Font("Segoe UI", 9);
                 ReturnToMenu.Location = new Point(20, Height - 75);
-                ReturnToMenu.Text = "< Back";
+                ReturnToMenu.Text = "back";
                 ReturnToMenu.Click += new System.EventHandler(ReturnToMenu_Click);
                 Controls.Add(ReturnToMenu);
+
+                PictureBox butt1 = new PictureBox();
+                butt1.Image = Properties.Resources.button;
+                butt1.Size = new Size(55, 22);
+                butt1.SizeMode = PictureBoxSizeMode.StretchImage;
+                butt1.Location = new Point(20, Height - 75);
+                butt1.SendToBack();
+                Controls.Add(butt1);
             }
             else
             {
@@ -555,10 +569,9 @@ namespace ClientGUI
                 this.Invalidate();
 
                 Label AreYouSure = new Label();
-                AreYouSure.Size = new Size(80, 75);
-                AreYouSure.Location = new Point(15, Height - 160);
+                AreYouSure.Size = new Size(78, 20);
+                AreYouSure.Location = new Point(17, Height - 100);
                 AreYouSure.Font = new Font("Segoe UI", 8);
-                AreYouSure.ForeColor = Color.White;
                 AreYouSure.Text = "Are you sure?";
                 Controls.Add(AreYouSure);
 
@@ -596,12 +609,26 @@ namespace ClientGUI
             this.Invalidate();
 
             Button ReturnToMenu = new Button();
-            ReturnToMenu.Size = new Size(50, 22);
-            ReturnToMenu.BackColor = Color.White;
+            ReturnToMenu.Size = new Size(55, 22);
+            ReturnToMenu.FlatStyle = FlatStyle.Flat;
+            ReturnToMenu.FlatAppearance.BorderSize = 0;
+            ReturnToMenu.FlatAppearance.MouseDownBackColor = Color.Transparent;
+            ReturnToMenu.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            ReturnToMenu.Image = Properties.Resources.button;
+            ReturnToMenu.BackColor = Color.Transparent;
+            ReturnToMenu.Font = new Font("Segoe UI", 9);
             ReturnToMenu.Location = new Point(20, Height - 75);
-            ReturnToMenu.Text = "< Back";
+            ReturnToMenu.Text = "back";
             ReturnToMenu.Click += new System.EventHandler(ReturnToMenu_Click);
             Controls.Add(ReturnToMenu);
+
+            PictureBox butt1 = new PictureBox();
+            butt1.Image = Properties.Resources.button;
+            butt1.Size = new Size(55, 22);
+            butt1.SizeMode = PictureBoxSizeMode.StretchImage;
+            butt1.Location = new Point(20, Height - 75);
+            butt1.SendToBack();
+            Controls.Add(butt1);
 
             Label BettingLabel = new Label();
             BettingLabel.Size = new Size(170, 60);
@@ -652,12 +679,26 @@ namespace ClientGUI
             this.Invalidate();
 
             Button ReturnToMenu = new Button();
-            ReturnToMenu.Size = new Size(50, 22);
-            ReturnToMenu.BackColor = Color.White;
+            ReturnToMenu.Size = new Size(55, 22);
+            ReturnToMenu.FlatStyle = FlatStyle.Flat;
+            ReturnToMenu.FlatAppearance.BorderSize = 0;
+            ReturnToMenu.FlatAppearance.MouseDownBackColor = Color.Transparent;
+            ReturnToMenu.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            ReturnToMenu.Image = Properties.Resources.button;
+            ReturnToMenu.BackColor = Color.Transparent;
+            ReturnToMenu.Font = new Font("Segoe UI", 9);
             ReturnToMenu.Location = new Point(20, Height - 75);
-            ReturnToMenu.Text = "< Back";
+            ReturnToMenu.Text = "back";
             ReturnToMenu.Click += new System.EventHandler(ReturnToMenu_Click);
             Controls.Add(ReturnToMenu);
+
+            PictureBox butt1 = new PictureBox();
+            butt1.Image = Properties.Resources.button;
+            butt1.Size = new Size(55, 22);
+            butt1.SizeMode = PictureBoxSizeMode.StretchImage;
+            butt1.Location = new Point(20, Height - 75);
+            butt1.SendToBack();
+            Controls.Add(butt1);
 
 
             Label BettingLabel = new Label();

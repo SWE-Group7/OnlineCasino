@@ -92,32 +92,21 @@ namespace ClientGUI.Game_GUIs
                                 break;
                             case GameState.Betting:
                                 {
-
+                                    
                                 }
                                 break;
                             case GameState.Playing:
                                 {
-                                    e.Graphics.DrawString("your turn", new Font("Segoe UI", 38), Brushes.White, new Point(clientWidth / 2 - 130, clientHeight / 2 - 40));
-
-                                    e.Graphics.FillRectangle(Brushes.White, clientWidth - 150, clientHeight - 175, 100, 35);
-                                    e.Graphics.DrawRectangle(Pens.Black, clientWidth - 151, clientHeight - 176, 102, 37);
-                                    e.Graphics.DrawString("hit", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 120, clientHeight - 178));
-
                                     e.Graphics.FillRectangle(Brushes.White, clientWidth - 150, clientHeight - 120, 100, 35);
                                     e.Graphics.DrawRectangle(Pens.Black, clientWidth - 151, clientHeight - 121, 102, 37);
-                                    e.Graphics.DrawString("stay", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 128, clientHeight - 125));
+                                    e.Graphics.DrawString("finish", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 128, clientHeight - 125));
 
                                     if (hoverX < clientWidth - 50 && hoverX > clientWidth - 150)
                                     {
-                                        if (hoverY < clientHeight - 175 + 35 && hoverY > clientHeight - 175)
-                                        {
-                                            e.Graphics.FillRectangle(Brushes.DimGray, clientWidth - 150, clientHeight - 175, 100, 35);
-                                            e.Graphics.DrawString("hit", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 120, clientHeight - 178));
-                                        }
-                                        else if ((hoverY < clientHeight - 120 + 35 && hoverY > clientHeight - 120))
+                                        if ((hoverY < clientHeight - 120 + 35 && hoverY > clientHeight - 120))
                                         {
                                             e.Graphics.FillRectangle(Brushes.DimGray, clientWidth - 150, clientHeight - 120, 100, 35);
-                                            e.Graphics.DrawString("stay", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 128, clientHeight - 125));
+                                            e.Graphics.DrawString("finish", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 128, clientHeight - 125));
                                         }
                                     }
                                 }

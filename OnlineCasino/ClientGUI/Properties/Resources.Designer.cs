@@ -503,6 +503,16 @@ namespace ClientGUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap DownButton {
+            get {
+                object obj = ResourceManager.GetObject("DownButton", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap jack_of_clubs {
             get {
                 object obj = ResourceManager.GetObject("jack_of_clubs", resourceCulture);
@@ -736,6 +746,16 @@ namespace ClientGUI.Properties {
         internal static System.Drawing.Bitmap textbox2 {
             get {
                 object obj = ResourceManager.GetObject("textbox2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap UpButton {
+            get {
+                object obj = ResourceManager.GetObject("UpButton", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

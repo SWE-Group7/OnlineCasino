@@ -75,7 +75,7 @@ namespace ClientGUI.Game_GUIs
                     else { otherPlayerCardX = clientWidth - cardWidth - 30; leftSide = false; }
                 }
                  
-                e.Graphics.DrawString(p.getUsername(), new Font("Segoe UI", 20), Brushes.White, new Point(otherPlayerCardX, otherPlayerCardY + cardHeight));
+                e.Graphics.DrawString(p.getFullName(), new Font("Segoe UI", 20), Brushes.White, new Point(otherPlayerCardX, otherPlayerCardY + cardHeight));
 
                 if (showCards)
                 {

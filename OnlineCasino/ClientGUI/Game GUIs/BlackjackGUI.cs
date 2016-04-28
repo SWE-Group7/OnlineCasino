@@ -11,7 +11,13 @@ namespace ClientGUI.Game_GUIs
     public class BlackjackGUI : CardGameGUI
     {
         SM.User u;
+        SM.User v;       
+        SM.User x;
+        SM.User y;
+        SM.User z;
+
         public new ClientLogic.Players.BlackjackPlayer You;
+
         public new List<CardPlayer> OtherPlayers;
         public List<Card> DealerHand = new List<Card>();
 
@@ -23,23 +29,65 @@ namespace ClientGUI.Game_GUIs
         public BlackjackGUI(int h, int w)
         {
             u = new SM.User(100, "n", "nadine", "omg", 100);
-            SharedModels.Players.BlackjackPlayer b = new SharedModels.Players.BlackjackPlayer(u, 100, 100, 100);
+            SharedModels.Players.BlackjackPlayer ba = new SharedModels.Players.BlackjackPlayer(u, 100, 100, 100);
+
+            v = new SM.User(100, "f", "Foster", "omg", 100);
+            SharedModels.Players.BlackjackPlayer bb = new SharedModels.Players.BlackjackPlayer(v, 100, 100, 100);
+
+            z = new SM.User(100, "h", "Hayden", "omg", 100);
+            SharedModels.Players.BlackjackPlayer bc = new SharedModels.Players.BlackjackPlayer(z, 100, 100, 100);
+
+            x = new SM.User(100, "g", "Sandy", "omg", 100);
+            SharedModels.Players.BlackjackPlayer bd = new SharedModels.Players.BlackjackPlayer(x, 100, 100, 100);
+
+            y = new SM.User(100, "s", "Gino", "omg", 100);
+            SharedModels.Players.BlackjackPlayer be = new SharedModels.Players.BlackjackPlayer(y, 100, 100, 100);
 
             Deck = new Deck();
-            You = new ClientLogic.Players.BlackjackPlayer(b);
+            You = new ClientLogic.Players.BlackjackPlayer(ba);
+            ClientLogic.Players.BlackjackPlayer player2 = new ClientLogic.Players.BlackjackPlayer(bb);
+            ClientLogic.Players.BlackjackPlayer player3 = new ClientLogic.Players.BlackjackPlayer(bc);
+            ClientLogic.Players.BlackjackPlayer player4 = new ClientLogic.Players.BlackjackPlayer(bd);
+            ClientLogic.Players.BlackjackPlayer player5 = new ClientLogic.Players.BlackjackPlayer(be);
+
             OtherPlayers = new List<ClientLogic.Players.BlackjackPlayer>().ConvertAll(x => (CardPlayer)x);
+            OtherPlayers.Add(player2);
+            OtherPlayers.Add(player3);
+            OtherPlayers.Add(player4);
+            OtherPlayers.Add(player5);
+
             clientHeight = h;
             clientWidth = w;
 
             // remove
-            Card c = new Card(CardSuit.Clubs, CardRank.Ace);
-            Card d = new Card(CardSuit.Diamonds, CardRank.King);
-            Card e = new Card(CardSuit.Hearts, CardRank.Eight);
-            You.Hand.Add(c);
-            You.Hand.Add(d);
-            You.Hand.Add(e);
+            Card you_c = new Card(CardSuit.Clubs, CardRank.Ace);
+            Card you_d = new Card(CardSuit.Diamonds, CardRank.King);
+            Card you_e = new Card(CardSuit.Hearts, CardRank.Eight);
+            You.Hand.Add(you_c);
+            You.Hand.Add(you_d);
 
-            DealerHand.Add(c);
+            Card d_f = new Card(CardSuit.Hearts, CardRank.Nine);           
+            DealerHand.Add(d_f);
+            
+            Card p1_c = new Card(CardSuit.Diamonds, CardRank.Ace);
+            Card p1_d = new Card(CardSuit.Hearts, CardRank.Seven);
+            OtherPlayers[0].Hand.Add(p1_c);
+            OtherPlayers[0].Hand.Add(p1_d);
+
+            Card p2_c = new Card(CardSuit.Diamonds, CardRank.Two);
+            Card p2_d = new Card(CardSuit.Spades, CardRank.Eight);
+            OtherPlayers[1].Hand.Add(p2_c);
+            OtherPlayers[1].Hand.Add(p2_d);
+
+            Card p3_c = new Card(CardSuit.Clubs, CardRank.Eight);
+            Card p3_d = new Card(CardSuit.Spades, CardRank.Three);
+            OtherPlayers[2].Hand.Add(p3_c);
+            OtherPlayers[2].Hand.Add(p3_d);
+
+            Card p4_c = new Card(CardSuit.Clubs, CardRank.Six);
+            Card p4_d = new Card(CardSuit.Hearts, CardRank.Queen);
+            OtherPlayers[3].Hand.Add(p4_c);
+            OtherPlayers[3].Hand.Add(p4_d);
 
             yourCardX = clientWidth / 2 - cardWidth / 2;
             yourCardY = clientHeight - 200;
@@ -47,6 +95,7 @@ namespace ClientGUI.Game_GUIs
 
             otherPlayerCardX = (cardWidth - 20) + 50;
             otherPlayerCardY = 100;
+
         }
 
         public void BlackjackGUI_Paint(object sender, PaintEventArgs e)
@@ -79,16 +128,23 @@ namespace ClientGUI.Game_GUIs
                         dealerCardOffset = (DealerHand.Count * (cardWidth + 20)) / 2;
                         foreach (Card c in DealerHand)
                         {
-                            CardImage = Deck.CardImage(c.Suit, c.Rank);
-                            dealerCardX += (dealerCardsCount * cardWidth + dealerCardsCount * 20);
-
-                            if (CardImage != null)
+                            if (dealerCardsCount == 1)
                             {
                                 e.Graphics.DrawImage(CardImage, new Rectangle(dealerCardX, dealerCardY, cardWidth - 20, cardHeight - 20));
                             }
+                            else
+                            {
+                                CardImage = Deck.CardImage(c.Suit, c.Rank);
+                                dealerCardX += (dealerCardsCount * cardWidth + dealerCardsCount * 20);
 
-                            dealerCardsCount--;
-                            dealerCardX = clientWidth / 2 - dealerCardOffset;
+                                if (CardImage != null)
+                                {
+                                    e.Graphics.DrawImage(CardImage, new Rectangle(dealerCardX, dealerCardY, cardWidth - 20, cardHeight - 20));
+                                }
+
+                                dealerCardsCount--;
+                                dealerCardX = clientWidth / 2 - dealerCardOffset;
+                            }
                         }
                         dealerCardsCount = DealerHand.Count - 1;
 
@@ -124,6 +180,7 @@ namespace ClientGUI.Game_GUIs
                                 break;
                             case GameState.Playing:
                                 {
+
                                     e.Graphics.DrawString("your turn", new Font("Segoe UI", 38), Brushes.White, new Point(clientWidth / 2 - 130, clientHeight / 2 - 40));
 
                                     e.Graphics.FillRectangle(Brushes.White, clientWidth - 150, clientHeight - 175, 100, 35);

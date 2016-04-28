@@ -159,6 +159,8 @@
     <None Include="Images\textbox.png" />
     <None Include="Images\textbox2.png" />
     <None Include="Images\button.png" />
+    <None Include="Images\DownButton.png" />
+    <None Include="Images\UpButton.png" />
     <Content Include="Resources\change_bet_Roulette.jpg" />
     <Content Include="Images\Menu_Header.jpg" />
   </ItemGroup>

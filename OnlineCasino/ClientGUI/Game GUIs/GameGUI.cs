@@ -57,45 +57,57 @@ namespace ClientGUI.Game_GUIs
 
         protected float sx = 0;
         protected bool sp = true;
-        protected void JoiningTable_Draw(object sender, PaintEventArgs e)
+        public void JoiningTable_Draw(object sender, PaintEventArgs e)
         {
             Stopwatch.Start();
-            e.Graphics.DrawRectangle(Pens.Black, clientWidth / 2 - 226, clientHeight / 2 - 126, 451, 251);
-            e.Graphics.FillRectangle(Brushes.White, new Rectangle(clientWidth / 2 - 225, clientHeight / 2 - 125, 450, 250));
-
-            e.Graphics.DrawString("JOINING NEXT FREE TABLE", new Font("Segoe UI", 16), Brushes.Black, new Point(clientWidth / 2 - 140, clientHeight / 2 - 30));
-            var t = e.Graphics.Transform;
-
-            if (sp)
-                sx += .01f;
-            else
-                sx -= .01f;
-            if (sx < -.3) sp = true;
-            if (sx > .3) sp = false;
-
-            t.Shear(sx, 0);
-
-            e.Graphics.Transform = t;
-            e.Graphics.DrawString("......", new Font("Segoe UI", 12), Brushes.Black, new Point(clientWidth / 2, clientHeight / 2 + 10));
-
-            CheckConnection();
-        }
-        protected void TableFound_Draw(object sender, PaintEventArgs e)
-        {
-            e.Graphics.FillRectangle(Brushes.White, new Rectangle(clientWidth / 2 - 225, clientHeight / 2 - 125, 450, 250));
-            e.Graphics.DrawString("Table found! Seating Players..", new Font("Segoe UI", 16), Brushes.Black, new Point(clientWidth / 2 - 150, clientHeight / 2 - 30));
-        }
-
-        protected void CheckConnection()
-        {
-            if (Stopwatch.ElapsedMilliseconds > 1000)
+            while (!CheckConnection())
             {
-                OS = OverallState.Playing;
-                GS = GameState.Playing;
+                e.Graphics.DrawRectangle(Pens.Black, clientWidth / 2 - 226, clientHeight / 2 - 126, 451, 251);
+                e.Graphics.FillRectangle(Brushes.White, new Rectangle(clientWidth / 2 - 225, clientHeight / 2 - 125, 450, 250));
 
+                e.Graphics.DrawString("JOINING NEXT FREE TABLE", new Font("Segoe UI", 16), Brushes.Black, new Point(clientWidth / 2 - 140, clientHeight / 2 - 30));
+                var t = e.Graphics.Transform;
+
+                if (sp)
+                    sx += .01f;
+                else
+                    sx -= .01f;
+                if (sx < -.3) sp = true;
+                if (sx > .3) sp = false;
+
+                t.Shear(sx, 0);
+
+                e.Graphics.Transform = t;
+                e.Graphics.DrawString("......", new Font("Segoe UI", 12), Brushes.Black, new Point(clientWidth / 2, clientHeight / 2 + 10));
+
+            }
+
+            TableFound_Draw(sender, e);
+        }
+        public void TableFound_Draw(object sender, PaintEventArgs e)
+        {
+            while (!CheckConnection())
+            {
+                e.Graphics.FillRectangle(Brushes.White, new Rectangle(clientWidth / 2 - 225, clientHeight / 2 - 125, 450, 250));
+                e.Graphics.DrawString("Table found! Seating Players..", new Font("Segoe UI", 16), Brushes.Black, new Point(clientWidth / 2 - 150, clientHeight / 2 - 30));
+            }
+            
+            OS = OverallState.Playing;
+            GS = GameState.Playing;
+        }
+
+        public bool CheckConnection()
+        {
+            if (Stopwatch.ElapsedMilliseconds > 2000)
+            {
+                                
                 Stopwatch.Stop();
                 Stopwatch.Reset();
+
+                return true;
             }
+
+            return false;
         }
     }
 }

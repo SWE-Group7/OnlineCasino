@@ -29,5 +29,10 @@ namespace ClientLogic.Players
         {
             return CurrentUser.Username;
         }
+
+        public string getFullName()
+        {
+            return CurrentUser.FullName;
+        }
     }
 }
