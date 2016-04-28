@@ -10,6 +10,14 @@ namespace ClientGUI.Game_GUIs
 {
     public class BlackjackGUI : CardGameGUI
     {
+        public enum Hand_State
+        {
+            under21,
+            twentyone,
+            bust
+        }
+        public Hand_State HandState = BlackjackGUI.Hand_State.under21;
+
         SM.User u;
         SM.User v;       
         SM.User x;
@@ -30,19 +38,19 @@ namespace ClientGUI.Game_GUIs
         {
             u = new SM.User(100, "n", "nadine", "omg", 100);
 
-            SharedModels.Players.BlackjackPlayer ba = new SharedModels.Players.BlackjackPlayer(u, 100, 100, 100);
+            SharedModels.Players.BlackjackPlayer ba = new SharedModels.Players.BlackjackPlayer(u, 1, 100, 100, 100);
 
             v = new SM.User(100, "f", "Foster", "omg", 100);
-            SharedModels.Players.BlackjackPlayer bb = new SharedModels.Players.BlackjackPlayer(v, 100, 100, 100);
+            SharedModels.Players.BlackjackPlayer bb = new SharedModels.Players.BlackjackPlayer(v, 2, 100, 100, 100);
 
             z = new SM.User(100, "h", "Hayden", "omg", 100);
-            SharedModels.Players.BlackjackPlayer bc = new SharedModels.Players.BlackjackPlayer(z, 100, 100, 100);
+            SharedModels.Players.BlackjackPlayer bc = new SharedModels.Players.BlackjackPlayer(z, 3, 100, 100, 100);
 
             x = new SM.User(100, "g", "Sandy", "omg", 100);
-            SharedModels.Players.BlackjackPlayer bd = new SharedModels.Players.BlackjackPlayer(x, 100, 100, 100);
+            SharedModels.Players.BlackjackPlayer bd = new SharedModels.Players.BlackjackPlayer(x, 4, 100, 100, 100);
 
             y = new SM.User(100, "s", "Gino", "omg", 100);
-            SharedModels.Players.BlackjackPlayer be = new SharedModels.Players.BlackjackPlayer(y, 100, 100, 100);
+            SharedModels.Players.BlackjackPlayer be = new SharedModels.Players.BlackjackPlayer(y, 5, 100, 100, 100);
 
             SM.Player b = new SM.Player(u, 1, 1000);
 
@@ -64,15 +72,18 @@ namespace ClientGUI.Game_GUIs
             clientWidth = w;
 
             // remove
-            Card you_c = new Card(CardSuit.Clubs, CardRank.Ace);
+            Card you_c = new Card(CardSuit.Clubs, CardRank.King);
             Card you_d = new Card(CardSuit.Diamonds, CardRank.King);
             Card you_e = new Card(CardSuit.Hearts, CardRank.Eight);
             You.Hand.Add(you_c);
             You.Hand.Add(you_d);
 
-            Card d_f = new Card(CardSuit.Hearts, CardRank.Nine);           
+            Card d_f = new Card(CardSuit.Hearts, CardRank.Nine);
+            Card d_e = new Card(CardSuit.Hearts, CardRank.Seven);
+
             DealerHand.Add(d_f);
-            
+            DealerHand.Add(d_e);
+
             Card p1_c = new Card(CardSuit.Diamonds, CardRank.Ace);
             Card p1_d = new Card(CardSuit.Hearts, CardRank.Seven);
             OtherPlayers[0].Hand.Add(p1_c);
@@ -132,23 +143,23 @@ namespace ClientGUI.Game_GUIs
                         dealerCardOffset = (DealerHand.Count * (cardWidth + 20)) / 2;
                         foreach (Card c in DealerHand)
                         {
+                            dealerCardX += (dealerCardsCount * cardWidth + dealerCardsCount * 20);
+
                             if (dealerCardsCount == 1)
                             {
-                                e.Graphics.DrawImage(CardImage, new Rectangle(dealerCardX, dealerCardY, cardWidth - 20, cardHeight - 20));
+                                e.Graphics.DrawImage(global::ClientGUI.Properties.Resources.Back, new Rectangle(dealerCardX, dealerCardY, cardWidth - 20, cardHeight - 20));
                             }
                             else
                             {
                                 CardImage = Deck.CardImage(c.Suit, c.Rank);
-                                dealerCardX += (dealerCardsCount * cardWidth + dealerCardsCount * 20);
-
+                                
                                 if (CardImage != null)
                                 {
                                     e.Graphics.DrawImage(CardImage, new Rectangle(dealerCardX, dealerCardY, cardWidth - 20, cardHeight - 20));
                                 }
-
-                                dealerCardsCount--;
-                                dealerCardX = clientWidth / 2 - dealerCardOffset;
                             }
+                            dealerCardsCount--;
+                            dealerCardX = clientWidth / 2 - dealerCardOffset;
                         }
                         dealerCardsCount = DealerHand.Count - 1;
 
@@ -157,8 +168,27 @@ namespace ClientGUI.Game_GUIs
                             case GameState.Waiting:
                                 {
                                     e.Graphics.DrawString("Waiting on other players", new Font("Segoe UI", 16), Brushes.White, new Point(clientWidth / 2 - 150, clientHeight / 2 - 30));
-                                    var t = e.Graphics.Transform;
+                                    
+                                    switch (HandState)
+                                    {
+                                        case Hand_State.under21:
+                                            {
 
+                                            }
+                                            break;
+                                        case Hand_State.twentyone:
+                                            {
+                                                e.Graphics.DrawString("Blackjack!", new Font("Segoe UI", 22), Brushes.White, new Point(clientWidth / 2 - 60, clientHeight - cardHeight - 80));
+                                            }
+                                            break;
+                                        case Hand_State.bust:
+                                            {
+                                                e.Graphics.DrawString("Bust!", new Font("Segoe UI", 22), Brushes.White, new Point(clientWidth / 2 - 40, clientHeight - cardHeight - 120));
+                                            }
+                                            break;                                          
+                                    }
+
+                                    var t = e.Graphics.Transform;
                                     if (sp) sx += .02f;
                                     else sx -= .02f;
 
@@ -169,11 +199,9 @@ namespace ClientGUI.Game_GUIs
 
                                     e.Graphics.Transform = t;
                                     e.Graphics.DrawString(".", new Font("Segoe UI", 12), Brushes.White, new Point(clientWidth / 2, clientHeight / 2));
+                                    // get win status from server 
 
-                                    OS = OverallState.Distributing;
-
-                                    // get win status from server
-                                    RES = RoundEndState.Lose;
+                                   
                                 }
                                 break;
                             case GameState.Betting:
@@ -184,30 +212,47 @@ namespace ClientGUI.Game_GUIs
                                 break;
                             case GameState.Playing:
                                 {
-
-                                    e.Graphics.DrawString("your turn", new Font("Segoe UI", 38), Brushes.White, new Point(clientWidth / 2 - 130, clientHeight / 2 - 40));
-
-                                    e.Graphics.FillRectangle(Brushes.White, clientWidth - 150, clientHeight - 175, 100, 35);
-                                    e.Graphics.DrawRectangle(Pens.Black, clientWidth - 151, clientHeight - 176, 102, 37);
-                                    e.Graphics.DrawString("hit", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 120, clientHeight - 178));
-
-                                    e.Graphics.FillRectangle(Brushes.White, clientWidth - 150, clientHeight - 120, 100, 35);
-                                    e.Graphics.DrawRectangle(Pens.Black, clientWidth - 151, clientHeight - 121, 102, 37);
-                                    e.Graphics.DrawString("stay", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 128, clientHeight - 125));
-
-                                    if (hoverX < clientWidth - 50 && hoverX > clientWidth - 150)
+                                    switch (HandState)
                                     {
-                                        if (hoverY < clientHeight - 175 + 35 && hoverY > clientHeight - 175)
-                                        {
-                                            e.Graphics.FillRectangle(Brushes.DimGray, clientWidth - 150, clientHeight - 175, 100, 35);
-                                            e.Graphics.DrawString("hit", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 120, clientHeight - 178));
-                                        }
-                                        else if ((hoverY < clientHeight - 120 + 35 && hoverY > clientHeight - 120))
-                                        {
-                                            e.Graphics.FillRectangle(Brushes.DimGray, clientWidth - 150, clientHeight - 120, 100, 35);
-                                            e.Graphics.DrawString("stay", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 128, clientHeight - 125));
-                                        }
-                                    }
+                                        case Hand_State.under21:
+                                            {
+                                                e.Graphics.DrawString("your turn", new Font("Segoe UI", 38), Brushes.White, new Point(clientWidth / 2 - 130, clientHeight / 2 - 40));
+
+                                                e.Graphics.FillRectangle(Brushes.White, clientWidth - 150, clientHeight - 175, 100, 35);
+                                                e.Graphics.DrawRectangle(Pens.Black, clientWidth - 151, clientHeight - 176, 102, 37);
+                                                e.Graphics.DrawString("hit", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 120, clientHeight - 178));
+
+                                                e.Graphics.FillRectangle(Brushes.White, clientWidth - 150, clientHeight - 120, 100, 35);
+                                                e.Graphics.DrawRectangle(Pens.Black, clientWidth - 151, clientHeight - 121, 102, 37);
+                                                e.Graphics.DrawString("stay", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 128, clientHeight - 125));
+
+                                                if (hoverX < clientWidth - 50 && hoverX > clientWidth - 150)
+                                                {
+                                                    if (hoverY < clientHeight - 175 + 35 && hoverY > clientHeight - 175)
+                                                    {
+                                                        e.Graphics.FillRectangle(Brushes.DimGray, clientWidth - 150, clientHeight - 175, 100, 35);
+                                                        e.Graphics.DrawString("hit", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 120, clientHeight - 178));
+                                                    }
+                                                    else if ((hoverY < clientHeight - 120 + 35 && hoverY > clientHeight - 120))
+                                                    {
+                                                        e.Graphics.FillRectangle(Brushes.DimGray, clientWidth - 150, clientHeight - 120, 100, 35);
+                                                        e.Graphics.DrawString("stay", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 128, clientHeight - 125));
+                                                    }
+                                                }
+                                            }
+                                            break;
+                                        case Hand_State.twentyone:
+                                            {
+                                                GS = GameState.Waiting;
+                                            }
+                                            break;
+                                        case Hand_State.bust:
+                                            {
+                                                GS = GameState.Waiting;
+                                            }
+                                            break;
+
+                                     }
                                 }
                                 break;
                         }

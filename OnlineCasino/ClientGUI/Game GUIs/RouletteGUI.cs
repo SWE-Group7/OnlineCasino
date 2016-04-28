@@ -160,6 +160,11 @@ namespace ClientGUI.Game_GUIs
             }
         }
 
+        public void PaintChosen(Object sender, PaintEventArgs e)
+        {
+
+        }
+
         public int ChosenNumber(int x, int y)
         {
             int num = 0;

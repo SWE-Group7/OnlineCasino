@@ -454,15 +454,26 @@ namespace ClientGUI
                                         {
                                             BlackjackGUI.You.Hand.Add(new SharedModels.GameComponents.Card(SharedModels.GameComponents.CardSuit.Clubs, SharedModels.GameComponents.CardRank.Five));
                                         }
+
+                                        BlackjackGUI.HandState = BlackjackGUI.Hand_State.bust;
                                     }
                                     else if ((BlackjackGUI.clickY < Height - 120 + 35 && BlackjackGUI.clickY > Height - 120))
                                     {
                                         BlackjackGUI.GS = GameGUI.GameState.Waiting;
                                     }
                                 }
+
+                                if(BlackjackGUI.GS == GameGUI.GameState.Waiting)
+                                {
+                                    BlackjackGUI.OS = BlackjackGUI.OverallState.Distributing;
+                                    BlackjackGUI.RES = BlackjackGUI.RoundEndState.Lose;
+                                }
                             }
                             break;
                         case BlackjackGUI.OverallState.Waiting:
+                            {
+                                
+                            }
                             break;
                         case BlackjackGUI.OverallState.Distributing:
                             {
@@ -470,7 +481,7 @@ namespace ClientGUI
                                 {
                                     if (BlackjackGUI.clickY > Height / 2 + 60 && BlackjackGUI.clickY < Height / 2 + 60 + 40)
                                     {
-                                        BlackjackGUI.You.RefreshHand();
+                                        //BlackjackGUI.You.RefreshHand();
                                         BettingScreen_Draw();
 
                                         ClientState = State.Betting;
@@ -601,6 +612,7 @@ namespace ClientGUI
                                                 }
 
                                                 Chosen = RouletteGUI.ChosenNumber(gridX, gridY);
+
                                             }
                                             else
                                             {

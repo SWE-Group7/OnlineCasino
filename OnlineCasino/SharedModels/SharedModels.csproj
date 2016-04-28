@@ -48,10 +48,12 @@
     <Compile Include="Games\GameEvent.cs" />
     <Compile Include="Games\Enums\GameStates.cs" />
     <Compile Include="Games\Enums\GameTypes.cs" />
+    <Compile Include="Players\BlackjackPlayer.cs" />
     <Compile Include="Players\PlayerStates.cs" />
     <Compile Include="Connection\Enums\ServerCommands.cs" />
     <Compile Include="Games\Blackjack.cs" />
     <Compile Include="Games\Game.cs" />
+    <Compile Include="Players\RoulettePlayer.cs" />
     <Compile Include="RequestResult.cs" />
     <Compile Include="Connection\Payload.cs" />
     <Compile Include="Connection\Security.cs" />
