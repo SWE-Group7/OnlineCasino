@@ -59,9 +59,7 @@
     <Compile Include="Games\GameComponents\Card.cs" />
     <Compile Include="Games\GameComponents\CardRank.cs" />
     <Compile Include="Games\GameComponents\CardSuit.cs" />
-    <Compile Include="Players\BlackjackPlayer.cs" />
     <Compile Include="Players\Player.cs" />
-    <Compile Include="Players\RoulettePlayer.cs" />
     <Compile Include="Players\TexasHoldEmPlayer.cs" />
     <Compile Include="Players\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
