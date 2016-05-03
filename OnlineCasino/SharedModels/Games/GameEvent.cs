@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharedModels.Games
+namespace SharedModels.Games.Events
 {
     [Serializable]
     public abstract class GameEvent
@@ -44,7 +44,10 @@ namespace SharedModels.Games
         public readonly Card[][] Cards;
 
         private BlackjackEvent(Builder b)
-            : base((int)b.Event, b.Seat, b.Num, b.Text, b.Seats, b.Winnings, b.Player) { }
+            : base((int)b.Event, b.Seat, b.Num, b.Text, b.Seats, b.Winnings, b.Player)
+        {
+            Cards = b.Cards;
+        }
 
         public static BlackjackEvent StartGame()
         {
@@ -58,6 +61,7 @@ namespace SharedModels.Games
             Builder b = new Builder();
             b.Cards = new Card[cards.Count][];
             b.Seats = new byte[cards.Count];
+            b.Event = BlackjackEvents.Deal;
 
             int i = 0;
             foreach (var pair in cards)
@@ -69,11 +73,12 @@ namespace SharedModels.Games
 
             return new BlackjackEvent(b);
         }
-        public static BlackjackEvent ShowDealer(Card[] cards)
+        public static BlackjackEvent ShowDealer(Card card)
         {
             Builder b = new Builder();
             b.Cards = new Card[1][];
-            b.Cards[0] = cards;
+            b.Cards[0] = new Card[] { card };
+            b.Event = BlackjackEvents.ShowDealer;
 
             return new BlackjackEvent(b);
         }
@@ -107,6 +112,7 @@ namespace SharedModels.Games
         {
             Builder b = new Builder();
             b.Seat = seat;
+            b.Event = BlackjackEvents.PlayerTurn;
 
             return new BlackjackEvent(b);
         }

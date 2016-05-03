@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace SharedModels
 {
-    public class AsyncBuffer
+    public class RequestBuffer
     {
         private bool requested;
         private bool updated;
         private object value;
         private int writeThreadId;
 
-        public AsyncBuffer()
+        public RequestBuffer()
         {
             this.writeThreadId = Thread.CurrentThread.ManagedThreadId;
         }

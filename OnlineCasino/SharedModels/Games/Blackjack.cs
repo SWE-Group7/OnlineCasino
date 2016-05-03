@@ -12,12 +12,11 @@ namespace SharedModels.Games
     public class Blackjack : Game
     {
         public readonly BlackjackStates BlackjackState;
-        public readonly List<Card> DealerHand;
-        public Blackjack(List<Player> players, GameStates gameState, BlackjackStates blackjackState, List<Card> dealerHand = null)
+
+        public Blackjack(List<Player> players, GameStates gameState, BlackjackStates blackjackState)
             :base(players, gameState)
         {
             BlackjackState = blackjackState;
-            DealerHand = dealerHand;
         }
 
             

@@ -9,6 +9,7 @@ using System.Threading;
 using SMG = SharedModels.Games;
 using SMP = SharedModels.Players;
 using System.Diagnostics;
+using SharedModels.Games.Events;
 
 namespace ServerLogic
 {
@@ -63,11 +64,13 @@ namespace ServerLogic
             GameThread = new Thread(() => Run());
             ThreadId = GameThread.ManagedThreadId;
             ListLock = new object();
+            
             sw = new Stopwatch();
         }
 
         public void Start()
         {
+            RoundSnapshot = GetSharedModel();
             GameThread.Start();
         }
         protected abstract void Run();
@@ -97,6 +100,9 @@ namespace ServerLogic
             {
                 SubscribedPlayers.Remove(player);
                 ActivePlayers.Remove(player);
+                Players.TryRemove(player.Seat, out player);
+                ReleaseSeat(player.Seat);
+                GameEvent gameEvent = BlackjackEvent.PlayerQuit(player.Seat);
             }
         }
         protected abstract SMG.Game GetSharedModel();
@@ -104,8 +110,8 @@ namespace ServerLogic
         {
             lock (ListLock)
             {
+                ServerMain.WriteEvent(gameEvent);
                 RoundEvents.Add(gameEvent);
-
                 foreach (var player in SubscribedPlayers)
                         player.ShareEvent(gameEvent);
             }
@@ -166,6 +172,7 @@ namespace ServerLogic
                 Player player;
                 Players.TryRemove(seat, out player);
                 ReleaseSeat(seat);
+                
             }
         }
     }

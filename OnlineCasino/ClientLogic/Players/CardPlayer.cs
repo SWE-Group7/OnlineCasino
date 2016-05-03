@@ -25,7 +25,6 @@ namespace ClientLogic.Players
         public void RefreshHand()
         {
             Hand = new List<Card>();
-
             // Deal two cards
         }
 

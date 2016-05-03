@@ -12,12 +12,9 @@ namespace SharedModels.Connection
         Register,
         GetUserInfo,
         
+        JoinGame,
         QuitGame,
         Disconnect
     }
 
-    public static class Extensions
-    {
-        
-    }
 }

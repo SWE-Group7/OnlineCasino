@@ -20,6 +20,7 @@ namespace SharedModels.Games.Enums
         PlayerStay,
         PlayerDouble,
         PlayerBust,
+        PlayerTurn,
 
         Deal,
         ShowDealer,

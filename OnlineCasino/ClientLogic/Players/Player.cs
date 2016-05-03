@@ -6,26 +6,37 @@ using System.Threading.Tasks;
 using SharedModels.Players;
 using SharedModels.GameComponents;
 using SMP = SharedModels.Players;
+using SharedModels;
+using SharedModels.Connection;
+using System.Collections.Concurrent;
 
 namespace ClientLogic.Players
 {
     public abstract class Player
     {
-        protected readonly User CurrentUser;
-        public decimal GameBalance;
-        public decimal Bet;
+        public readonly User User;
+        public int GameBalance;
+        public int Bet;
+        public int Gains;
         public readonly int Seat;
+
 
         public Player(SMP.Player player)
         {
-            this.CurrentUser = new User(player.CurrentUser);
+            this.User = new User(player.CurrentUser);
             this.GameBalance = player.GameBalance;
             this.Seat = player.Seat;
+            this.Gains = 0;
+
+            if (player.CurrentUser.UserID == ClientMain.MainUser.UserID)
+            {
+                User = ClientMain.MainUser;
+                ClientMain.MainPlayer = this;
+            }
         }
 
-        public string getUsername()
-        {
-            return CurrentUser.Username;
-        }
+
+        
+
     }
 }

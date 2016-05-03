@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ClientLogic.Connections;
 using SharedModels.Players;
 using ClientLogic;
+using SharedModels.Connection.Enums;
 
 namespace ClientConsole
 {
@@ -17,6 +18,8 @@ namespace ClientConsole
             string password = Prompt("Password:");
 
             ClientMain.TrySyncLogin(username, password);
+            ClientMain.TryJoinGame(GameTypes.Blackjack);
+            
             
         }
 

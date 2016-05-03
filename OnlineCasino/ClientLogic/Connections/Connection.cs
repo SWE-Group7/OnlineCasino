@@ -10,12 +10,16 @@ using System.Threading;
 using System.Threading.Tasks;
 using ClientLogic.Players;
 using System.Diagnostics;
+using SharedModels.Connection.Enums;
+using SharedModels.Games;
+using SharedModels.Games.Events;
 
 namespace ClientLogic.Connections
 {
     public class Connection
     {
         private TcpClient Server;
+
         private const int bufferSize = 4096;
 
         public bool Connected;
@@ -29,17 +33,19 @@ namespace ClientLogic.Connections
         private Queue<Payload> WriteQueue;
         private volatile bool WriteQueueEmpty;
         private Dictionary<int, RequestResult> RequestedByClient;
+        private Dictionary<int, RequestResult> RequestedByServer;
 
         private Stopwatch Timer = new Stopwatch();
 
         public Connection()
         {
-            Server = new TcpClient("192.168.0.16", 47689);
+            Server = new TcpClient(ConnectionStatics.IP, ConnectionStatics.Port);
             Connected = true;
             WriteQueueEmpty = true;
 
             WriteQueue = new Queue<Payload>();
             RequestedByClient = new Dictionary<int, RequestResult>();
+            RequestedByServer = new Dictionary<int, RequestResult>();
 
             Reader = Thread.CurrentThread;
             Reader = new Thread(() => StartReader());
@@ -66,17 +72,19 @@ namespace ClientLogic.Connections
 
         private User SyncLogin(ServerCommands cmd, Security security)
         {
-            SM.User smUser;
+            object smUser;
             RequestResult result = Request(cmd, security);
 
-            bool success = result.WaitForReturn<SM.User>(10000, out smUser);
+            bool success = result.WaitForReturn(10000, out smUser);
 
             if (success)
             {
-                return new User(smUser);
+                return new User((SM.User)smUser);
             }
             else
             {
+                if (smUser is string)
+                    ClientMain.SetLoginMessage((string)smUser);
                 Connected = false;
                 Writer.Join();
                 Reader.Join();
@@ -193,7 +201,7 @@ namespace ClientLogic.Connections
             CommTypes commType;
             ClientCommands cmd = 0;
             int reqId = -1;
-            byte[] obj;
+            byte[] objBytes;
             int index;
             int bytesRead;
             int bytesToRead;
@@ -243,7 +251,7 @@ namespace ClientLogic.Connections
                 bytesToRead = BitConverter.ToInt32(buffer, 0);
 
                 //Get object bytes
-                obj = new byte[bytesToRead];
+                objBytes = new byte[bytesToRead];
                 index = 0;
                 while (bytesToRead > 0)
                 {
@@ -251,11 +259,12 @@ namespace ClientLogic.Connections
                         continue;
 
                     bytesRead = Server.GetStream().Read(buffer, 0, Math.Min(bufferSize, bytesToRead));
-                    Array.ConstrainedCopy(buffer, 0, obj, index, bytesRead);
+                    Array.ConstrainedCopy(buffer, 0, objBytes, index, bytesRead);
                     index += bytesRead;
                     bytesToRead -= bytesRead;
                 }
 
+                object obj = Serializer.Deserialize(objBytes);
                 //Handle
                 switch (commType)
                 {
@@ -287,17 +296,29 @@ namespace ClientLogic.Connections
             return true;
         }
 
-        private void HandleVoid(ClientCommands cmd, byte[] obj)
+        private void HandleVoid(ClientCommands cmd, object obj)
         {
-            throw new NotImplementedException();
+            switch (cmd)
+            {
+                case ClientCommands.SendEvent:
+                    ClientMain.QueueEvent((GameEvent)obj);
+                    break;
+            }
         }
 
-        private void HandleRequest(ClientCommands cmd, int reqId, byte[] objBytes)
+        private void HandleRequest(ClientCommands cmd, int reqId, object obj)
         {
-            throw new NotImplementedException();
+
+            RequestResult request = new RequestResult();
+            lock (RequestedByServer)
+                RequestedByServer[reqId] = request;
+
+            ClientMain.QueueRequest(cmd, request);
+
+
         }
 
-        private void HandleReturn(int reqId, bool success, byte[] objBytes)
+        private void HandleReturn(int reqId, bool success, object obj)
         {
             RequestResult result;
             lock (RequestedByClient)
@@ -307,10 +328,8 @@ namespace ClientLogic.Connections
             }
 
             if(result != null)
-            {
-                object obj = Serializer.Deserialize(objBytes);
                 result.SetValue(success, obj);
-            }
+            
         }
 
         #endregion

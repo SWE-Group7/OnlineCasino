@@ -40,10 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AsyncBuffer.cs" />
     <Compile Include="Connection\ConnectionStatics.cs" />
     <Compile Include="Connection\Enums\ClientCommands.cs" />
     <Compile Include="Connection\Enums\CommTypes.cs" />
+    <Compile Include="Games\Enums\GUI.cs" />
+    <Compile Include="RequestBuffer.cs" />
     <Compile Include="Games\Enums\GameEvents.cs" />
     <Compile Include="Games\GameEvent.cs" />
     <Compile Include="Games\Enums\GameStates.cs" />

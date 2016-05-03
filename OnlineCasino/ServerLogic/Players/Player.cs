@@ -12,6 +12,7 @@ using SharedModels;
 using SharedModels.Connection;
 using System.Collections.Concurrent;
 using SharedModels.Games.Enums;
+using SharedModels.Games.Events;
 
 namespace ServerLogic.Players
 {
@@ -40,6 +41,7 @@ namespace ServerLogic.Players
             GameBalance = buyIn;
             State = (int)SMP.PlayerStates.Joining;
             Results = new ConcurrentDictionary<ClientCommands, RequestResult>();
+            Lock = new object();
         }
 
         

@@ -11,9 +11,9 @@ namespace SharedModels.Players
     {
         public readonly User CurrentUser;
         public readonly byte Seat;
-        public readonly decimal GameBalance;
+        public readonly int GameBalance;
 
-        public Player(User user, int seat, decimal gameBalance)
+        public Player(User user, int seat, int gameBalance)
         {
             CurrentUser = user;
             Seat = (byte) seat;

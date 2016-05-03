@@ -43,7 +43,7 @@ namespace ServerTest
                         fullName = Prompt("Full Name");
                         email = Prompt("Email Address");
 
-                        user = User.Register(username, password, email, fullName);
+                        user = User.Register(username, password, email, fullName, null);
                         if (user == null) Console.WriteLine("Username taken. Try Again:");
                         else users.Add(user);
                         break;
@@ -51,7 +51,7 @@ namespace ServerTest
                         username = Prompt("User Name");
                         password = Prompt("Password");
 
-                        user = User.Login(username, password);
+                        user = User.Login(username, password, null);
                         if (user == null) Console.WriteLine("Username/Password combination does not match. Try Again:");
                         else users.Add(user);
                         break;

@@ -16,13 +16,14 @@ using SharedModels.Games;
 using SMG = SharedModels.Games;
 using SharedModels.Connection;
 using SharedModels.Games.Enums;
+using SharedModels.Games.Events;
 
 namespace ServerLogic.Games
 {
     public class Blackjack : Game
     {
-      
-        protected override int MaxSeats { get; }
+
+        protected override int MaxSeats { get; } = 5;
         private BlackjackStates BlackjackState;
         private Deck deck;
         private List<Card> DealerHand;
@@ -47,6 +48,11 @@ namespace ServerLogic.Games
                 playersExist = Players.AsEnumerable().Where(p => p.Value.GetState() != SMP.PlayerStates.Joining).Any();
                 Thread.Sleep(100);
             }
+
+            sw.Restart();
+            while (sw.ElapsedMilliseconds < 1000)
+                Thread.Sleep(50);
+            
 
             GameState = GameStates.Playing;
             GameEvent gameEvent = BlackjackEvent.StartGame();
@@ -113,7 +119,14 @@ namespace ServerLogic.Games
                 gameEvent = BlackjackEvent.ChangeState(BlackjackState);
                 Broadcast(gameEvent);
 
+                DealerHand.Clear();
+                DealerHand.Add(deck.DealCard());
+                DealerHand.Add(deck.DealCard());
+
                 Dictionary<int, Card[]> seatToCards = new Dictionary<int, Card[]>();
+                seatToCards.Add(0, new Card[] { DealerHand[0] });
+
+               
                 foreach (BlackjackPlayer player in ActivePlayers)
                 {
                     Card card1 = deck.DealCard();
@@ -126,16 +139,12 @@ namespace ServerLogic.Games
                         Naturals.Add(player.Seat);
                 }
 
-                DealerHand.Clear();
-                DealerHand.Add(deck.DealCard());
-                DealerHand.Add(deck.DealCard());
-
-                seatToCards.Add(0, new Card[] { DealerHand[0] });
+                
 
                 gameEvent = BlackjackEvent.Deal(seatToCards);
                 Broadcast(gameEvent);
 
-                Thread.Sleep(1000);
+                Thread.Sleep(2000);
                 //PLAYING
                 BlackjackState = BlackjackStates.Playing;
                 gameEvent = BlackjackEvent.ChangeState(BlackjackState);
@@ -160,7 +169,7 @@ namespace ServerLogic.Games
                             //Get Action
                             player.Request(cmd);
                             sw.Restart();
-                            while (sw.ElapsedMilliseconds < TimeLimit)
+                            while(true)
                             {
                                 if (player.TryGetResult(cmd, out action))
                                     break;
@@ -200,7 +209,9 @@ namespace ServerLogic.Games
                 //DEALER TURN
                 gameEvent = BlackjackEvent.PlayerTurn(0);
                 Broadcast(gameEvent);
-
+                gameEvent = BlackjackEvent.ShowDealer(DealerHand[1]);
+                Broadcast(gameEvent);
+                
                 while (DealerCount < 17)
                 {
                     Card card = deck.DealCard();
@@ -271,7 +282,9 @@ namespace ServerLogic.Games
 
             lock (Players)
                 Players.TryAdd(seat, player);
-            
+
+            BlackjackEvent gameEvent = BlackjackEvent.PlayerJoin(player.GetSharedModel());
+            Broadcast(gameEvent);
             return player;
         }
         protected override SM.Games.Game GetSharedModel()
@@ -287,20 +300,9 @@ namespace ServerLogic.Games
             foreach(Player p in players)
                 smPlayers.Add(p.GetSharedModel());
 
-            game = new SMG.Blackjack(smPlayers, GameState, BlackjackState, DealerHand);
+            game = new SMG.Blackjack(smPlayers, GameState, BlackjackState);
             return game;
 
         }
-
-        private string ReadLine(int v)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void Reader()
-        {
-            throw new NotImplementedException();
-        }
-
     }
  }

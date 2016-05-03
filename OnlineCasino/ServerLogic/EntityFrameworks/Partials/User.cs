@@ -1,4 +1,5 @@
 ﻿using SharedModels;
+using SharedModels.Connection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +14,24 @@ namespace ServerLogic.EntityFrameworks
         public static User Register(string username, string password, string email, string fullName)
         {
             //Validate Email, Username, Password
-            if (!(Validation.ValidateUserName(username) && Validation.ValidatePassword(password) && Validation.ValidateEmail(email)))
+
+            if (!Validation.ValidateUserName(username))
+            {
+                ServerMain.QueueClientError(ServerCommands.Register, "Invalid characters in username");
                 return null;
+            }
+
+            if (!Validation.ValidateUserName(username))
+            {
+                ServerMain.QueueClientError(ServerCommands.Register, "Invalid characters in password");
+                return null;
+            }
+
+            if (!Validation.ValidateUserName(username))
+            {
+                ServerMain.QueueClientError(ServerCommands.Register, "Invalid characters in email address");
+                return null;
+            }
 
             User dbUser = new User();
             try
@@ -24,7 +41,11 @@ namespace ServerLogic.EntityFrameworks
 
                     //Check to see if username is taken
                     if (db.Users.Where(u => u.Username == username).Any())
+                    {
+                        ServerMain.QueueClientError(ServerCommands.Register, "Username already taken");
                         return null;
+                    }
+                        
 
                     dbUser.FullName = fullName;
                     dbUser.Username = username;
@@ -44,6 +65,7 @@ namespace ServerLogic.EntityFrameworks
             catch (Exception ex)
             {
                 ServerMain.WriteException("User.Register()", ex);
+                ServerMain.QueueClientError(ServerCommands.Register, "Unknown error");
                 dbUser = null;
             }
 
@@ -61,12 +83,20 @@ namespace ServerLogic.EntityFrameworks
                     dbUser = db.Users.FirstOrDefault(u => u.Username == username);
 
                     if (dbUser == null)
+                    {
+                        ServerMain.QueueClientError(ServerCommands.Login, "Invalid Username/Password");
                         return null;
+                    }
+                        
 
                     if (dbUser.Password == HashPassword(password, dbUser.Salt))
                         return dbUser;
                     else
+                    {
+                        ServerMain.QueueClientError(ServerCommands.Login, "Invalid Username/Password");
                         return null;
+                    }
+                        
 
                 }
 
@@ -74,6 +104,7 @@ namespace ServerLogic.EntityFrameworks
             catch (Exception ex)
             {
                 ServerMain.WriteException("EntityFrameworks.User.Login()", ex);
+                ServerMain.QueueClientError(ServerCommands.Login, "Invalid Username/Password");
                 return null;
             }
         }

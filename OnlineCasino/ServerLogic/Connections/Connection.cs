@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Collections.Concurrent;
+using SharedModels.Connection.Enums;
 
 namespace ServerLogic.Connections
 {
@@ -28,8 +30,8 @@ namespace ServerLogic.Connections
         private volatile bool WriteQueueEmpty;
 
         private Queue<Payload> ReadQueue;
-        private Dictionary<int, RequestResult> RequestedByServer;
-        private Dictionary<ServerCommands, AsyncBuffer> Buffers;
+        private ConcurrentDictionary<int, RequestResult> RequestedByServer;
+
         private Stopwatch Timer = new Stopwatch();
 
         private TcpClient Client;
@@ -39,7 +41,7 @@ namespace ServerLogic.Connections
         {
             this.Client = client;
             Connected = false;
-            
+            RequestedByServer = new ConcurrentDictionary<int, RequestResult>();
             WriteQueue = new Queue<Payload>();
             ReadQueue = new Queue<Payload>();
             WriteQueueEmpty = true;
@@ -52,9 +54,9 @@ namespace ServerLogic.Connections
                 Security security = (Security)Serializer.Deserialize(obj);
 
                 if (cmd == ServerCommands.Login)
-                    CurrentUser = User.Login(security.Username, security.Password);
+                    CurrentUser = User.Login(security.Username, security.Password, this);
                 else if (cmd == ServerCommands.Register)
-                    CurrentUser = User.Register(security.Username, security.Password, security.EmailAddress, security.FullName);
+                    CurrentUser = User.Register(security.Username, security.Password, security.EmailAddress, security.FullName, this);
 
                 userOut = CurrentUser;
                 return (CurrentUser != null);
@@ -67,7 +69,6 @@ namespace ServerLogic.Connections
                 return false;
             }
         }
-
         public void AcceptLogin(int reqId)
         {
             SM.User smUser;
@@ -77,10 +78,9 @@ namespace ServerLogic.Connections
             Connected = true;
             ImmediateWrite(new Payload(CommTypes.Return, reqId, true, smUser));
         }
-
-        public void RejectLogin(int reqId)
+        public void RejectLogin(int reqId, string errorMessage)
         {
-            ImmediateWrite(new Payload(CommTypes.Return, reqId, false, null));
+            ImmediateWrite(new Payload(CommTypes.Return, reqId, false, errorMessage));
             Client.GetStream().Dispose();
             Client.Close();
             
@@ -113,18 +113,14 @@ namespace ServerLogic.Connections
 
         public RequestResult Request(ClientCommands cmd, object obj = null)
         {
-            RequestResult ret = new RequestResult();
+            RequestResult result = new RequestResult();
             int reqId = Interlocked.Increment(ref RequestId);
 
-            lock (RequestedByServer)
-            {
-                RequestedByServer.Add(reqId, ret);
-            }
-
+            RequestedByServer[reqId] = result;
             Payload payload = new Payload(CommTypes.Request, cmd, reqId, obj);
             QueueWrite(payload);
 
-            return ret;
+            return result;
         }
 
         public void Return(int reqId, bool success, object obj)
@@ -219,7 +215,7 @@ namespace ServerLogic.Connections
             ServerCommands cmd = 0;
             int reqId = -1;
 
-            byte[] obj;
+            byte[] objBytes;
             int index;
             int bytesRead;
             int bytesToRead;
@@ -272,7 +268,7 @@ namespace ServerLogic.Connections
                     bytesToRead = BitConverter.ToInt32(buffer, 0);
 
                     //Get object bytes
-                    obj = new byte[bytesToRead];
+                    objBytes = new byte[bytesToRead];
                     index = 0;
                     while (bytesToRead > 0)
                     {
@@ -280,10 +276,12 @@ namespace ServerLogic.Connections
                             continue;
 
                         bytesRead = Client.GetStream().Read(buffer, 0, Math.Min(bufferSize, bytesToRead));
-                        Array.ConstrainedCopy(buffer, 0, obj, index, bytesRead);
+                        Array.ConstrainedCopy(buffer, 0, objBytes, index, bytesRead);
                         index += bytesRead;
                         bytesToRead -= bytesRead;
                     }
+
+                    object obj = Serializer.Deserialize(objBytes);
 
                     //Handle
                     switch (commType)
@@ -300,8 +298,6 @@ namespace ServerLogic.Connections
                         default:
                             break;
                     }
-
-                    
                 }
             }
 
@@ -325,7 +321,7 @@ namespace ServerLogic.Connections
             return true;
         }
 
-        private void HandleVoid(ServerCommands cmd, byte[] obj)
+        private void HandleVoid(ServerCommands cmd, object obj)
         {
             switch (cmd)
             {
@@ -337,25 +333,34 @@ namespace ServerLogic.Connections
             }
         }
 
-        private void HandleRequest(ServerCommands cmd, int reqId, byte[] obj)
+        private void HandleRequest(ServerCommands cmd, int reqId, object obj)
         {
-            throw new NotImplementedException();
+            object retObject = null;
+
+            switch (cmd)
+            {
+                case ServerCommands.GetUserInfo:
+                    if ((int)obj == CurrentUser.UserID)
+                        retObject = CurrentUser.GetSharedModelPrivate();
+                    else
+                        retObject = ServerMain.GetUserInfo((int)obj);
+
+                    Return(reqId, (retObject != null), retObject);
+                    break;
+                case ServerCommands.JoinGame:
+                    int[] data = (int[])obj;
+                    CurrentUser.JoinGame((GameTypes)data[0], data[1], reqId);
+                    break;
+            }
+            
         }
 
-        private void HandleReturn(int reqId, bool success, byte[] objBytes)
+        private void HandleReturn(int reqId, bool success, object obj)
         {
             RequestResult result;
-            lock (RequestedByServer)
-            {
-                if (RequestedByServer.TryGetValue(reqId, out result))
-                    RequestedByServer.Remove(reqId);
-            }
-
-            if (result != null)
-            {
-                object obj = Serializer.Deserialize(objBytes);
+            if (RequestedByServer.TryRemove(reqId, out result))
                 result.SetValue(success, obj);
-            }
+            
         }
         #endregion
 

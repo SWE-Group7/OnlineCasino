@@ -14,20 +14,30 @@ using System.Diagnostics;
 using SharedModels.Connection.Enums;
 using ServerLogic.Games;
 using System.Collections.Concurrent;
+using SMP = SharedModels.Players;
+using SharedModels.Games.Events;
+using SharedModels.Games.Enums;
+
 namespace ServerLogic
 {
     public static class ServerMain
     {
-        private static List<User> ConnectedUsers;
+        
+
+        private static ConcurrentDictionary<int, User> ConnectedUsers;
         private static ConcurrentDictionary<GameTypes, List<Game>> AllGames;
+        private static ConcurrentDictionary<ServerCommands, string> ClientErrorMessages;
         private static TcpListener Listener;
         private static Stopwatch Timer = new Stopwatch();
         private static volatile int NextGameID = 1;
 
+        public static bool GameEvents { get; private set; }
+
         public static void Start()
         {
-            ConnectedUsers = new List<User>();
+            ConnectedUsers = new ConcurrentDictionary<int, User>();
             AllGames = new ConcurrentDictionary<GameTypes, List<Game>>();
+            ClientErrorMessages = new ConcurrentDictionary<ServerCommands, string>();
 
             //Initialize list of game for each GameType 
             GameTypes[] gameTypes = (GameTypes[]) Enum.GetValues(typeof(GameTypes));
@@ -146,14 +156,11 @@ namespace ServerLogic
             {
                 connection.AcceptLogin(reqId);
                 connection.Communicate();
-
-                lock (ConnectedUsers)
-                    ConnectedUsers.Add(user);
+                ConnectedUsers[user.UserID] = user;
             }
             else
             {
-                connection.RejectLogin(reqId);
-                
+                connection.RejectLogin(reqId, ClientErrorMessages[cmd]);
             }
         }
         private static bool ReaderStuck(TcpClient client)
@@ -195,18 +202,33 @@ namespace ServerLogic
                             //game = new TexasHoldEm(NextGameID++);
                             break;
                     }
+                    game.Start();
                     specificGames.Add(game);
                 }
             }
             return game;
 
         }
+        public static SMP.User GetUserInfo(int id)
+        {
+            if (ConnectedUsers.ContainsKey(id))
+                return ConnectedUsers[id].GetSharedModelPublic();
 
-        public static void  WriteException(string throwingMethod, Exception ex)
+            return null;
+        }
+
+        public static void WriteEvent(GameEvent gameEvent)
+        {
+            Console.WriteLine(Enum.GetName(typeof(BlackjackEvents), (BlackjackEvents)gameEvent.Event));
+        }
+        public static void WriteException(string throwingMethod, Exception ex)
         {
             Console.WriteLine(String.Format("{0} threw an Exception : {1}", throwingMethod, ex.Message));
         }
-
+        public static void QueueClientError(ServerCommands cmd, string message)
+        {
+            ClientErrorMessages[cmd] = message;
+        }
         
     }
 }

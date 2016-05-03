@@ -9,6 +9,7 @@ using DB = ServerLogic.EntityFrameworks;
 using SM = SharedModels;
 using SMG = SharedModels.Games;
 using SharedModels.Connection;
+using SharedModels.Games.Events;
 
 namespace ServerLogic
 {
@@ -40,7 +41,7 @@ namespace ServerLogic
             }
         }
 
-        private User(DB.User dbUser)
+        private User(DB.User dbUser, Connection connection)
         {
             this.UserID = dbUser.UserID;
             this.Username = dbUser.Username;
@@ -51,25 +52,26 @@ namespace ServerLogic
             this.balance = dbUser.Balance;
             this.InGame = false;
             this.Lock = new object();
+            this.CurrentConnection = connection;
 
             Cache = new UserCache();
         }
 
-        public static User Register(string username, string password, string email, string fullName)
+        public static User Register(string username, string password, string email, string fullName, Connection connection)
         {
             DB.User dbUser = DB.User.Register(username, password, email, fullName);
 
             if (dbUser != null)
-                return new User(dbUser);
+                return new User(dbUser, connection);
             else
                 return null;
         }
-        public static User Login(string username, string password)
+        public static User Login(string username, string password, Connection connection)
         {
             DB.User dbUser = DB.User.Login(username, password);
 
             if (dbUser != null)
-                return new User(dbUser);
+                return new User(dbUser, connection);
             else
                 return null;
         }
@@ -114,7 +116,7 @@ namespace ServerLogic
 
             DB.User.UpdateBalance(UserID, value);
         }
-        public void ShareEvent(SMG.GameEvent gameEvent)
+        public void ShareEvent(GameEvent gameEvent)
         {
             if (InGame)
                 CurrentConnection.Command(ClientCommands.SendEvent, gameEvent);
@@ -171,9 +173,7 @@ namespace ServerLogic
             internal SM.Players.User smUserPrivate;
             internal volatile bool Old = true;
         }
-           
-        
-        
 
+        
     }
 }

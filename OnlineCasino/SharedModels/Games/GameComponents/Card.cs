@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace SharedModels.GameComponents
 {
+    [Serializable]
     public class Card
     {
         public CardSuit Suit;

@@ -13,6 +13,7 @@ namespace ClientLogic.Players
         public string Username;
         public string FullName;
         public string Email;
+        public int BuyIn;
         
         public decimal Balance;
 
@@ -24,5 +25,6 @@ namespace ClientLogic.Players
             this.Email = smUser.Email;
             this.Balance = smUser.Balance;
         }
+
     }
 }

@@ -9,7 +9,7 @@ using SMP = SharedModels.Players;
 namespace ClientLogic.Players
 {
     public class BlackjackPlayer : CardPlayer
-    {   
+    {
         public BlackjackPlayer(SMP.Player player)
             :base(player)
         {
