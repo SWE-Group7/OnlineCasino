@@ -27,12 +27,6 @@ namespace ClientLogic.Players
             this.GameBalance = player.GameBalance;
             this.Seat = player.Seat;
             this.Gains = 0;
-
-            if (player.CurrentUser.UserID == ClientMain.MainUser.UserID)
-            {
-                User = ClientMain.MainUser;
-                ClientMain.MainPlayer = this;
-            }
         }
     }
 }

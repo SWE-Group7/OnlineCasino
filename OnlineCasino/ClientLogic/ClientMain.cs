@@ -48,7 +48,6 @@ namespace ClientLogic
             EventQueue = new ConcurrentQueue<GameEvent>();
             RequestQueue = new ConcurrentDictionary<ClientCommands, RequestResult>();
             MainGame = null;
-            MainPlayer = null;
 
             lock (Lock)
             {

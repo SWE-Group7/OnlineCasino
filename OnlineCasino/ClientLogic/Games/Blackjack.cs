@@ -18,20 +18,18 @@ namespace ClientLogic.Games
 {
     public class Blackjack : Game
     {
-        public static SME.OverallState OS = OverallState.Waiting;
-        public static SME.WaitingState WS = WaitingState.NoConnection;
-        public static SME.GameState GS = SME.GameState.Waiting;
-        public static SME.RoundEndState RES = RoundEndState.Tie;
+         
 
         public volatile SMG.BlackjackStates BlackjackState;
         public List<CardPlayer> OtherPlayers
         {
-            get { var players = Players.Where(p => p.Key != ClientMain.MainPlayer.Seat).Select(p => p.Value).ToList();
+            get { var players = Players.Where(p => p.Key != MainPlayer.Seat).Select(p => p.Value).ToList();
                 return players.Cast<CardPlayer>().ToList();
             }
         }
-        public List<Card> DealerHand;        
-        
+        public BlackjackPlayer MainPlayer;
+        public List<Card> DealerHand;
+
         public Blackjack(SMG.Blackjack blackjack)
             :base(blackjack as SMG.Game)
         {
@@ -40,8 +38,12 @@ namespace ClientLogic.Games
             DealerHand = new List<Card>();
 
             foreach (var smPlayer in blackjack.Players)
+            {
                 Players[smPlayer.Seat] = new BlackjackPlayer(smPlayer);
-            
+
+                if (smPlayer.CurrentUser.UserID == ClientMain.MainUser.UserID)
+                    MainPlayer = (BlackjackPlayer) Players[smPlayer.Seat];
+            }
 
         }
 
@@ -54,10 +56,10 @@ namespace ClientLogic.Games
             switch (bje)
             {
                 case BlackjackEvents.StartGame:
-                    GameState = SMG.GameStates.Playing;
+                    GS = GameStates.Playing;
                     break;
                 case BlackjackEvents.EndGame:
-                    GameState = SMG.GameStates.Finializing;
+                    
                     break;
                 case BlackjackEvents.ChangeGameState:
                     ChangeState((SMG.BlackjackStates)gameEvent.Num);
@@ -97,7 +99,7 @@ namespace ClientLogic.Games
             }
         }
 
-        private void ChangeState(SMG.BlackjackStates state)
+        private void ChangeState( SMG.BlackjackStates state)
         {
             BlackjackState = state;
 
@@ -118,8 +120,8 @@ namespace ClientLogic.Games
 
             if(BlackjackState == SMG.BlackjackStates.Playing)
             {
-                Blackjack.OS = SME.OverallState.Playing;
-                Blackjack.GS = SME.GameState.Playing;
+                OS = OverallStates.Playing;
+                GS = GameStates.Playing;
             }
 
                 

@@ -10,10 +10,10 @@ namespace SharedModels.Players
     public class BlackjackPlayer : Player
     {
         public List<Card> Hand;
-        public decimal UserBuyIn;
-        public decimal UserBet;
+        public int UserBuyIn;
+        public int UserBet;
 
-        public BlackjackPlayer(User u, int seat, decimal gameBalance, decimal buy, decimal bet):
+        public BlackjackPlayer(User u, int seat, int gameBalance, int buy, int bet):
             base(u, seat, gameBalance)
         {
             Hand = new List<Card>();

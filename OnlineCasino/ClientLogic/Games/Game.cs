@@ -18,23 +18,38 @@ namespace ClientLogic.Games
     {
 
         public ConcurrentDictionary<int, Player> Players;
+
         public volatile SMG.GameStates GameState;
         public readonly GameTypes GameType;
-        public int Turn;
+        public OverallStates OS = OverallStates.Waiting;
+        public WaitingState WS = WaitingState.NoConnection;
+        public GameStates GS = GameStates.Waiting;
+        public RoundEndStates RES = RoundEndStates.Tie;
 
+        public int Turn;
 
         public Game(SMG.Game game)
         {
             Players = new ConcurrentDictionary<int, Player>();
             GameState = game.GameState;
 
-        public enum OverallState
+            OS = OverallStates.Waiting;
+            WS = WaitingState.NoConnection;
+            GS = GameStates.Waiting;
+            RES = RoundEndStates.Tie;
+        }
+
+
+        public abstract void HandleEvent(GameEvent gameEvent);
+
+        #region Enums
+        public enum OverallStates
         {
             Waiting = 0,
             Playing,
             Distributing
         }
-        public OverallState OS = OverallState.Waiting;
+
 
         public enum WaitingState
         {
@@ -42,27 +57,25 @@ namespace ClientLogic.Games
             TableFound,
 
         }
-        public WaitingState WS = WaitingState.NoConnection;
 
-        public enum GameState
+
+        public enum GameStates
         {
             Waiting = 0,
             Betting,
             Playing
         }
-        public GameState GS = GameState.Waiting;
 
-        public enum RoundEndState
+
+        public enum RoundEndStates
         {
             Win = 0,
             Lose,
             Tie
 
         }
-        public RoundEndState RES = RoundEndState.Tie;
 
-
-        public abstract void HandleEvent(GameEvent gameEvent);
+        #endregion
     }
 }
 

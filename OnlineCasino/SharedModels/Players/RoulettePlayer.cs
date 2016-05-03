@@ -8,10 +8,10 @@ namespace SharedModels.Players
 {
     public class RoulettePlayer : Player
     {
-        public decimal UserBuyIn;
-        public decimal UserBet;
+        public int UserBuyIn;
+        public int UserBet;
 
-        public RoulettePlayer(User u, int seat, decimal gameBalance, decimal buy, decimal bet) :
+        public RoulettePlayer(User u, int seat, int gameBalance, int buy, int bet) :
             base(u, seat, gameBalance)
         {
             UserBuyIn = buy;

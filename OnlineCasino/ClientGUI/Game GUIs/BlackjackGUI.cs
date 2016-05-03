@@ -5,6 +5,7 @@ using ClientLogic.Players;
 using SharedModels.GameComponents;
 using SM = SharedModels.Players;
 using ClientLogic;
+using ClientLogic.Games;
 
 namespace ClientGUI.Game_GUIs
 {
@@ -18,15 +19,10 @@ namespace ClientGUI.Game_GUIs
         }
         public Hand_State HandState = BlackjackGUI.Hand_State.under21;
 
-        SM.User u;
-        SM.User v;       
-        SM.User x;
-        SM.User y;
-        SM.User z;
-
-        public new ClientLogic.Players.BlackjackPlayer You;
-
+        public Blackjack Game;
+        public new BlackjackPlayer You;
         public new List<CardPlayer> OtherPlayers;
+
         public List<Card> DealerHand = new List<Card>();
 
         protected int dealerCardX;
@@ -36,81 +32,8 @@ namespace ClientGUI.Game_GUIs
 
         public BlackjackGUI(int h, int w)
         {
-            u = new SM.User(100, "n", "nadine", "omg", 100);
-
-            SharedModels.Players.BlackjackPlayer ba = new SharedModels.Players.BlackjackPlayer(u, 1, 100, 100, 100);
-
-            v = new SM.User(100, "f", "Foster", "omg", 100);
-            SharedModels.Players.BlackjackPlayer bb = new SharedModels.Players.BlackjackPlayer(v, 2, 100, 100, 100);
-
-            z = new SM.User(100, "h", "Hayden", "omg", 100);
-            SharedModels.Players.BlackjackPlayer bc = new SharedModels.Players.BlackjackPlayer(z, 3, 100, 100, 100);
-
-            x = new SM.User(100, "g", "Sandy", "omg", 100);
-            SharedModels.Players.BlackjackPlayer bd = new SharedModels.Players.BlackjackPlayer(x, 4, 100, 100, 100);
-
-            y = new SM.User(100, "s", "Gino", "omg", 100);
-            SharedModels.Players.BlackjackPlayer be = new SharedModels.Players.BlackjackPlayer(y, 5, 100, 100, 100);
-
-            SM.Player b = new SM.Player(u, 1, 1000);
-
-
-            Deck = new Deck();
-            You = new ClientLogic.Players.BlackjackPlayer(ba);
-            ClientLogic.Players.BlackjackPlayer player2 = new ClientLogic.Players.BlackjackPlayer(bb);
-            ClientLogic.Players.BlackjackPlayer player3 = new ClientLogic.Players.BlackjackPlayer(bc);
-            ClientLogic.Players.BlackjackPlayer player4 = new ClientLogic.Players.BlackjackPlayer(bd);
-            ClientLogic.Players.BlackjackPlayer player5 = new ClientLogic.Players.BlackjackPlayer(be);
-
-            OtherPlayers = new List<ClientLogic.Players.BlackjackPlayer>().ConvertAll(x => (CardPlayer)x);
-            OtherPlayers.Add(player2);
-            OtherPlayers.Add(player3);
-            OtherPlayers.Add(player4);
-            OtherPlayers.Add(player5);
-
             clientHeight = h;
             clientWidth = w;
-
-            // remove
-            Card you_c = new Card(CardSuit.Clubs, CardRank.King);
-            Card you_d = new Card(CardSuit.Diamonds, CardRank.King);
-            Card you_e = new Card(CardSuit.Hearts, CardRank.Eight);
-            You.Hand.Add(you_c);
-            You.Hand.Add(you_d);
-
-            Card d_f = new Card(CardSuit.Hearts, CardRank.Nine);
-            Card d_e = new Card(CardSuit.Hearts, CardRank.Seven);
-
-            DealerHand.Add(d_f);
-            DealerHand.Add(d_e);
-
-            Card p1_c = new Card(CardSuit.Diamonds, CardRank.Ace);
-            Card p1_d = new Card(CardSuit.Hearts, CardRank.Seven);
-            OtherPlayers[0].Hand.Add(p1_c);
-            OtherPlayers[0].Hand.Add(p1_d);
-
-            Card p2_c = new Card(CardSuit.Diamonds, CardRank.Two);
-            Card p2_d = new Card(CardSuit.Spades, CardRank.Eight);
-            OtherPlayers[1].Hand.Add(p2_c);
-            OtherPlayers[1].Hand.Add(p2_d);
-
-            Card p3_c = new Card(CardSuit.Clubs, CardRank.Eight);
-            Card p3_d = new Card(CardSuit.Spades, CardRank.Three);
-            OtherPlayers[2].Hand.Add(p3_c);
-            OtherPlayers[2].Hand.Add(p3_d);
-
-            Card p4_c = new Card(CardSuit.Clubs, CardRank.Six);
-            Card p4_d = new Card(CardSuit.Hearts, CardRank.Queen);
-            OtherPlayers[3].Hand.Add(p4_c);
-            OtherPlayers[3].Hand.Add(p4_d);
-
-            yourCardX = clientWidth / 2 - cardWidth / 2;
-            yourCardY = clientHeight - 200;
-            yourCardsCount = You.Hand.Count - 1;
-
-            otherPlayerCardX = (cardWidth - 20) + 50;
-            otherPlayerCardY = 100;
-
         }
 
         public void BlackjackGUI_Paint(object sender, PaintEventArgs e)
