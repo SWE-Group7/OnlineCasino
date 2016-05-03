@@ -137,47 +137,43 @@ namespace ClientGUI.Game_GUIs
 
                                     e.Graphics.DrawString("your turn", new Font("Segoe UI", 38), Brushes.White, new Point(clientWidth / 2 - 130, clientHeight / 2 - 40));
 
-                                    e.Graphics.FillRectangle(Brushes.White, clientWidth - 150, clientHeight - 175, 100, 35);
-                                    e.Graphics.DrawRectangle(Pens.Black, clientWidth - 151, clientHeight - 176, 102, 37);
-                                    e.Graphics.DrawString("call", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 125, clientHeight - 178));
+                                    e.Graphics.DrawImage(Properties.Resources.UpButton, clientWidth - 150, clientHeight - 175, 100, 35);
+                                    e.Graphics.DrawString("call", new Font("Segoe UI", 18), Brushes.Black, new Point(clientWidth - 125, clientHeight - 175));
 
-                                    e.Graphics.FillRectangle(Brushes.White, clientWidth - 150, clientHeight - 120, 100, 35);
-                                    e.Graphics.DrawRectangle(Pens.Black, clientWidth - 151, clientHeight - 121, 102, 37);
-                                    e.Graphics.DrawString("raise", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 135, clientHeight - 125));
+                                    e.Graphics.DrawImage(Properties.Resources.UpButton, clientWidth - 150, clientHeight - 120, 100, 35);
+                                    e.Graphics.DrawString("raise", new Font("Segoe UI", 18), Brushes.Black, new Point(clientWidth - 135, clientHeight - 122));
 
                                     if (hoverX < clientWidth - 50 && hoverX > clientWidth - 150)
                                     {
                                          if (hoverY < clientHeight - 175 + 35 && hoverY > clientHeight - 175)
                                         {
-                                            e.Graphics.FillRectangle(Brushes.DimGray, clientWidth - 150, clientHeight - 175, 100, 35);
-                                            e.Graphics.DrawString("call", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 125, clientHeight - 178));
+                                            e.Graphics.DrawImage(Properties.Resources.DownButton, clientWidth - 150, clientHeight - 175, 100, 35);
+                                            e.Graphics.DrawString("call", new Font("Segoe UI", 18), Brushes.Black, new Point(clientWidth - 125, clientHeight - 175));
                                         }
                                         else if ((hoverY < clientHeight - 120 + 35 && hoverY > clientHeight - 120))
                                         {
-                                            e.Graphics.FillRectangle(Brushes.DimGray, clientWidth - 150, clientHeight - 120, 100, 35);
-                                            e.Graphics.DrawString("raise", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 135, clientHeight - 125));
+                                            e.Graphics.DrawImage(Properties.Resources.DownButton, clientWidth - 150, clientHeight - 120, 100, 35);
+                                            e.Graphics.DrawString("raise", new Font("Segoe UI", 18), Brushes.Black, new Point(clientWidth - 135, clientHeight - 122));
                                         }
                                     }
 
-                                    e.Graphics.FillRectangle(Brushes.OldLace, clientWidth - 260, clientHeight - 175, 100, 35);
-                                    e.Graphics.DrawRectangle(Pens.Black, clientWidth - 261, clientHeight - 176, 102, 37);
-                                    e.Graphics.DrawString("fold", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 238, clientHeight - 178));
+                                    e.Graphics.DrawImage(Properties.Resources.UpButton, clientWidth - 260, clientHeight - 175, 100, 35);
+                                    e.Graphics.DrawString("fold", new Font("Segoe UI", 18), Brushes.Black, new Point(clientWidth - 238, clientHeight - 175));
 
-                                    e.Graphics.FillRectangle(Brushes.OldLace, clientWidth - 260, clientHeight - 120, 100, 35);
-                                    e.Graphics.DrawRectangle(Pens.Black, clientWidth - 261, clientHeight - 121, 102, 37);
-                                    e.Graphics.DrawString("check", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 248, clientHeight - 125));
+                                    e.Graphics.DrawImage(Properties.Resources.UpButton, clientWidth - 260, clientHeight - 120, 100, 35);
+                                    e.Graphics.DrawString("check", new Font("Segoe UI", 18), Brushes.Black, new Point(clientWidth - 248, clientHeight - 122));
 
                                     if (hoverX < clientWidth - 160 && hoverX > clientWidth - 260)
                                     {
                                         if (hoverY < clientHeight - 175 + 35 && hoverY > clientHeight - 175)
                                         {
-                                            e.Graphics.FillRectangle(Brushes.DimGray, clientWidth - 260, clientHeight - 175, 100, 35);
-                                            e.Graphics.DrawString("fold", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 238, clientHeight - 178));
+                                            e.Graphics.DrawImage(Properties.Resources.DownButton, clientWidth - 260, clientHeight - 175, 100, 35);
+                                            e.Graphics.DrawString("fold", new Font("Segoe UI", 18), Brushes.Black, new Point(clientWidth - 238, clientHeight - 175));
                                         }
                                         else if ((hoverY < clientHeight - 120 + 35 && hoverY > clientHeight - 120))
                                         {
-                                            e.Graphics.FillRectangle(Brushes.DimGray, clientWidth - 260, clientHeight - 120, 100, 35);
-                                            e.Graphics.DrawString("check", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 248, clientHeight - 125));
+                                            e.Graphics.DrawImage(Properties.Resources.DownButton, clientWidth - 260, clientHeight - 120, 100, 35);
+                                            e.Graphics.DrawString("check", new Font("Segoe UI", 18), Brushes.Black, new Point(clientWidth - 248, clientHeight - 122));
                                         }
                                     }
                                 }

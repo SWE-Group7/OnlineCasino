@@ -34,9 +34,5 @@ namespace ClientLogic.Players
                 ClientMain.MainPlayer = this;
             }
         }
-
-
-        
-
     }
 }

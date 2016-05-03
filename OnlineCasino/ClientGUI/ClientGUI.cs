@@ -275,7 +275,7 @@ namespace ClientGUI
                 RouletteGUI = null;
             }
 
-            this.BackgroundImage = global::ClientGUI.Properties.Resources.CardsBackground;
+            this.BackgroundImage = global::ClientGUI.Properties.Resources.Possible_Background;
             this.Controls.Clear();
             this.Invalidate();
 
@@ -290,7 +290,8 @@ namespace ClientGUI
         private void No_Click(object sender, EventArgs e)
         {
             check = false;
-            Game_Draw();
+            if (ClientState != State.Betting) Game_Draw();
+            else BettingScreen_Draw();
         }
 
         private void SubmitBuyIn_Click(object sender, EventArgs e)
@@ -319,7 +320,7 @@ namespace ClientGUI
                     this.Invalidate();
                     this.BackgroundImage = global::ClientGUI.Properties.Resources.BlackjackBackground;
 
-                    ClientState = State.Game;
+                    ClientState = State.Betting;
                     BlackjackGUI.OS = GameGUI.OverallState.Playing;
                     //BlackjackGUI.WS = GameGUI.WaitingState.NoConnection;
 
@@ -341,7 +342,7 @@ namespace ClientGUI
                     this.Invalidate();
                     this.BackgroundImage = global::ClientGUI.Properties.Resources.BlackjackBackground;
 
-                    ClientState = State.Game;
+                    ClientState = State.Betting;
                     TexasHoldEmGUI.OS = GameGUI.OverallState.Playing;
                     //TexasHoldEmGUI.WS = GameGUI.WaitingState.NoConnection;
 
@@ -363,7 +364,7 @@ namespace ClientGUI
                     this.Invalidate();
                     this.BackgroundImage = global::ClientGUI.Properties.Resources.RouletteBackground;
 
-                    ClientState = State.Game;
+                    ClientState = State.Betting;
                     RouletteGUI.OS = GameGUI.OverallState.Playing;
 
                     // RouletteGUI.WS = GameGUI.WaitingState.NoConnection;
@@ -371,7 +372,7 @@ namespace ClientGUI
                     // Wait for table to be found, then move to betting stage
 
                     RouletteGUI.GS = GameGUI.GameState.Betting;
-                    Game_Draw();
+                    BettingScreen_Draw();
                 }
             }
         }
@@ -411,6 +412,16 @@ namespace ClientGUI
 
                     Game_Draw();
                 }
+                else if (GameChoice == Game.Roulette)
+                {
+                    RouletteGUI.bet = bet;
+
+                    ClientState = State.Game;
+                    RouletteGUI.OS = GameGUI.OverallState.Playing;
+                    RouletteGUI.GS = GameGUI.GameState.Playing;
+
+                    Game_Draw();
+                }
             }
         }
 
@@ -443,15 +454,26 @@ namespace ClientGUI
                                         {
                                             BlackjackGUI.You.Hand.Add(new SharedModels.GameComponents.Card(SharedModels.GameComponents.CardSuit.Clubs, SharedModels.GameComponents.CardRank.Five));
                                         }
+
+                                        BlackjackGUI.HandState = BlackjackGUI.Hand_State.bust;
                                     }
                                     else if ((BlackjackGUI.clickY < Height - 120 + 35 && BlackjackGUI.clickY > Height - 120))
                                     {
                                         BlackjackGUI.GS = GameGUI.GameState.Waiting;
                                     }
                                 }
+
+                                if(BlackjackGUI.GS == GameGUI.GameState.Waiting)
+                                {
+                                    BlackjackGUI.OS = BlackjackGUI.OverallState.Distributing;
+                                    BlackjackGUI.RES = BlackjackGUI.RoundEndState.Lose;
+                                }
                             }
                             break;
                         case BlackjackGUI.OverallState.Waiting:
+                            {
+                                
+                            }
                             break;
                         case BlackjackGUI.OverallState.Distributing:
                             {
@@ -459,7 +481,7 @@ namespace ClientGUI
                                 {
                                     if (BlackjackGUI.clickY > Height / 2 + 60 && BlackjackGUI.clickY < Height / 2 + 60 + 40)
                                     {
-                                        BlackjackGUI.You.RefreshHand();
+                                        //BlackjackGUI.You.RefreshHand();
                                         BettingScreen_Draw();
 
                                         ClientState = State.Betting;
@@ -590,6 +612,7 @@ namespace ClientGUI
                                                 }
 
                                                 Chosen = RouletteGUI.ChosenNumber(gridX, gridY);
+
                                             }
                                             else
                                             {
