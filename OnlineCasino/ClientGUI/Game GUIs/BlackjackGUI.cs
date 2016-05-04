@@ -11,17 +11,19 @@ namespace ClientGUI.Game_GUIs
 {
     public class BlackjackGUI : CardGameGUI
     {
-        public enum Hand_State
-        {
-            under21,
-            twentyone,
-            bust
-        }
-        public Hand_State HandState = BlackjackGUI.Hand_State.under21;
 
-        public Blackjack Game;
-        public new BlackjackPlayer You;
-        public new List<CardPlayer> OtherPlayers;
+
+        public new Blackjack CurrentGame
+        {
+            get { return (Blackjack)base.CurrentGame; }
+        }
+        public new BlackjackPlayer You
+        {
+            get
+            {
+                return (BlackjackPlayer)base.You;
+            }
+        }
 
         public List<Card> DealerHand = new List<Card>();
 
@@ -38,18 +40,18 @@ namespace ClientGUI.Game_GUIs
 
         public void BlackjackGUI_Paint(object sender, PaintEventArgs e)
         {
-            switch (OS)
+            switch (ClientMain.MainGame.OS)
             {
-                case OverallState.Waiting:
+                case OverallStates.Waiting:
                     {
-                        switch (WS)
+                        switch (CurrentGame.WS)
                         {
-                            case WaitingState.NoConnection:
+                            case WaitingStates.NoConnection:
                                 {
                                     JoiningTable_Draw(sender, e);
                                 }
                                 break;
-                            case WaitingState.TableFound:
+                            case WaitingStates.TableFound:
                                 {
                                     TableFound_Draw(sender, e);
                                 }
@@ -57,10 +59,10 @@ namespace ClientGUI.Game_GUIs
                         }
                     }
                     break;
-                case OverallState.Playing:
+                case OverallStates.Playing:
                     {
-                        YourHand_Paint(sender, e, You);
-                        OtherPlayerHands_Paint(sender, e, OtherPlayers, true);
+                        YourHand_Paint(sender, e);
+                        OtherPlayerHands_Paint(sender, e, CurrentGame.OtherPlayers, true);
 
                         e.Graphics.DrawString("Dealer", new Font("Segoe UI", 20), Brushes.White, new Point(clientWidth / 2 - 60, cardHeight + 10));
                         dealerCardOffset = (DealerHand.Count * (cardWidth + 20)) / 2;
@@ -86,25 +88,25 @@ namespace ClientGUI.Game_GUIs
                         }
                         dealerCardsCount = DealerHand.Count - 1;
 
-                        switch (GS)
+                        switch (CurrentGame.GS)
                         {
-                            case GameState.Waiting:
+                            case GameStates.Waiting:
                                 {
                                     e.Graphics.DrawString("Waiting on other players", new Font("Segoe UI", 16), Brushes.White, new Point(clientWidth / 2 - 150, clientHeight / 2 - 30));
                                     
-                                    switch (HandState)
+                                    switch (CurrentGame.HandState)
                                     {
-                                        case Hand_State.under21:
+                                        case BlackjackHandStates.Under21:
                                             {
 
                                             }
                                             break;
-                                        case Hand_State.twentyone:
+                                        case BlackjackHandStates.TwentyOne:
                                             {
                                                 e.Graphics.DrawString("Blackjack!", new Font("Segoe UI", 22), Brushes.White, new Point(clientWidth / 2 - 60, clientHeight - cardHeight - 80));
                                             }
                                             break;
-                                        case Hand_State.bust:
+                                        case BlackjackHandStates.Bust:
                                             {
                                                 e.Graphics.DrawString("Bust!", new Font("Segoe UI", 22), Brushes.White, new Point(clientWidth / 2 - 40, clientHeight - cardHeight - 120));
                                             }
@@ -127,17 +129,17 @@ namespace ClientGUI.Game_GUIs
                                    
                                 }
                                 break;
-                            case GameState.Betting:
+                            case GameStates.Betting:
                                 {
                                     e.Graphics.DrawRectangle(Pens.Black, clientWidth / 2 - 226, clientHeight / 2 - 126, 451, 251);
                                     e.Graphics.FillRectangle(Brushes.White, new Rectangle(clientWidth / 2 - 225, clientHeight / 2 - 125, 450, 250));
                                 }
                                 break;
-                            case GameState.Playing:
+                            case GameStates.Playing:
                                 {
-                                    switch (HandState)
+                                    switch (CurrentGame.HandState)
                                     {
-                                        case Hand_State.under21:
+                                        case BlackjackHandStates.Under21:
                                             {
                                                 e.Graphics.DrawString("your turn", new Font("Segoe UI", 38), Brushes.White, new Point(clientWidth / 2 - 130, clientHeight / 2 - 40));
 
@@ -164,14 +166,14 @@ namespace ClientGUI.Game_GUIs
                                                 }
                                             }
                                             break;
-                                        case Hand_State.twentyone:
+                                        case BlackjackHandStates.TwentyOne:
                                             {
-                                                GS = GameState.Waiting;
+                                                CurrentGame.GS = GameStates.Waiting;
                                             }
                                             break;
-                                        case Hand_State.bust:
+                                        case BlackjackHandStates.Bust:
                                             {
-                                                GS = GameState.Waiting;
+                                                CurrentGame.GS = GameStates.Waiting;
                                             }
                                             break;
 
@@ -181,7 +183,7 @@ namespace ClientGUI.Game_GUIs
                         }
                     }
                     break;
-                case OverallState.Distributing:
+                case OverallStates.Distributing:
                     {
                         e.Graphics.DrawRectangle(Pens.Black, clientWidth / 2 - 226, clientHeight / 2 - 186, 451, 351);
                         e.Graphics.FillRectangle(Brushes.White, new Rectangle(clientWidth / 2 - 225, clientHeight / 2 - 185, 450, 350));
@@ -200,25 +202,25 @@ namespace ClientGUI.Game_GUIs
                             }
                         }
 
-                        switch (RES)
+                        switch (CurrentGame.RES)
                         {
-                            case RoundEndState.Lose:
+                            case RoundEndStates.Lose:
                                 {
                                     e.Graphics.DrawString("you lose", new Font("Segoe UI", 38), Brushes.Black, new Point(clientWidth / 2 - 95, clientHeight / 2 - 140));
-                                    e.Graphics.DrawString("-$" + bet, new Font("Segoe UI", 15), Brushes.Black, new Point(clientWidth / 2 - 15, clientHeight / 2 - 45));
-                                    e.Graphics.DrawString("current buy in: $" + buyIn, new Font("Segoe UI", 13), Brushes.Black, new Point(clientWidth / 2 - 75, clientHeight / 2 - 20));
+                                    e.Graphics.DrawString("-$" + You.Bet, new Font("Segoe UI", 15), Brushes.Black, new Point(clientWidth / 2 - 15, clientHeight / 2 - 45));
+                                    e.Graphics.DrawString("current buy in: $" + You.BuyIn, new Font("Segoe UI", 13), Brushes.Black, new Point(clientWidth / 2 - 75, clientHeight / 2 - 20));
                                 }
                                 break;
-                            case RoundEndState.Tie:
+                            case RoundEndStates.Tie:
                                 {
                                     e.Graphics.DrawString("you tied", new Font("Segoe UI", 38), Brushes.Black, new Point(clientWidth / 2 - 118, clientHeight / 2 - 140));
                                 }
                                 break;
-                            case RoundEndState.Win:
+                            case RoundEndStates.Win:
                                 {
                                     e.Graphics.DrawString("you won!", new Font("Segoe UI", 38), Brushes.Black, new Point(clientWidth / 2 - 118, clientHeight / 2 - 140));
-                                    e.Graphics.DrawString("+$" + bet, new Font("Segoe UI", 15), Brushes.Black, new Point(clientWidth / 2 - 15, clientHeight / 2 - 40));
-                                    e.Graphics.DrawString("current buy in: $" + buyIn, new Font("Segoe UI", 13), Brushes.Black, new Point(clientWidth / 2 - 75, clientHeight / 2 - 20));
+                                    e.Graphics.DrawString("+$" + You.Bet, new Font("Segoe UI", 15), Brushes.Black, new Point(clientWidth / 2 - 15, clientHeight / 2 - 40));
+                                    e.Graphics.DrawString("current buy in: $" + You.BuyIn, new Font("Segoe UI", 13), Brushes.Black, new Point(clientWidth / 2 - 75, clientHeight / 2 - 20));
                                 }
                                 break;
                         }

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ClientLogic.Games;
 
 namespace ClientGUI.Game_GUIs
 {
@@ -17,8 +18,17 @@ namespace ClientGUI.Game_GUIs
     {
         SharedModels.Players.User u;
         SharedModels.Players.User f;
-        public new CLP.TexasHoldEmPlayer You;
-        public new List<CLP.CardPlayer> OtherPlayers;
+        public new TexasHoldEm CurrentGame
+        {
+            get { return (TexasHoldEm) base.CurrentGame; }
+        }
+        public new ClientLogic.Players.TexasHoldEmPlayer You
+        {
+            get
+            {
+                return (ClientLogic.Players.TexasHoldEmPlayer) base.You;
+            }
+        }
         public List<Card> MiddleHand = new List<Card>();
 
         int middleCardX;
@@ -33,29 +43,6 @@ namespace ClientGUI.Game_GUIs
             clientWidth = w;
             middleCardX = clientWidth / 2 - (cardWidth - 20) / 2;
             middleCardY = 100; 
-            
-            u = new SharedModels.Players.User(100, "n", "nadine", "omg", 100);
-
-            SharedModels.Players.TexasHoldEmPlayer t = new SharedModels.Players.TexasHoldEmPlayer(u, 1, 100);
-            f = new SharedModels.Players.User(200, "f", "foster", "omgomg", 100);
-            SharedModels.Players.TexasHoldEmPlayer tf = new SharedModels.Players.TexasHoldEmPlayer(u, 1, 100);
-
-            Deck = new Deck();
-            You = new ClientLogic.Players.TexasHoldEmPlayer(t);
-            OtherPlayers = new List<ClientLogic.Players.TexasHoldEmPlayer>().ConvertAll(x => (CLP.CardPlayer)x);
-
-            OtherPlayers.Add(new ClientLogic.Players.TexasHoldEmPlayer(tf));
-            // Remove
-            Card c = new Card(CardSuit.Clubs, CardRank.Ace);
-            Card d = new Card(CardSuit.Diamonds, CardRank.King);
-            You.Hand.Add(c);
-            You.Hand.Add(d);
-
-            OtherPlayers[0].Hand.Add(c);
-            OtherPlayers[0].Hand.Add(d);
-
-            MiddleHand.Add(c);
-            MiddleHand.Add(c);
 
             yourCardX = clientWidth / 2 - cardWidth / 2;
             yourCardY = clientHeight - 200;
@@ -64,18 +51,18 @@ namespace ClientGUI.Game_GUIs
 
         public void TexasHoldEmGUI_Paint(object sender, PaintEventArgs e)
         {
-            switch (OS)
+            switch (CurrentGame.OS)
             {
-                case OverallState.Waiting:
+                case OverallStates.Waiting:
                     {
-                        switch (WS)
+                        switch (CurrentGame.WS)
                         {
-                            case WaitingState.NoConnection:
+                            case WaitingStates.NoConnection:
                                 {
                                     JoiningTable_Draw(sender, e);
                                 }
                                 break;
-                            case WaitingState.TableFound:
+                            case WaitingStates.TableFound:
                                 {
                                     TableFound_Draw(sender, e);
                                 }
@@ -83,15 +70,15 @@ namespace ClientGUI.Game_GUIs
                         }
                     }
                     break;
-                case OverallState.Playing:
+                case OverallStates.Playing:
                     {
-                        YourHand_Paint(sender, e, You);
+                        YourHand_Paint(sender, e);
 
-                        OtherPlayerHands_Paint(sender, e, OtherPlayers, false);
+                        OtherPlayerHands_Paint(sender, e, CurrentGame.OtherPlayers, false);
 
-                        switch (GS)
+                        switch (CurrentGame.GS)
                         {
-                            case GameState.Waiting:
+                            case GameStates.Waiting:
                                 {
                                     e.Graphics.DrawString("Waiting on other players", new Font("Segoe UI", 16), Brushes.White, new Point(clientWidth / 2 - 150, clientHeight / 2 - 30));
                                     var t = e.Graphics.Transform;
@@ -107,17 +94,17 @@ namespace ClientGUI.Game_GUIs
                                     e.Graphics.Transform = t;
                                     e.Graphics.DrawString(".", new Font("Segoe UI", 12), Brushes.White, new Point(clientWidth / 2, clientHeight / 2));
 
-                                    OS = OverallState.Distributing;
-                                    RES = RoundEndState.Lose;
+                                    CurrentGame.OS = OverallStates.Distributing;
+                                    CurrentGame.RES = RoundEndStates.Lose;
                                 }
                                 break;
-                            case GameState.Betting:
+                            case GameStates.Betting:
                                 {
                                     e.Graphics.DrawRectangle(Pens.Black, clientWidth / 2 - 226, clientHeight / 2 - 126, 451, 251);
                                     e.Graphics.FillRectangle(Brushes.White, new Rectangle(clientWidth / 2 - 225, clientHeight / 2 - 125, 450, 250));
                                 }
                                 break;
-                            case GameState.Playing:
+                            case GameStates.Playing:
                                 {
                                     middleCardOffset = (MiddleHand.Count * (cardWidth + 20)) / 2;
                                     foreach (Card c in MiddleHand)
@@ -181,7 +168,7 @@ namespace ClientGUI.Game_GUIs
                         }
                     }
                     break;
-                case OverallState.Distributing:
+                case OverallStates.Distributing:
                     {
                         e.Graphics.DrawRectangle(Pens.Black, clientWidth / 2 - 226, clientHeight / 2 - 186, 451, 351);
                         e.Graphics.FillRectangle(Brushes.White, new Rectangle(clientWidth / 2 - 225, clientHeight / 2 - 185, 450, 350));
@@ -200,26 +187,26 @@ namespace ClientGUI.Game_GUIs
                             }
                         }
 
-                        switch (RES)
+                        switch (CurrentGame.RES)
                         {
-                            case RoundEndState.Lose:
+                            case RoundEndStates.Lose:
                                 {
                                     e.Graphics.DrawString("you lose", new Font("Segoe UI", 38), Brushes.Black, new Point(clientWidth / 2 - 95, clientHeight / 2 - 140));
-                                    e.Graphics.DrawString("-$" + bet, new Font("Segoe UI", 15), Brushes.Black, new Point(clientWidth / 2 - 15, clientHeight / 2 - 40));
-                                    e.Graphics.DrawString("current buy in: $" + buyIn, new Font("Segoe UI", 13), Brushes.Black, new Point(clientWidth / 2 - 75, clientHeight / 2 - 20));
+                                    e.Graphics.DrawString("-$" + You.Bet, new Font("Segoe UI", 15), Brushes.Black, new Point(clientWidth / 2 - 15, clientHeight / 2 - 40));
+                                    e.Graphics.DrawString("current buy in: $" + You.BuyIn, new Font("Segoe UI", 13), Brushes.Black, new Point(clientWidth / 2 - 75, clientHeight / 2 - 20));
 
                                 }
                                 break;
-                            case RoundEndState.Tie:
+                            case RoundEndStates.Tie:
                                 {
                                     e.Graphics.DrawString("you tied", new Font("Segoe UI", 38), Brushes.Black, new Point(clientWidth / 2 - 118, clientHeight / 2 - 140));
                                 }
                                 break;
-                            case RoundEndState.Win:
+                            case RoundEndStates.Win:
                                 {
                                     e.Graphics.DrawString("you won!", new Font("Segoe UI", 38), Brushes.Black, new Point(clientWidth / 2 - 118, clientHeight / 2 - 140));
-                                    e.Graphics.DrawString("+$" + bet, new Font("Segoe UI", 15), Brushes.Black, new Point(clientWidth / 2 - 15, clientHeight / 2 - 40));
-                                    e.Graphics.DrawString("current buy in: $" + buyIn, new Font("Segoe UI", 13), Brushes.Black, new Point(clientWidth / 2 - 75, clientHeight / 2 - 20));
+                                    e.Graphics.DrawString("+$" + You.Bet, new Font("Segoe UI", 15), Brushes.Black, new Point(clientWidth / 2 - 15, clientHeight / 2 - 40));
+                                    e.Graphics.DrawString("current buy in: $" + You.BuyIn, new Font("Segoe UI", 13), Brushes.Black, new Point(clientWidth / 2 - 75, clientHeight / 2 - 20));
                                 }
                                 break;
                         }

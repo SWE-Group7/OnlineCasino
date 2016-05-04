@@ -19,22 +19,22 @@ namespace ClientLogic.Games
 
         public ConcurrentDictionary<int, Player> Players;
 
-        public volatile SMG.GameStates GameState;
+        public volatile SMG.GameStates ServerGameState;
         public readonly GameTypes GameType;
-        public OverallStates OS = OverallStates.Waiting;
-        public WaitingState WS = WaitingState.NoConnection;
-        public GameStates GS = GameStates.Waiting;
-        public RoundEndStates RES = RoundEndStates.Tie;
+        public OverallStates OS;
+        public WaitingStates WS;
+        public GameStates GS;
+        public RoundEndStates RES;
 
         public int Turn;
 
         public Game(SMG.Game game)
         {
             Players = new ConcurrentDictionary<int, Player>();
-            GameState = game.GameState;
+            ServerGameState = game.GameState;
 
             OS = OverallStates.Waiting;
-            WS = WaitingState.NoConnection;
+            WS = WaitingStates.NoConnection;
             GS = GameStates.Waiting;
             RES = RoundEndStates.Tie;
         }
@@ -42,41 +42,41 @@ namespace ClientLogic.Games
 
         public abstract void HandleEvent(GameEvent gameEvent);
 
-        #region Enums
-        public enum OverallStates
-        {
-            Waiting = 0,
-            Playing,
-            Distributing
-        }
-
-
-        public enum WaitingState
-        {
-            NoConnection = 0,
-            TableFound,
-
-        }
-
-
-        public enum GameStates
-        {
-            Waiting = 0,
-            Betting,
-            Playing
-        }
-
-
-        public enum RoundEndStates
-        {
-            Win = 0,
-            Lose,
-            Tie
-
-        }
-
-        #endregion
+      
     }
+
+    #region Enums
+    public enum OverallStates
+    {
+        Waiting = 0,
+        Playing,
+        Distributing
+    }
+
+
+    public enum WaitingStates
+    {
+        NoConnection = 0,
+        TableFound,
+    }
+
+
+    public enum GameStates
+    {
+        Waiting = 0,
+        Betting,
+        Playing
+    }
+
+
+    public enum RoundEndStates
+    {
+        Win = 0,
+        Lose,
+        Tie
+    }
+
+    #endregion
 }
 
 

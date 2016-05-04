@@ -20,9 +20,30 @@ namespace ClientLogic
     {
         
         public static User MainUser;
-        public static Player MainPlayer;
+        private static Player _MainPlayer;
+        public static Player MainPlayer
+        {
+            get
+            {
+                return _MainPlayer;
+            }
+
+            set
+            {
+                _MainPlayer = value;
+                _MainPlayer.BuyIn = BuyIn;
+                _MainPlayer.Bet = Bet;
+            }
+        }
         public static Connection MainConnection;
         public static Game MainGame;
+
+        public static int BuyIn;
+        public static int Bet;
+
+        public static GameTypes GameType = GameTypes.None;
+        public static ClientStates ClientState = ClientStates.Login;
+
         public static ConcurrentQueue<GameEvent> EventQueue;
         public static ConcurrentDictionary<ClientCommands, RequestResult> RequestQueue;
 
@@ -44,7 +65,7 @@ namespace ClientLogic
         }
 
         public static bool TryJoinGame(GameTypes gameType)
-        {
+         {
             EventQueue = new ConcurrentQueue<GameEvent>();
             RequestQueue = new ConcurrentDictionary<ClientCommands, RequestResult>();
             MainGame = null;
@@ -108,5 +129,14 @@ namespace ClientLogic
                 result.SetValue(true, ret);
             }
         }
+    }
+
+    public enum ClientStates
+    {
+        Login = 0,
+        Register,
+        Menu,
+        Betting,
+        Game
     }
 }

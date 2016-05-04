@@ -17,6 +17,7 @@ namespace ClientLogic.Players
         public readonly User User;
         public int GameBalance;
         public int Bet;
+        public int BuyIn;
         public int Gains;
         public readonly int Seat;
 

@@ -19,8 +19,8 @@ namespace ClientLogic.Games
     public class Blackjack : Game
     {
          
-
         public volatile SMG.BlackjackStates BlackjackState;
+        public BlackjackHandStates HandState = BlackjackHandStates.Under21;
         public List<CardPlayer> OtherPlayers
         {
             get { var players = Players.Where(p => p.Key != MainPlayer.Seat).Select(p => p.Value).ToList();
@@ -42,7 +42,10 @@ namespace ClientLogic.Games
                 Players[smPlayer.Seat] = new BlackjackPlayer(smPlayer);
 
                 if (smPlayer.CurrentUser.UserID == ClientMain.MainUser.UserID)
-                    MainPlayer = (BlackjackPlayer) Players[smPlayer.Seat];
+                {
+                    MainPlayer = (BlackjackPlayer)Players[smPlayer.Seat];
+                    ClientMain.MainPlayer = (Player)MainPlayer;
+                }
             }
 
         }
@@ -184,5 +187,12 @@ namespace ClientLogic.Games
             Players.TryRemove(seat, out player);
         }
 
+    }
+
+    public enum BlackjackHandStates
+    {
+        Under21,
+        TwentyOne,
+        Bust
     }
 }

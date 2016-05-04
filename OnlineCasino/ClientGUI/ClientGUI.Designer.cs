@@ -1,4 +1,5 @@
 ﻿using ClientLogic;
+using SharedModels.Connection.Enums;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -11,13 +12,13 @@ namespace ClientGUI
         public string EmailAddress;
         private string Password;
 
-        public decimal balance;
+        public int balance;
 
         public string buyInString;
         public string betString;
 
-        public decimal buyIn;
-        public decimal bet;
+        public int buyIn;
+        public int bet;
 
         private bool check = false;
         private bool leave = false;
@@ -590,16 +591,6 @@ namespace ClientGUI
                 No.Text = "no";
                 No.Click += new System.EventHandler(No_Click);
                 Controls.Add(No);
-            }
-
-            // Make separate classes for each of the game GUIs
-            switch (GameChoice)
-            {
-                case Game.Blackjack:
-                    {
-
-                    }
-                    break;
             }
         }
 

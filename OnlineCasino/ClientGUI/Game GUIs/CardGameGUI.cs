@@ -13,7 +13,6 @@ namespace ClientGUI.Game_GUIs
     public abstract class CardGameGUI : GameGUI
     {
         public Bitmap CardImage;
-        protected Deck Deck;
 
         protected int yourCardX;
         protected int yourCardY;
@@ -30,15 +29,15 @@ namespace ClientGUI.Game_GUIs
         protected int cardHeight = 150;
         protected int cardWidth = 120;
 
-        protected void YourHand_Paint(object sender, System.Windows.Forms.PaintEventArgs e, CardPlayer You)
+        protected void YourHand_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
         {
             e.Graphics.DrawLine(Pens.Black, new Point(0, clientHeight - cardHeight - 60), new Point(1500, clientHeight - cardHeight - 60));
 
-            e.Graphics.DrawString("Buy In: $" + buyIn, new Font("Segoe UI", 12), Brushes.White, new Point(100, clientHeight - cardHeight));
-            e.Graphics.DrawString("   Bet: $" + bet, new Font("Segoe UI", 12), Brushes.White, new Point(106, clientHeight - cardHeight + 20));
+            e.Graphics.DrawString("Buy In: $" + You.BuyIn, new Font("Segoe UI", 12), Brushes.White, new Point(100, clientHeight - cardHeight));
+            e.Graphics.DrawString("   Bet: $" + You.Bet, new Font("Segoe UI", 12), Brushes.White, new Point(106, clientHeight - cardHeight + 20));
 
-            yourCardOffset = (You.Hand.Count * (cardWidth + 20)) / 2;
-            foreach (Card c in You.Hand)
+            yourCardOffset = (((CardPlayer)You).Hand.Count * (cardWidth + 20)) / 2;
+            foreach (Card c in ((CardPlayer)You).Hand)
             {
                 CardImage = Deck.CardImage(c.Suit, c.Rank);
                 yourCardX += (yourCardsCount * cardWidth + yourCardsCount * 20);
@@ -51,7 +50,7 @@ namespace ClientGUI.Game_GUIs
                 yourCardsCount--;
                 yourCardX = clientWidth / 2 - yourCardOffset;
             }
-            yourCardsCount = You.Hand.Count - 1;
+            yourCardsCount = ((CardPlayer)You).Hand.Count - 1;
         }
 
         protected void OtherPlayerHands_Paint(object sender, System.Windows.Forms.PaintEventArgs e, List<CardPlayer> OtherPlayers, bool showCards)

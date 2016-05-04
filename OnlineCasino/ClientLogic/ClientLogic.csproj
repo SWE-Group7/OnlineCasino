@@ -46,6 +46,7 @@
     <Compile Include="Games\Blackjack.cs" />
     <Compile Include="Games\Game.cs" />
     <Compile Include="Games\GameComponents\CardHelper.cs" />
+    <Compile Include="Games\TexasHoldEm.cs" />
     <Compile Include="Players\BlackjackPlayer.cs" />
     <Compile Include="Players\CardPlayer.cs" />
     <Compile Include="Players\Player.cs" />
