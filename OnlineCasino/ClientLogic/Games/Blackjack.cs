@@ -50,7 +50,6 @@ namespace ClientLogic.Games
 
         }
 
-
         public override void HandleEvent(GameEvent gEvent)
         {
             BlackjackEvent gameEvent = (BlackjackEvent)gEvent;
@@ -59,7 +58,7 @@ namespace ClientLogic.Games
             switch (bje)
             {
                 case BlackjackEvents.StartGame:
-                    GS = GameStates.Playing;
+                    GS = SMG.GameStates.Playing;
                     break;
                 case BlackjackEvents.EndGame:
                     
@@ -90,8 +89,8 @@ namespace ClientLogic.Games
                     break;
                 case BlackjackEvents.PlayerDouble:
                     break;
-                case BlackjackEvents.ShowWinnings:
-                    ShowWinnings(gameEvent.Seats, gameEvent.Winnings);
+                case BlackjackEvents.Payout:
+                    Payout(gameEvent.Seats, gameEvent.Winnings);
                     break;
                 case BlackjackEvents.Deal:
                     Deal(gameEvent);
@@ -123,25 +122,27 @@ namespace ClientLogic.Games
 
             if(BlackjackState == SMG.BlackjackStates.Playing)
             {
-                OS = OverallStates.Playing;
-                GS = GameStates.Playing;
-            }
-
-                
-
-           
+                GS = SMG.GameStates.Playing;
+            }       
         }
 
-        private void ShowWinnings(byte[] seats, int[] winnings)
+        private void Payout(byte[] seats, int[] winnings)
         {
             for (int i = 0; i < seats.Length; i++)
             {
                 BlackjackPlayer player = ((BlackjackPlayer)Players[seats[i]]);
                 player.Gains = winnings[i] - player.GameBalance;
                 player.GameBalance = winnings[i];
+
+                if (player.Gains < 0)
+                    player.WinLossState = SMP.WinLossStates.Lose;
+                else if (player.Gains > 0)
+                    player.WinLossState = SMP.WinLossStates.Win;
+                else
+                    player.WinLossState = SMP.WinLossStates.Tie;
+                   
             }
-        }
-        
+        }       
 
         private void Deal(BlackjackEvent gameEvent)
         {
@@ -185,6 +186,24 @@ namespace ClientLogic.Games
         {
             Player player;
             Players.TryRemove(seat, out player);
+        }
+
+        public override void Bet(int bet)
+        {
+            ClientMain.HandleRequests(SharedModels.Connection.ClientCommands.Blackjack_GetBet, bet);
+        }
+
+        public void Action(BlackjackEvents action)
+        {
+            switch (action)
+            {
+                case BlackjackEvents.PlayerBet:
+                case BlackjackEvents.PlayerHit:
+                    ClientMain.HandleRequests(SharedModels.Connection.ClientCommands.Blackjack_GetAction, action);
+                    break;
+                default:
+                    break;
+            }
         }
 
     }

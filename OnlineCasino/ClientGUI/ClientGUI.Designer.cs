@@ -691,7 +691,6 @@ namespace ClientGUI
             butt1.SendToBack();
             Controls.Add(butt1);
 
-
             Label BettingLabel = new Label();
             BettingLabel.Size = new Size(100, 50);
             BettingLabel.Location = new Point(Width / 2 - 50, Height / 2 - 85);

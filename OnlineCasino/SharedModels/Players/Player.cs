@@ -21,4 +21,11 @@ namespace SharedModels.Players
         }
 
     }
+
+    public enum WinLossStates
+    {
+        Win = 0,
+        Tie,
+        Lose
+    }
 }

@@ -68,10 +68,8 @@ namespace ClientGUI.Game_GUIs
 
             e.Graphics.FillRectangle(Brushes.White, new Rectangle(clientWidth / 2 - 225, clientHeight / 2 - 125, 450, 250));
             e.Graphics.DrawString("Table found! Seating Players..", new Font("Segoe UI", 16), Brushes.Black, new Point(clientWidth / 2 - 150, clientHeight / 2 - 30));
-            
-            
-            CurrentGame.OS = OverallStates.Playing;
-            CurrentGame.GS = GameStates.Playing;
+                      
+            CurrentGame.GS = SharedModels.Games.GameStates.Playing;
         }
 
         public bool CheckConnection()

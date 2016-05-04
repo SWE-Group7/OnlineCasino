@@ -24,7 +24,7 @@ namespace SharedModels.Games.Enums
 
         Deal,
         ShowDealer,
-        ShowWinnings,
+        Payout,
     }  
 
     

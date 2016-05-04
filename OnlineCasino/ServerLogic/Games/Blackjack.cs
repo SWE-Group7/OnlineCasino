@@ -1,4 +1,5 @@
-﻿using ServerLogic.Players;
+﻿
+using ServerLogic.Players;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -84,24 +85,26 @@ namespace ServerLogic.Games
                 //Recieve Bets
                 List<Player> NoResponse = ActivePlayers;
                 sw.Restart();
-                foreach (BlackjackPlayer player in NoResponse)
+                while (sw.ElapsedMilliseconds < TimeLimit)
                 {
-                    int bet;
-
-                    //Response!
-                    if (player.TryGetResult(cmd, out bet))
+                    foreach (BlackjackPlayer player in NoResponse)
                     {
-                        player.SetBet(bet);
-                        gameEvent = BlackjackEvent.PlayerBet(player.Seat, bet);
-                        Broadcast(gameEvent);
-                        NoResponse.RemoveAll(p => p.Seat == player.Seat);
+                        int bet;
 
+                        if (player.TryGetResult(cmd, out bet))
+                        {
+                            player.SetBet(bet);
+                            gameEvent = BlackjackEvent.PlayerBet(player.Seat, bet);
+                            Broadcast(gameEvent);
+                            NoResponse.RemoveAll(p => p.Seat == player.Seat);
+
+                        }
+
+                        Thread.Sleep(10);
                     }
 
-                    if (sw.ElapsedMilliseconds > TimeLimit)
+                    if (!NoResponse.Any())
                         break;
-
-                    Thread.Sleep(1);
                 }
 
                 //Force NoResponses to bet 0

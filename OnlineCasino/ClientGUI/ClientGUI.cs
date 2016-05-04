@@ -61,6 +61,7 @@ namespace ClientGUI
                     break;
                 case ClientStates.Betting:
                     {
+                        BettingScreen_Draw();
                         e.Graphics.DrawRectangle(Pens.Black, Width / 2 - 301, Height / 2 - 201, 601, 401);
                         e.Graphics.FillRectangle(Brushes.White, new Rectangle(Width / 2 - 300, Height / 2 - 200, 600, 400));
                     }
@@ -76,7 +77,7 @@ namespace ClientGUI
                                 break;
                             case GameTypes.TexasHoldEm:
                                 {
-                                    TexasHoldEmGUI.TexasHoldEmGUI_Paint(sender, e);
+                                    //TexasHoldEmGUI.TexasHoldEmGUI_Paint(sender, e);
                                 }
                                 break;
                             case GameTypes.Roulette:
@@ -161,7 +162,6 @@ namespace ClientGUI
         }
         private void AccountInfo_Click(object sender, EventArgs e)
         {
-            // Create account information page
             AccountInfo_Draw();
         }
 
@@ -170,7 +170,7 @@ namespace ClientGUI
         {
             if (ClientMain.GameType == GameTypes.Blackjack)
             {
-                if (BlackjackGUI != null && ClientMain.ClientState != ClientStates.Betting && ClientMain.MainGame.OS != OverallStates.Distributing)
+                if (BlackjackGUI != null && ClientMain.ClientState != ClientStates.Betting && ClientMain.MainGame.GS != SharedModels.Games.GameStates.Finializing)
                 {
                     check = true;
                     Game_Draw();
@@ -190,7 +190,7 @@ namespace ClientGUI
             }
             else if (ClientMain.GameType == GameTypes.TexasHoldEm)
             {
-                if (TexasHoldEmGUI != null && ClientMain.ClientState != ClientStates.Betting && ClientMain.MainGame.OS != OverallStates.Distributing)
+                if (TexasHoldEmGUI != null && ClientMain.ClientState != ClientStates.Betting && ClientMain.MainGame.GS != SharedModels.Games.GameStates.Finializing)
                 {
                     check = true;
                     Game_Draw();
@@ -210,7 +210,7 @@ namespace ClientGUI
             }
             else if (ClientMain.GameType == GameTypes.Roulette)
             {
-                if (RouletteGUI != null && ClientMain.ClientState != ClientStates.Betting && ClientMain.MainGame.OS != OverallStates.Distributing)
+                if (RouletteGUI != null && ClientMain.ClientState != ClientStates.Betting && ClientMain.MainGame.GS != SharedModels.Games.GameStates.Finializing)
                 {
                     check = true;
                     Game_Draw();
@@ -277,14 +277,13 @@ namespace ClientGUI
         private void SubmitBuyIn_Click(object sender, EventArgs e)
         {
             buyInString = BuyInTextBox.Text;
-
+             
             //Invalid buyIn
             if (!int.TryParse(buyInString, out buyIn) || buyIn > ClientMain.MainUser.Balance)
                 return;
             
             ClientMain.BuyIn = buyIn;
 
-            //Try Join
             if (!ClientMain.TryJoinGame(ClientMain.GameType))
                 return;
                 
@@ -309,12 +308,7 @@ namespace ClientGUI
 
             this.Controls.Clear();
             this.Invalidate();
-
-
-            ClientMain.MainGame.OS = OverallStates.Playing;
-            ClientMain.MainGame.GS = GameStates.Waiting;
-            
-            
+                   
         }
         private void SubmitBet_Click(object sender, EventArgs e)
         {
@@ -331,16 +325,11 @@ namespace ClientGUI
             {
                 this.Controls.Clear();
                 this.Invalidate();
-
-                
+                              
                 ClientMain.MainPlayer.Bet = bet;
-
+                ClientMain.MainGame.Bet(bet);
                 ClientMain.ClientState = ClientStates.Game;
-                ClientMain.MainGame.OS = OverallStates.Playing;
-                ClientMain.MainGame.GS = GameStates.Playing;
-
-                Game_Draw();
-                
+                Game_Draw();               
             }
         }
 
@@ -361,55 +350,45 @@ namespace ClientGUI
                     BlackjackGUI.clickX = e.X;
                     BlackjackGUI.clickY = e.Y;
 
-                    switch (ClientMain.MainGame.OS)
+                    switch (ClientMain.MainGame.GS)
                     {
-                        case OverallStates.Playing:
-                            {
-                                if (BlackjackGUI.clickX < Width - 50 && BlackjackGUI.clickX > Width - 150)
+                        case SharedModels.Games.GameStates.Playing:
+                            {     
+                                if (((Blackjack)ClientMain.MainGame).BlackjackState == SharedModels.Games.BlackjackStates.Playing)
                                 {
-                                    if (BlackjackGUI.clickY < Height - 175 + 35 && BlackjackGUI.clickY > Height - 175)
+                                    if (BlackjackGUI.clickX < Width - 50 && BlackjackGUI.clickX > Width - 150)
                                     {
-                                        if (BlackjackGUI.You.Hand.Count < 5)
+                                        if (BlackjackGUI.clickY < Height - 175 + 35 && BlackjackGUI.clickY > Height - 175)
                                         {
-                                            BlackjackGUI.You.Hand.Add(new SharedModels.GameComponents.Card(SharedModels.GameComponents.CardSuit.Clubs, SharedModels.GameComponents.CardRank.Five));
-                                        }
+                                            if (BlackjackGUI.You.Hand.Count < 5)
+                                            {
+                                                // hit
+                                            }
 
-                                        ((Blackjack) ClientMain.MainGame).HandState = BlackjackHandStates.Bust;
-                                    }
-                                    else if ((BlackjackGUI.clickY < Height - 120 + 35 && BlackjackGUI.clickY > Height - 120))
-                                    {
-                                        ClientMain.MainGame.GS = GameStates.Waiting;
+                                            ((Blackjack)ClientMain.MainGame).HandState = BlackjackHandStates.Bust;
+                                        }
+                                        else if ((BlackjackGUI.clickY < Height - 120 + 35 && BlackjackGUI.clickY > Height - 120))
+                                        {
+                                            // stay
+                                        }
                                     }
                                 }
-
-                                if(ClientMain.MainGame.GS == GameStates.Waiting)
+                                else if (((Blackjack)ClientMain.MainGame).BlackjackState == SharedModels.Games.BlackjackStates.Betting)
                                 {
-                                    ClientMain.MainGame.OS = OverallStates.Distributing;
-                                    ClientMain.MainGame.RES = RoundEndStates.Lose;
+                                    BettingScreen_Draw();
                                 }
                             }
                             break;
-                        case OverallStates.Waiting:
+                        case SharedModels.Games.GameStates.Waiting:
                             {
                                 
                             }
                             break;
-                        case OverallStates.Distributing:
+                        case SharedModels.Games.GameStates.Finializing:
                             {
-                                if (BlackjackGUI.clickX > Width / 2 - 65 && BlackjackGUI.clickX < Width / 2 - 65 + 130)
-                                {
-                                    if (BlackjackGUI.clickY > Height / 2 + 60 && BlackjackGUI.clickY < Height / 2 + 60 + 40)
-                                    {
-                                        //ClientMain.MainGame.You.RefreshHand();
-                                        BettingScreen_Draw();
-
-                                        ClientMain.ClientState = ClientStates.Betting;
-                                        ClientMain.MainGame.OS = OverallStates.Waiting;
-                                        ClientMain.MainGame.GS = GameStates.Betting;
-                                    }
-                                }
-                                break;
+                                
                             }
+                            break;
                     }
                 }
             }
@@ -420,9 +399,9 @@ namespace ClientGUI
                     TexasHoldEmGUI.clickX = e.X;
                     TexasHoldEmGUI.clickY = e.Y;
 
-                    switch (ClientMain.MainGame.OS)
+                    switch (ClientMain.MainGame.GS)
                     {
-                        case OverallStates.Playing:
+                        case SharedModels.Games.GameStates.Playing:
                             {
                                 if (TexasHoldEmGUI.clickX < Width - 50 && TexasHoldEmGUI.clickX > Width - 150)
                                 {
@@ -448,9 +427,9 @@ namespace ClientGUI
                                 }
                             }
                             break;
-                        case OverallStates.Waiting:
+                        case SharedModels.Games.GameStates.Waiting:
                             break;
-                        case OverallStates.Distributing:
+                        case SharedModels.Games.GameStates.Finializing:
                             {
                                 if (TexasHoldEmGUI.clickX > Width / 2 - 65 && TexasHoldEmGUI.clickX < Width / 2 - 65 + 130)
                                 {
@@ -479,89 +458,72 @@ namespace ClientGUI
                     int startY = 305;
 
                     int Chosen = 0;
-                    switch (ClientMain.MainGame.OS)
+                    switch (ClientMain.MainGame.GS)
                     {
-                        case OverallStates.Playing:
-                            {
-                                switch (ClientMain.MainGame.GS)
+                        case SharedModels.Games.GameStates.Playing:
+                            {                                
+                                if (RouletteGUI.clickX >= startX - 36 && RouletteGUI.clickX <= startX) { gridX = 1; }
+                                else if (RouletteGUI.clickX > startX && RouletteGUI.clickX <= startX + 49) { gridX = 2; }
+                                else if (RouletteGUI.clickX > startX + 49 && RouletteGUI.clickX <= startX + 49 * 2) { gridX = 3; }
+                                else if (RouletteGUI.clickX > startX + 49 * 2 && RouletteGUI.clickX <= startX + 49 * 3) { gridX = 4; }
+                                else if (RouletteGUI.clickX > startX + 49 * 3 && RouletteGUI.clickX <= startX + 49 * 4) { gridX = 5; }
+                                else if (RouletteGUI.clickX > startX + 49 * 4 && RouletteGUI.clickX <= startX + 49 * 5) { gridX = 6; }
+                                else if (RouletteGUI.clickX > startX + 49 * 5 && RouletteGUI.clickX <= startX + 49 * 6) { gridX = 7; }
+                                else if (RouletteGUI.clickX > startX + 49 * 6 && RouletteGUI.clickX <= startX + 49 * 7) { gridX = 8; }
+                                else if (RouletteGUI.clickX > startX + 49 * 7 && RouletteGUI.clickX <= startX + 49 * 8) { gridX = 9; }
+                                else if (RouletteGUI.clickX > startX + 49 * 8 && RouletteGUI.clickX <= startX + 49 * 9) { gridX = 10; }
+                                else if (RouletteGUI.clickX > startX + 49 * 9 && RouletteGUI.clickX <= startX + 49 * 10) { gridX = 11; }
+                                else if (RouletteGUI.clickX > startX + 49 * 10 && RouletteGUI.clickX <= startX + 49 * 11) { gridX = 12; }
+                                else if (RouletteGUI.clickX > startX + 49 * 11 && RouletteGUI.clickX <= startX + 49 * 12) { gridX = 13; }
+                                else if (RouletteGUI.clickX > startX + 49 * 12 && RouletteGUI.clickX <= startX + 49 * 13) { gridX = 14; }
+
+                                if (gridX != 1)
                                 {
-                                    case GameStates.Waiting:
-                                        {
-                                         
-                                        }
-                                        break;
-                                    case GameStates.Betting:
-                                        {
-                                            if (RouletteGUI.clickX >= startX - 36 && RouletteGUI.clickX <= startX) { gridX = 1; }
-                                            else if (RouletteGUI.clickX > startX && RouletteGUI.clickX <= startX + 49) { gridX = 2; }
-                                            else if (RouletteGUI.clickX > startX + 49 && RouletteGUI.clickX <= startX + 49 * 2) { gridX = 3; }
-                                            else if (RouletteGUI.clickX > startX + 49 * 2 && RouletteGUI.clickX <= startX + 49 * 3) { gridX = 4; }
-                                            else if (RouletteGUI.clickX > startX + 49 * 3 && RouletteGUI.clickX <= startX + 49 * 4) { gridX = 5; }
-                                            else if (RouletteGUI.clickX > startX + 49 * 4 && RouletteGUI.clickX <= startX + 49 * 5) { gridX = 6; }
-                                            else if (RouletteGUI.clickX > startX + 49 * 5 && RouletteGUI.clickX <= startX + 49 * 6) { gridX = 7; }
-                                            else if (RouletteGUI.clickX > startX + 49 * 6 && RouletteGUI.clickX <= startX + 49 * 7) { gridX = 8; }
-                                            else if (RouletteGUI.clickX > startX + 49 * 7 && RouletteGUI.clickX <= startX + 49 * 8) { gridX = 9; }
-                                            else if (RouletteGUI.clickX > startX + 49 * 8 && RouletteGUI.clickX <= startX + 49 * 9) { gridX = 10; }
-                                            else if (RouletteGUI.clickX > startX + 49 * 9 && RouletteGUI.clickX <= startX + 49 * 10) { gridX = 11; }
-                                            else if (RouletteGUI.clickX > startX + 49 * 10 && RouletteGUI.clickX <= startX + 49 * 11) { gridX = 12; }
-                                            else if (RouletteGUI.clickX > startX + 49 * 11 && RouletteGUI.clickX <= startX + 49 * 12) { gridX = 13; }
-                                            else if (RouletteGUI.clickX > startX + 49 * 12 && RouletteGUI.clickX <= startX + 49 * 13) { gridX = 14; }
+                                    if (RouletteGUI.clickY >= startY && RouletteGUI.clickY <= startY + 58)
+                                    {
+                                        gridY = 1;
+                                    }
+                                    else if (RouletteGUI.clickY >= startY + 58 && RouletteGUI.clickY < startY + 58 * 2)
+                                    {
+                                        gridY = 2;
+                                    }
+                                    else if (RouletteGUI.clickY >= startY + 58 * 2 && RouletteGUI.clickY < startY + 58 * 3)
+                                    {
+                                        gridY = 3;
+                                    }
+                                    else if (RouletteGUI.clickY >= startY + 58 * 3 + 36 && RouletteGUI.clickY < startY + 58 * 3 + 36 * 2)
+                                    {
+                                        gridY = 4;
+                                    }
+                                    else if (RouletteGUI.clickY >= startY + 58 * 3 + 36 * 2 && RouletteGUI.clickY < startY + 58 * 3 + 36 * 3)
+                                    {
+                                        gridY = 5;
+                                    }
 
-                                            if (gridX != 1)
-                                            {
-                                                if (RouletteGUI.clickY >= startY && RouletteGUI.clickY <= startY + 58)
-                                                {
-                                                    gridY = 1;
-                                                }
-                                                else if (RouletteGUI.clickY >= startY + 58 && RouletteGUI.clickY < startY + 58 * 2)
-                                                {
-                                                    gridY = 2;
-                                                }
-                                                else if (RouletteGUI.clickY >= startY + 58 * 2 && RouletteGUI.clickY < startY + 58 * 3)
-                                                {
-                                                    gridY = 3;
-                                                }
-                                                else if (RouletteGUI.clickY >= startY + 58 * 3 + 36 && RouletteGUI.clickY < startY + 58 * 3 + 36 * 2)
-                                                {
-                                                    gridY = 4;
-                                                }
-                                                else if (RouletteGUI.clickY >= startY + 58 * 3 + 36 * 2 && RouletteGUI.clickY < startY + 58 * 3 + 36 * 3)
-                                                {
-                                                    gridY = 5;
-                                                }
+                                    Chosen = RouletteGUI.ChosenNumber(gridX, gridY);
 
-                                                Chosen = RouletteGUI.ChosenNumber(gridX, gridY);
-
-                                            }
-                                            else
-                                            {
-                                                if (RouletteGUI.clickY >= startY && RouletteGUI.clickY <= startY + 88)
-                                                {
-                                                    Chosen = -1;
-                                                    RouletteGUI.Choice = RouletteGUI.Choices.DoubleZero;
-                                                }
-                                                else if (RouletteGUI.clickY >= startY + 88 && RouletteGUI.clickY <= startY + 88 * 2)
-                                                {
-                                                    Chosen = 0;
-                                                    RouletteGUI.NumberChosen = 0;
-                                                }
-                                            }                                              
-                                        }
-                                        break;
-                                    case GameStates.Playing:
-                                        {
-                                           
-                                        }
-                                        break;
                                 }
+                                else
+                                {
+                                    if (RouletteGUI.clickY >= startY && RouletteGUI.clickY <= startY + 88)
+                                    {
+                                        Chosen = -1;
+                                        RouletteGUI.Choice = RouletteGUI.Choices.DoubleZero;
+                                    }
+                                    else if (RouletteGUI.clickY >= startY + 88 && RouletteGUI.clickY <= startY + 88 * 2)
+                                    {
+                                        Chosen = 0;
+                                        RouletteGUI.NumberChosen = 0;
+                                    }
+                                }                                                                                                        
                             }
                             break;
-                        case OverallStates.Waiting:
+                        case SharedModels.Games.GameStates.Waiting:
                             {
 
                             }
                             break;
-                        case OverallStates.Distributing:
+                        case SharedModels.Games.GameStates.Finializing:
                             {
                                 if (RouletteGUI.clickX > Width / 2 - 65 && RouletteGUI.clickX < Width / 2 - 65 + 130)
                                 {

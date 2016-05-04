@@ -21,4 +21,6 @@ namespace SharedModels.Players
             UserBet = bet;
         }
     }
+
+   
 }

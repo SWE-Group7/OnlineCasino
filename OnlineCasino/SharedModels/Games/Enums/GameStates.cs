@@ -29,6 +29,7 @@ namespace SharedModels.Games
         Spinning,
         GainsOrLoses
     }
+
     public enum TexasHoldEmStates
     {
         Betting,

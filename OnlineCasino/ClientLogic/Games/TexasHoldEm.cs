@@ -38,5 +38,10 @@ namespace ClientLogic.Games
         {
             throw new NotImplementedException();
         }
+
+        public override void Bet(int bet)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

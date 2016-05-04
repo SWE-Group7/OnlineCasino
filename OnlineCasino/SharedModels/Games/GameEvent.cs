@@ -85,7 +85,7 @@ namespace SharedModels.Games.Events
         public static BlackjackEvent Payout(Dictionary<int, int> seatToWinnings)
         {
             Builder b = new Builder();
-            b.Event = BlackjackEvents.ShowWinnings;
+            b.Event = BlackjackEvents.Payout;
             b.Seats = new byte[seatToWinnings.Count];
             b.Winnings = new int[seatToWinnings.Count];
 

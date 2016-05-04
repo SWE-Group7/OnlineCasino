@@ -20,7 +20,7 @@ namespace ClientLogic.Players
         public int BuyIn;
         public int Gains;
         public readonly int Seat;
-
+        public WinLossStates WinLossState;
 
         public Player(SMP.Player player)
         {
@@ -29,5 +29,7 @@ namespace ClientLogic.Players
             this.Seat = player.Seat;
             this.Gains = 0;
         }
+
+        
     }
 }
