@@ -38,9 +38,8 @@ namespace ClientGUI.Game_GUIs
  
 
         public TexasHoldEmGUI(int h, int w)
+            :base(h, w)
         {
-            clientHeight = h;
-            clientWidth = w;
             middleCardX = clientWidth / 2 - (cardWidth - 20) / 2;
             middleCardY = 100; 
 

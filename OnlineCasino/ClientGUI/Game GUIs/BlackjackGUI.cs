@@ -39,9 +39,9 @@ namespace ClientGUI.Game_GUIs
         protected int dealerCardOffset;
 
         public BlackjackGUI(int h, int w)
+            :base(h, w)
         {
-            clientHeight = h;
-            clientWidth = w;
+
 
             dealerCardX = clientWidth / 2 - (cardWidth - 20) / 2;
             dealerCardY = 20;

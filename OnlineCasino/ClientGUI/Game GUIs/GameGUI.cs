@@ -36,6 +36,14 @@ namespace ClientGUI.Game_GUIs
 
         protected float sx = 0;
         protected bool sp = true;
+
+        public GameGUI(int h, int w)
+        {
+            clientHeight = h;
+            clientWidth = w;
+        }
+
+
         public void JoiningTable_Draw(object sender, PaintEventArgs e)
         {
 

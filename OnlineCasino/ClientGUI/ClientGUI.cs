@@ -172,7 +172,7 @@ namespace ClientGUI
                 string message = DisplayedAlerts[i].Item1;
                 long takeDownTime = DisplayedAlerts[i].Item2;
 
-                e.Graphics.DrawString(message, FontMediumLarge, Brushes.White, new Point(ClientSize.Width / 2, AlertPositionY + i * (AlertSpacerY)), FormatCentered);
+                e.Graphics.DrawString(message, FontMediumLarge, Brushes.DarkCyan, new Point(ClientSize.Width / 2, AlertPositionY + i * (AlertSpacerY)), FormatCentered);
 
                 if((DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond) > takeDownTime)
                     DisplayedAlerts.RemoveAt(i);

@@ -241,7 +241,7 @@ namespace ServerLogic.Games
                 Broadcast(gameEvent);
                 Thread.Sleep(1500);
 
-                while (DealerCount < 17 && DealerHand.Count <= 5)
+                while (DealerCount < 17 && DealerHand.Count < 5)
                 {
                     Card card = deck.DealCard();
                     DealerHand.Add(card);

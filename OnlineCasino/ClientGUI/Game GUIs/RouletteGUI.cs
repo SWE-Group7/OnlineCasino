@@ -36,9 +36,8 @@ namespace ClientGUI.Game_GUIs
         public int NumberChosen = -1;
 
         public RouletteGUI(int h, int w)
+            :base(h, w)
         {
-            clientHeight = h;
-            clientWidth = w;
         }
 
         public void RouletteGUI_Paint(Object sender, PaintEventArgs e)
