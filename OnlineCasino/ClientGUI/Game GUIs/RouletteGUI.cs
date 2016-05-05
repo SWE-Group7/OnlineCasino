@@ -59,7 +59,7 @@ namespace ClientGUI.Game_GUIs
                         //{
                         //    case GameStates.Waiting:
                         //        {
-                        //            e.Graphics.DrawString("Waiting on other players", new Font("Segoe UI", 16), Brushes.White, new Point(clientWidth / 2 - 150, clientHeight / 2 - 30));
+                        //            e.Graphics.DrawString("Waiting on other players", ClientGUI.FontMediumWhiteCenter, Brushes.White, new Point(clientWidth / 2 - 150, clientHeight / 2 - 30));
                         //            var t = e.Graphics.Transform;
 
                         //            if (sp) sx += .02f;
@@ -71,7 +71,7 @@ namespace ClientGUI.Game_GUIs
                         //            t.Shear(sx, 0);
 
                         //            e.Graphics.Transform = t;
-                        //            e.Graphics.DrawString(".", new Font("Segoe UI", 12), Brushes.White, new Point(clientWidth / 2, clientHeight / 2));
+                        //            e.Graphics.DrawString(".", ClientGUI.FontSmaller, Brushes.White, new Point(clientWidth / 2, clientHeight / 2));
 
                         //            CurrentGame.OS = OverallStates.Distributing;
 
@@ -88,14 +88,14 @@ namespace ClientGUI.Game_GUIs
                         //        {
                         //            e.Graphics.FillRectangle(Brushes.White, clientWidth - 150, clientHeight - 120, 100, 35);
                         //            e.Graphics.DrawRectangle(Pens.Black, clientWidth - 151, clientHeight - 121, 102, 37);
-                        //            e.Graphics.DrawString("finish", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 128, clientHeight - 125));
+                        //            e.Graphics.DrawString("finish", ClientGUI.BlackActionButton, Brushes.Black, new Point(clientWidth - 128, clientHeight - 125));
 
                         //            if (hoverX < clientWidth - 50 && hoverX > clientWidth - 150)
                         //            {
                         //                if ((hoverY < clientHeight - 120 + 35 && hoverY > clientHeight - 120))
                         //                {
                         //                    e.Graphics.FillRectangle(Brushes.DimGray, clientWidth - 150, clientHeight - 120, 100, 35);
-                        //                    e.Graphics.DrawString("finish", new Font("Segoe UI", 20), Brushes.Black, new Point(clientWidth - 128, clientHeight - 125));
+                        //                    e.Graphics.DrawString("finish", ClientGUI.BlackActionButton, Brushes.Black, new Point(clientWidth - 128, clientHeight - 125));
                         //                }
                         //            }
                         //        }
@@ -111,14 +111,14 @@ namespace ClientGUI.Game_GUIs
                         e.Graphics.FillRectangle(Brushes.LightGray, clientWidth / 2 - 65, clientHeight / 2 + 60, 130, 40);
                         e.Graphics.DrawRectangle(Pens.Black, clientWidth / 2 - 66, clientHeight / 2 + 59, 131, 41);
 
-                        e.Graphics.DrawString("Play Again", new Font("Segoe UI", 14), Brushes.DarkGray, new Point(clientWidth / 2 - 50, clientHeight / 2 + 65));
+                        e.Graphics.DrawString("Play Again", new Font("Segoe UI", 14), ClientGUI.DisabledBrush, new Point(clientWidth / 2 - 50, clientHeight / 2 + 65));
 
                         if (hoverX > clientWidth / 2 - 65 && hoverX < clientWidth / 2 - 65 + 130)
                         {
                             if (hoverY > clientHeight / 2 + 60 && hoverY < clientHeight / 2 + 60 + 40)
                             {
                                 e.Graphics.FillRectangle(Brushes.DimGray, clientWidth / 2 - 65, clientHeight / 2 + 60, 130, 40);
-                                e.Graphics.DrawString("Play Again", new Font("Segoe UI", 14), Brushes.DarkGray, new Point(clientWidth / 2 - 50, clientHeight / 2 + 65));
+                                e.Graphics.DrawString("Play Again", new Font("Segoe UI", 14), ClientGUI.DisabledBrush, new Point(clientWidth / 2 - 50, clientHeight / 2 + 65));
                             }
                         }
 
@@ -126,19 +126,19 @@ namespace ClientGUI.Game_GUIs
                         //{
                         //    case RoundEndStates.Lose:
                         //        {
-                        //            e.Graphics.DrawString("you lose", new Font("Segoe UI", 38), Brushes.Black, new Point(clientWidth / 2 - 95, clientHeight / 2 - 140));
+                        //            e.Graphics.DrawString("you lose", ClientGUI.LargeWhiteCenter, Brushes.Black, new Point(clientWidth / 2 - 95, clientHeight / 2 - 140));
                         //            e.Graphics.DrawString("-$" + You.Bet, new Font("Segoe UI", 15), Brushes.Black, new Point(clientWidth / 2 - 15, clientHeight / 2 - 45));
                         //            e.Graphics.DrawString("current buy in: $" + You.BuyIn, new Font("Segoe UI", 13), Brushes.Black, new Point(clientWidth / 2 - 75, clientHeight / 2 - 20));
                         //        }
                         //        break;
                         //    case RoundEndStates.Tie:
                         //        {
-                        //            e.Graphics.DrawString("you tied", new Font("Segoe UI", 38), Brushes.Black, new Point(clientWidth / 2 - 118, clientHeight / 2 - 140));
+                        //            e.Graphics.DrawString("you tied", ClientGUI.LargeWhiteCenter, Brushes.Black, new Point(clientWidth / 2 - 118, clientHeight / 2 - 140));
                         //        }
                         //        break;
                         //    case RoundEndStates.Win:
                         //        {
-                        //            e.Graphics.DrawString("you won!", new Font("Segoe UI", 38), Brushes.Black, new Point(clientWidth / 2 - 118, clientHeight / 2 - 140));
+                        //            e.Graphics.DrawString("you won!", ClientGUI.LargeWhiteCenter, Brushes.Black, new Point(clientWidth / 2 - 118, clientHeight / 2 - 140));
                         //            e.Graphics.DrawString("+$" + You.Bet, new Font("Segoe UI", 15), Brushes.Black, new Point(clientWidth / 2 - 15, clientHeight / 2 - 40));
                         //            e.Graphics.DrawString("current buy in: $" + You.BuyIn, new Font("Segoe UI", 13), Brushes.Black, new Point(clientWidth / 2 - 75, clientHeight / 2 - 20));
                         //        }

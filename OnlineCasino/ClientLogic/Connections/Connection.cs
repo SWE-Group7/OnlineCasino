@@ -49,10 +49,12 @@ namespace ClientLogic.Connections
 
             Reader = Thread.CurrentThread;
             Reader = new Thread(() => StartReader());
+            Reader.IsBackground = true;
             Reader.Name = "Reader";
             Reader.Start();
 
             Writer = new Thread(() => StartWriter());
+            Writer.IsBackground = true;
             Writer.Name = "Writer";
             Writer.Start();
 

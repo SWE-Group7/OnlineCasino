@@ -87,10 +87,10 @@ namespace ServerLogic.Games
                 sw.Restart();
                 while (sw.ElapsedMilliseconds < TimeLimit)
                 {
-                    foreach (BlackjackPlayer player in NoResponse)
+                    for (int i = NoResponse.Count - 1; i >= 0; i--)
                     {
+                        var player = NoResponse[i];
                         int bet;
-
                         if (player.TryGetResult(cmd, out bet))
                         {
                             player.SetBet(bet);
@@ -104,8 +104,8 @@ namespace ServerLogic.Games
                         }
 
                         Thread.Sleep(10);
-                    }
 
+                    }
                     if (!NoResponse.Any())
                         break;
                 }
@@ -154,6 +154,7 @@ namespace ServerLogic.Games
                 //PLAYING
                 BlackjackState = BlackjackStates.Playing;
                 gameEvent = BlackjackEvent.ChangeState(BlackjackState);
+                Broadcast(gameEvent);
 
                 int DealerCount = CardHelper.CountHand(DealerHand);
                 bool DealerBlackjack = (DealerCount == 21);
@@ -199,7 +200,7 @@ namespace ServerLogic.Games
                             }
                             Broadcast(gameEvent);
 
-                            if (player.CardCount == 21)
+                            if (player.CardCount == 21 || player.GetCards().Count >= 5)
                                 StayOrBust = true;
                             else if (player.CardCount > 21)
                             {
@@ -209,6 +210,7 @@ namespace ServerLogic.Games
                             }
                         } while (!StayOrBust);
 
+                        Thread.Sleep(1500);
                     }
                 }
 
@@ -217,14 +219,16 @@ namespace ServerLogic.Games
                 Broadcast(gameEvent);
                 gameEvent = BlackjackEvent.ShowDealer(DealerHand[1]);
                 Broadcast(gameEvent);
-                
-                while (DealerCount < 17)
+                Thread.Sleep(1500);
+
+                while (DealerCount < 17 && DealerHand.Count <= 5)
                 {
                     Card card = deck.DealCard();
                     DealerHand.Add(card);
                     DealerCount = CardHelper.CountHand(DealerHand);
                     gameEvent = BlackjackEvent.PlayerHit(0, card);
                     Broadcast(gameEvent);
+                    Thread.Sleep(1500);
                 }
 
                 if (DealerCount <= 21)
@@ -233,12 +237,9 @@ namespace ServerLogic.Games
                     gameEvent = BlackjackEvent.PlayerBust(0);
 
                 Broadcast(gameEvent);
+                Thread.Sleep(1500);
 
-                //GAME CONCLUSION
-                BlackjackState = BlackjackStates.Payout;
-                gameEvent = BlackjackEvent.ChangeState(BlackjackState);
-                Broadcast(gameEvent);
-
+                //Payout
                 Dictionary<int, int> seatToWinnings = new Dictionary<int, int>();
                 foreach (BlackjackPlayer player in ActivePlayers)
                 {
@@ -246,7 +247,7 @@ namespace ServerLogic.Games
                     bool playerBlackjack = Naturals.Contains(player.Seat);
                     decimal mult = 0;
 
-                    if (PlayerCount > 21)
+                    if (PlayerCount > 21 && DealerCount <= 21)
                         mult = -1;
                     else if (DealerCount <= 21 && PlayerCount < DealerCount)
                         mult = -1;
@@ -255,6 +256,8 @@ namespace ServerLogic.Games
                     else if (DealerCount == PlayerCount && DealerCount != 21)
                         mult = 0;
                     else if (DealerBlackjack && playerBlackjack)
+                        mult = 0;
+                    else if (PlayerCount > 21 && DealerCount > 21)
                         mult = 0;
                     else if (!DealerBlackjack && playerBlackjack)
                         mult = 1.5m;
@@ -267,6 +270,12 @@ namespace ServerLogic.Games
 
                 gameEvent = BlackjackEvent.Payout(seatToWinnings);
                 Broadcast(gameEvent);
+
+                BlackjackState = BlackjackStates.Payout;
+                gameEvent = BlackjackEvent.ChangeState(BlackjackState);
+                Broadcast(gameEvent);
+
+                Thread.Sleep(4000);
 
                 gameEvent = BlackjackEvent.ChangeState(BlackjackStates.RoundFinish);
                 Broadcast(gameEvent);

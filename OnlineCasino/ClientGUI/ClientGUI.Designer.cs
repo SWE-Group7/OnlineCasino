@@ -89,6 +89,8 @@ namespace ClientGUI
         TextBox BuyInTextBox;
         TextBox BetTextBox;
 
+        Label ErrorLabel;
+
         public void Login_Draw()
         {
             this.Controls.Clear();
@@ -97,7 +99,7 @@ namespace ClientGUI
             //Label LoginLabel = new Label();
             //LoginLabel.Size = new Size(320, 30);
             //LoginLabel.Location = new Point(Width / 2 - 255, Height / 2 - 165);
-            //LoginLabel.Font = new Font("Segoe UI", 16);
+            //LoginLabel.Font = ClientGUI.FontMediumWhiteCenter;
             //LoginLabel.BackColor = Color.Transparent;
             //LoginLabel.Text = " Welcome to";
             //Controls.Add(LoginLabel);
@@ -232,7 +234,7 @@ namespace ClientGUI
             Label RegisterLabel = new Label();
             RegisterLabel.Size = new Size(250, 30);
             RegisterLabel.Location = new Point(Width / 2 - 125, Height / 2 - 5);
-            RegisterLabel.Font = new Font("Segoe UI", 16);
+            RegisterLabel.Font = ClientGUI.FontSmall;
             RegisterLabel.BackColor = Color.Transparent;
             RegisterLabel.Text = "Register a New Account";
             Controls.Add(RegisterLabel);
@@ -368,7 +370,7 @@ namespace ClientGUI
             Label Welcome = new Label();
             Welcome.Size = new Size(550, 35);
             Welcome.Location = new Point(Width / 2 - 275, Height / 2 - 100);
-            Welcome.Font = new Font("Segoe UI", 16);
+            Welcome.Font = ClientGUI.FontSmall;
             Welcome.BackColor = Color.White;
             Welcome.Text = "Hi " + ClientMain.MainUser.FullName + "! Your balance is $" + ClientMain.MainUser.Balance.ToString("#.####") + ".";
             Controls.Add(Welcome);
@@ -459,7 +461,7 @@ namespace ClientGUI
             Label Welcome = new Label();
             Welcome.Size = new Size(550, 35);
             Welcome.Location = new Point(Width / 2 - 275, Height / 2 - 100);
-            Welcome.Font = new Font("Segoe UI", 16);
+            Welcome.Font = ClientGUI.FontSmall;
             Welcome.BackColor = Color.White;
             Welcome.Text = "Hi " + ClientMain.MainUser.FullName + "! Your balance is $" + ClientMain.MainUser.Balance.ToString("#.####") + ".";
             Controls.Add(Welcome);
@@ -552,7 +554,7 @@ namespace ClientGUI
                 ReturnToMenu.BackColor = Color.Transparent;
                 ReturnToMenu.Font = new Font("Segoe UI", 9);
                 ReturnToMenu.Location = new Point(20, Height - 75);
-                ReturnToMenu.Text = "back";
+                ReturnToMenu.Text = "Back";
                 ReturnToMenu.Click += new System.EventHandler(ReturnToMenu_Click);
                 Controls.Add(ReturnToMenu);
 
@@ -632,14 +634,14 @@ namespace ClientGUI
             Label BuyInLabel = new Label();
             BuyInLabel.Size = new Size(20, 30);
             BuyInLabel.Location = new Point(Width / 2 - 52, Height / 2 - 15);
-            BuyInLabel.Font = new Font("Segoe UI", 12);
+            BuyInLabel.Font = ClientGUI.FontSmaller;
             BuyInLabel.Text = "$";
             BuyInLabel.BackColor = Color.Transparent;
             Controls.Add(BuyInLabel);
 
             BuyInTextBox = new TextBox();
             BuyInTextBox.Size = new Size(70, 30);
-            BuyInTextBox.Font = new Font("Segoe UI", 12);
+            BuyInTextBox.Font = ClientGUI.FontSmaller;
             BuyInTextBox.Location = new Point(Width / 2 - 32, Height / 2 - 15);
             Controls.Add(BuyInTextBox);
 
@@ -699,27 +701,35 @@ namespace ClientGUI
             BettingLabel.Text = " BET ";
             Controls.Add(BettingLabel);
 
-            Label BuyInLabel = new Label();
-            BuyInLabel.Size = new Size(150, 15);
-            BuyInLabel.Location = new Point(Width / 2 - 35, Height / 2 - 30);
-            BuyInLabel.Font = new Font("Segoe UI", 9);
-            BuyInLabel.Text = "Buy In: $" + buyIn;
-            BuyInLabel.BackColor = Color.Transparent;
-            Controls.Add(BuyInLabel);
+            Label BalanceLabel = new Label();
+            BalanceLabel.Size = new Size(150, 15);
+            BalanceLabel.Location = new Point(Width / 2 - 55, Height / 2 - 30);
+            BalanceLabel.Font = new Font("Segoe UI", 9);
+            BalanceLabel.Text = "Game Balance: $" + ClientMain.MainPlayer.GameBalance;
+            BalanceLabel.BackColor = Color.Transparent;
+            Controls.Add(BalanceLabel);
 
             Label BetLabel = new Label();
             BetLabel.Size = new Size(20, 30);
             BetLabel.Location = new Point(Width / 2 - 52, Height / 2 - 10);
-            BetLabel.Font = new Font("Segoe UI", 12);
+            BetLabel.Font = ClientGUI.FontSmaller;
             BetLabel.Text = "$";
             BetLabel.BackColor = Color.Transparent;
             Controls.Add(BetLabel);
 
             BetTextBox = new TextBox();
             BetTextBox.Size = new Size(70, 30);
-            BetTextBox.Font = new Font("Segoe UI", 12);
+            BetTextBox.Font = ClientGUI.FontSmaller;
             BetTextBox.Location = new Point(Width / 2 - 32, Height / 2 - 10);
             Controls.Add(BetTextBox);
+
+            ErrorLabel = new Label();
+            ErrorLabel.Size = new Size(200, 50);
+            ErrorLabel.Location = new Point(Width / 2 - 37, Height / 2 + 75);
+            ErrorLabel.Font = new Font("Segoe UI", 10);
+            ErrorLabel.ForeColor = Color.Red;
+            ErrorLabel.BackColor = Color.Transparent;
+            Controls.Add(ErrorLabel);
 
             Button SubmitBet = new Button();
             SubmitBet.Size = new Size(70, 30);

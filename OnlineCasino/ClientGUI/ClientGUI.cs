@@ -4,6 +4,7 @@ using ClientLogic.Games;
 using ClientLogic.Players;
 using SharedModels.Connection.Enums;
 using SharedModels.GameComponents;
+using SharedModels.Games.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,6 +23,17 @@ namespace ClientGUI
         TexasHoldEmGUI TexasHoldEmGUI;
         Game_GUIs.RouletteGUI RouletteGUI;
 
+        public static SolidBrush HoverBrush = new SolidBrush(Color.FromArgb(Convert.ToInt32("FFAAAAAA", 16)));
+        public static SolidBrush DisabledBrush = new SolidBrush(Color.FromArgb(Convert.ToInt32("FF555555", 16)));
+
+        public static StringFormat FormatCentered = new StringFormat();
+
+        public static Font FontLarge = new Font("Segoe UI", 38);
+        public static Font FontMediumLarge = new Font("Segoe UI", 30);
+        public static Font FontMedium = new Font("Segoe UI", 20);
+        public static Font FontSmall = new Font("Segoe UI", 16);
+        public static Font FontSmaller = new Font("Segoe UI", 12);
+
         public int mouseX;
         public int mouseY;
 
@@ -29,8 +41,9 @@ namespace ClientGUI
 
         public ClientGUI()
         {
-            
             InitializeComponent();
+            FormatCentered.Alignment = StringAlignment.Center;
+            FormatCentered.LineAlignment = StringAlignment.Center;
         }
 
         private void ClientGUI_Load(object sender, EventArgs e)
@@ -69,8 +82,11 @@ namespace ClientGUI
                             BettingScreen_Draw();
 
                         DrawBettingScreen = false;
-                        e.Graphics.DrawRectangle(Pens.Black, Width / 2 - 301, Height / 2 - 201, 601, 401);
-                        e.Graphics.FillRectangle(Brushes.White, new Rectangle(Width / 2 - 300, Height / 2 - 200, 600, 400));
+                        if (!ClientMain.MainPlayer.HasBet())
+                        {
+                            e.Graphics.DrawRectangle(Pens.Black, Width / 2 - 301, Height / 2 - 201, 601, 401);
+                            e.Graphics.FillRectangle(Brushes.White, new Rectangle(Width / 2 - 300, Height / 2 - 200, 600, 400));
+                        }
                     }
                     break;
                 case ClientStates.Game:
@@ -328,14 +344,17 @@ namespace ClientGUI
             betString = BetTextBox.Text;
             if (!int.TryParse(betString, out bet))
             {
-
+                ErrorLabel.Text = "Invalid Input";
+                ErrorLabel.Refresh();
             }
-            else if (bet > buyIn)
+            else if (bet > ClientMain.MainPlayer.GameBalance)
             {
-
+                ErrorLabel.Text = "Invalid Amount";
+                ErrorLabel.Refresh();
             }
             else
             {
+                ErrorLabel.Text = "";
                 this.Controls.Clear();
                 this.Invalidate();
                               
@@ -374,14 +393,14 @@ namespace ClientGUI
                                         {
                                             if (BlackjackGUI.You.Hand.Count < 5)
                                             {
-                                                // hit
+                                                //Clicked Hit
+                                                ((Blackjack)ClientMain.MainGame).Action(BlackjackEvents.PlayerHit);
                                             }
-
-                                            ((Blackjack)ClientMain.MainGame).HandState = BlackjackHandStates.Bust;
                                         }
                                         else if ((BlackjackGUI.clickY < Height - 120 + 35 && BlackjackGUI.clickY > Height - 120))
                                         {
-                                            // stay
+                                            //Clicked Stay
+                                            ((Blackjack)ClientMain.MainGame).Action(BlackjackEvents.PlayerStay);
                                         }
                                     }
                                 }

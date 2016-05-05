@@ -154,6 +154,7 @@ namespace SharedModels.Games.Events
         public static BlackjackEvent PlayerBust(int seat)
         {
             Builder b = new Builder();
+            b.Seat = seat;
             b.Event = BlackjackEvents.PlayerBust;
 
             return new BlackjackEvent(b);

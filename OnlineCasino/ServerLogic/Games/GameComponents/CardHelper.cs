@@ -15,24 +15,26 @@ namespace ServerLogic.Games.GameComponents
         {
             int handCount = 0;
             List<int> valueList = new List<int>();
-            foreach(Card card in hand)
+            foreach(Card card in hand.Where(c => c.Rank != CardRank.Ace))
             {
-                int temp = handCount;
-                int cardValue = (int)card.Rank;
+                int cardValue;
 
-                if (cardValue >= 10)
+                if ((int)card.Rank <= 10)
+                    cardValue = (int)card.Rank;
+                else
                     cardValue = 10;
-                if (cardValue == 1)
-                    cardValue = 11;
 
-                valueList.Add(cardValue);
-                temp += cardValue;
-
-                while ((temp > 21) && (valueList.Exists(cards => cards == 11)))
-                    temp = temp - 10; 
-
-                handCount = temp;              
+                handCount += cardValue;
             }
+
+            foreach(Card card in hand.Where(c => c.Rank == CardRank.Ace))
+            {
+                if (handCount + 11 > 21)
+                    handCount += 1;
+                else
+                    handCount += 11;
+            }
+
             return handCount;
         }
 

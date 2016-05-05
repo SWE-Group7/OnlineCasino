@@ -33,8 +33,7 @@ namespace ClientGUI.Game_GUIs
         {           
             e.Graphics.DrawLine(Pens.Black, new Point(0, clientHeight - cardHeight - 60), new Point(1500, clientHeight - cardHeight - 60));
 
-            e.Graphics.DrawString("Buy In: $" + You.BuyIn, new Font("Segoe UI", 12), Brushes.White, new Point(100, clientHeight - cardHeight));
-            e.Graphics.DrawString("   Bet: $" + You.Bet, new Font("Segoe UI", 12), Brushes.White, new Point(106, clientHeight - cardHeight + 20));
+            e.Graphics.DrawString("Balance: $" + You.GameBalance + "\n Bet: $" + You.Bet, ClientGUI.FontSmaller, Brushes.White, new Point(100, clientHeight - cardHeight));
            
             yourCardY = clientHeight - cardHeight - 50;
             yourCardsCount = ((CardPlayer)You).Hand.Count - 1;
@@ -81,7 +80,7 @@ namespace ClientGUI.Game_GUIs
                     else { otherPlayerCardX = clientWidth - cardWidth - 30; leftSide = false; }
                 }
                  
-                e.Graphics.DrawString(p.User.FullName, new Font("Segoe UI", 20), Brushes.White, new Point(otherPlayerCardX, otherPlayerCardY + cardHeight));
+                e.Graphics.DrawString(p.User.FullName, ClientGUI.FontMedium, Brushes.White, new Point(otherPlayerCardX, otherPlayerCardY + cardHeight));
 
                 if (showCards)
                 {

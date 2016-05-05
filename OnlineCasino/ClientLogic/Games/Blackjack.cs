@@ -13,6 +13,7 @@ using SharedModels.Games.Enums;
 using SharedModels.Connection.Enums;
 using SMP = SharedModels.Players;
 using SME = SharedModels.Games.Enums;
+using ServerLogic.Games.GameComponents;
 
 namespace ClientLogic.Games
 {
@@ -28,7 +29,19 @@ namespace ClientLogic.Games
             }
         }
         public BlackjackPlayer MainPlayer;
+        public BlackjackPlayer TurnPlayer
+        {
+            get
+            {
+                if (Turn == 0)
+                    return null;
+                else
+                    return (BlackjackPlayer)Players[Turn];
+            }
+        }
         public List<Card> DealerHand;
+        public BlackjackEvents DealerAction;
+        public BlackjackHandStates DealerHandState;
 
         public Blackjack(SMG.Blackjack blackjack)
             :base(blackjack as SMG.Game)
@@ -36,6 +49,8 @@ namespace ClientLogic.Games
             
             BlackjackState = blackjack.BlackjackState;
             DealerHand = new List<Card>();
+            DealerHandState = BlackjackHandStates.Under21;
+            DealerAction = (BlackjackEvents)0;
 
             foreach (var smPlayer in blackjack.Players)
             {
@@ -112,6 +127,8 @@ namespace ClientLogic.Games
                     break;
                 case SMG.BlackjackStates.RoundFinish:
                     DealerHand.Clear();
+                    DealerHandState = BlackjackHandStates.Under21;
+                    DealerAction = (BlackjackEvents)0;
 
                     foreach (var pair in Players.ToList())
                     {
@@ -149,41 +166,94 @@ namespace ClientLogic.Games
         private void Deal(BlackjackEvent gameEvent)
         {
             DealerHand.Add(gameEvent.Cards[0][0]);
+            
             for (int i = 1; i < gameEvent.Seats.Length; i++)
             {
                 ((BlackjackPlayer)Players[gameEvent.Seats[i]]).UpdateHand(gameEvent.Cards[i][0]);
                 ((BlackjackPlayer)Players[gameEvent.Seats[i]]).UpdateHand(gameEvent.Cards[i][1]);
+
+                if (CardHelper.CountHand(((BlackjackPlayer)Players[gameEvent.Seats[i]]).Hand) == 21)
+                    HandState = BlackjackHandStates.TwentyOne;
             }   
         }
         private void ShowDealer(BlackjackEvent gameEvent)
         {
-            DealerHand.Add(gameEvent.Cards[0][0]);   
+            DealerHand.Add(gameEvent.Cards[0][0]);
+            if (CardHelper.CountHand(DealerHand) == 21)
+                DealerHandState = BlackjackHandStates.TwentyOne;
         }
         private void PlayerBust(BlackjackEvent gameEvent)
         {
+            if(gameEvent.Seat == 0)
+            {
+                DealerHandState = BlackjackHandStates.Bust;
+            }
+            else
+            {
+                BlackjackPlayer player = (BlackjackPlayer)Players[gameEvent.Seat];
+                player.HandState = BlackjackHandStates.Bust;
+            }
+                
         }
         private void PlayerStay(BlackjackEvent gameEvent)
         {
+            if (gameEvent.Seat == 0)
+            {
+                DealerAction = BlackjackEvents.PlayerStay;
+                if (CardHelper.CountHand(DealerHand) == 21)
+                    DealerHandState = BlackjackHandStates.TwentyOne;
+            }
+            else
+            {
+                BlackjackPlayer player = (BlackjackPlayer)Players[gameEvent.Seat];
+                player.Action = BlackjackEvents.PlayerStay;
+
+                if (CardHelper.CountHand(player.Hand) == 21)
+                    DealerHandState = BlackjackHandStates.TwentyOne;
+            }
         }
 
         private void PlayerHit(BlackjackEvent gameEvent)
         {
             if (gameEvent.Seat == 0)
+            {
                 DealerHand.Add(gameEvent.Cards[0][0]);
+                DealerAction = BlackjackEvents.PlayerHit;
+
+                if (CardHelper.CountHand(DealerHand) == 21)
+                    DealerHandState = BlackjackHandStates.TwentyOne;
+            }
             else
-                ((BlackjackPlayer)Players[gameEvent.Seat]).UpdateHand(gameEvent.Cards[0][0]);
+            {
+                BlackjackPlayer player = (BlackjackPlayer)Players[gameEvent.Seat];
+
+                player.UpdateHand(gameEvent.Cards[0][0]);
+
+                //Update hand state if necessary
+                if (CardHelper.CountHand(player.Hand) == 21)
+                    player.HandState = BlackjackHandStates.TwentyOne;
+
+                //Update action
+                player.Action = BlackjackEvents.PlayerHit;
+
+            }
+                
         }
 
         private void PlayerBet(BlackjackEvent gameEvent)
         {
-            ((BlackjackPlayer)Players[gameEvent.Seat]).SetBet(gameEvent.Num);
+            BlackjackPlayer player = (BlackjackPlayer)Players[gameEvent.Seat];
+            player.SetBet(gameEvent.Num);
+
             if (gameEvent.Seat == MainPlayer.Seat)
                 ClientMain.ClientState = ClientStates.Game;
+
+            player.Action = BlackjackEvents.PlayerBet;
         }
 
         public void PlayerJoin(SMP.Player smPlayer)
         {
-            if(smPlayer.Seat != MainPlayer.Seat)
+            if(!Players.ContainsKey(smPlayer.Seat))
                 Players[smPlayer.Seat] = new BlackjackPlayer(smPlayer);
         }
 
@@ -203,6 +273,7 @@ namespace ClientLogic.Games
             switch (action)
             {
                 case BlackjackEvents.PlayerBet:
+                case BlackjackEvents.PlayerStay:
                 case BlackjackEvents.PlayerHit:
                     ClientMain.HandleRequests(SharedModels.Connection.ClientCommands.Blackjack_GetAction, action);
                     break;
@@ -210,7 +281,7 @@ namespace ClientLogic.Games
                     break;
             }
         }
-
+        
     }
 
     public enum BlackjackHandStates

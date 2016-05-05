@@ -13,7 +13,6 @@ namespace ClientLogic.Players
         public string Username;
         public string FullName;
         public string Email;
-        public int BuyIn;
         
         public decimal Balance;
 

@@ -43,7 +43,7 @@ namespace ClientGUI.Game_GUIs
             e.Graphics.DrawRectangle(Pens.Black, clientWidth / 2 - 226, clientHeight / 2 - 126, 451, 251);
             e.Graphics.FillRectangle(Brushes.White, new Rectangle(clientWidth / 2 - 225, clientHeight / 2 - 125, 450, 250));
 
-            e.Graphics.DrawString("JOINING NEXT FREE TABLE", new Font("Segoe UI", 16), Brushes.Black, new Point(clientWidth / 2 - 140, clientHeight / 2 - 30));
+            e.Graphics.DrawString("JOINING NEXT FREE TABLE", ClientGUI.FontSmall, Brushes.Black, new Point(clientWidth / 2 - 140, clientHeight / 2 - 30));
             var t = e.Graphics.Transform;
 
             if (sp)
@@ -56,7 +56,7 @@ namespace ClientGUI.Game_GUIs
             t.Shear(sx, 0);
 
             e.Graphics.Transform = t;
-            e.Graphics.DrawString("......", new Font("Segoe UI", 12), Brushes.Black, new Point(clientWidth / 2, clientHeight / 2 + 10));
+            e.Graphics.DrawString("......", ClientGUI.FontSmaller, Brushes.Black, new Point(clientWidth / 2, clientHeight / 2 + 10));
 
             
 
@@ -66,7 +66,7 @@ namespace ClientGUI.Game_GUIs
         {
 
             e.Graphics.FillRectangle(Brushes.White, new Rectangle(clientWidth / 2 - 225, clientHeight / 2 - 125, 450, 250));
-            e.Graphics.DrawString("Table found! Seating Players..", new Font("Segoe UI", 16), Brushes.Black, new Point(clientWidth / 2 - 150, clientHeight / 2 - 30));
+            e.Graphics.DrawString("Table found! Seating Players..", ClientGUI.FontSmall, Brushes.Black, new Point(clientWidth / 2 - 150, clientHeight / 2 - 30));
                       
             CurrentGame.GS = SharedModels.Games.GameStates.Playing;
         }

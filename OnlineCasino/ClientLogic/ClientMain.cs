@@ -77,7 +77,7 @@ namespace ClientLogic
             {
                 SMG.Game smGame;
                 RequestResult result;
-                int[] data = new int[] { (int)gameType, (int)MainUser.BuyIn };
+                int[] data = new int[] { (int)gameType, (int)BuyIn };
 
 
                 result = MainConnection.Request(ServerCommands.JoinGame, data);
