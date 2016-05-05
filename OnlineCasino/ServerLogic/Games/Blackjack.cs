@@ -66,6 +66,8 @@ namespace ServerLogic.Games
                 ResetRoundVariables();
                 BlackjackState = BlackjackStates.RoundStart;
                 deck = new Deck();
+                Naturals.Clear();
+
                 ClientCommands cmd;
                 gameEvent = BlackjackEvent.ChangeState(BlackjackState);
                 Broadcast(gameEvent);
@@ -240,9 +242,10 @@ namespace ServerLogic.Games
                 Thread.Sleep(1500);
 
                 //Payout
-                Dictionary<int, int> seatToWinnings = new Dictionary<int, int>();
+                Dictionary<int, Tuple<int, SMP.WinLossStates>> seatToWinnings = new Dictionary<int, Tuple<int, SMP.WinLossStates>>();
                 foreach (BlackjackPlayer player in ActivePlayers)
                 {
+                    SMP.WinLossStates state;
                     int PlayerCount = player.CardCount;
                     bool playerBlackjack = Naturals.Contains(player.Seat);
                     decimal mult = 0;
@@ -264,8 +267,16 @@ namespace ServerLogic.Games
                     else
                         mult = 1m;
 
+                    if (mult < 0)
+                        state = SMP.WinLossStates.Lose;
+                    else if (mult == 0)
+                        state = SMP.WinLossStates.Tie;
+                    else
+                        state = SMP.WinLossStates.Win;
+
                     int balance = player.UpdateGameBalance(mult);
-                    seatToWinnings[player.Seat] = balance;
+                    Tuple<int, SMP.WinLossStates> data = new Tuple<int, SMP.WinLossStates>(balance, state);
+                    seatToWinnings[player.Seat] = data;
                 }
 
                 gameEvent = BlackjackEvent.Payout(seatToWinnings);

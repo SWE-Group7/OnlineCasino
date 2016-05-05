@@ -45,7 +45,6 @@
     <Compile Include="Connections\Connection.cs" />
     <Compile Include="Games\Blackjack.cs" />
     <Compile Include="Games\Game.cs" />
-    <Compile Include="Games\GameComponents\CardHelper.cs" />
     <Compile Include="Games\TexasHoldEm.cs" />
     <Compile Include="Players\BlackjackPlayer.cs" />
     <Compile Include="Players\CardPlayer.cs" />
@@ -60,6 +59,9 @@
       <Project>{7fdae663-98d2-4e4f-bfe6-670b29b24af4}</Project>
       <Name>SharedModels</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Games\GameComponents\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

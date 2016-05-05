@@ -13,7 +13,6 @@ using SharedModels.Games.Enums;
 using SharedModels.Connection.Enums;
 using SMP = SharedModels.Players;
 using SME = SharedModels.Games.Enums;
-using ServerLogic.Games.GameComponents;
 
 namespace ClientLogic.Games
 {
@@ -105,7 +104,7 @@ namespace ClientLogic.Games
                 case BlackjackEvents.PlayerDouble:
                     break;
                 case BlackjackEvents.Payout:
-                    Payout(gameEvent.Seats, gameEvent.Winnings);
+                    Payout(gameEvent.Seats, gameEvent.WinStates, gameEvent.Winnings);
                     break;
                 case BlackjackEvents.Deal:
                     Deal(gameEvent);
@@ -145,20 +144,14 @@ namespace ClientLogic.Games
             }   
         }
 
-        private void Payout(byte[] seats, int[] winnings)
+        private void Payout(byte[] seats, byte[] winStates, int[] winnings)
         {
             for (int i = 0; i < seats.Length; i++)
             {
                 BlackjackPlayer player = ((BlackjackPlayer)Players[seats[i]]);
                 player.Gains = winnings[i] - player.GameBalance;
                 player.GameBalance = winnings[i];
-
-                if (player.Gains < 0)
-                    player.WinLossState = SMP.WinLossStates.Lose;
-                else if (player.Gains > 0)
-                    player.WinLossState = SMP.WinLossStates.Win;
-                else
-                    player.WinLossState = SMP.WinLossStates.Tie;
+                player.WinLossState = (SMP.WinLossStates) winStates[i];
                    
             }
         }       
