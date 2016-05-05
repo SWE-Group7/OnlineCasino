@@ -545,7 +545,7 @@ namespace ClientGUI
                 this.Invalidate();
 
                 Button ReturnToMenu = new Button();
-                ReturnToMenu.Size = new Size(55, 22);
+                ReturnToMenu.Size = new Size(100, 22);
                 ReturnToMenu.FlatStyle = FlatStyle.Flat;
                 ReturnToMenu.FlatAppearance.BorderSize = 0;
                 ReturnToMenu.FlatAppearance.MouseDownBackColor = Color.Transparent;
@@ -554,8 +554,8 @@ namespace ClientGUI
                 ReturnToMenu.BackColor = Color.Transparent;
                 ReturnToMenu.Font = new Font("Segoe UI", 9);
                 ReturnToMenu.Location = new Point(20, Height - 75);
-                ReturnToMenu.Text = "Back";
-                ReturnToMenu.Click += new System.EventHandler(ReturnToMenu_Click);
+                ReturnToMenu.Text = "Cash Out";
+                ReturnToMenu.Click += new System.EventHandler(Cashout_Click);
                 Controls.Add(ReturnToMenu);
 
                 PictureBox butt1 = new PictureBox();
@@ -611,7 +611,7 @@ namespace ClientGUI
             ReturnToMenu.BackColor = Color.Transparent;
             ReturnToMenu.Font = new Font("Segoe UI", 9);
             ReturnToMenu.Location = new Point(20, Height - 75);
-            ReturnToMenu.Text = "back";
+            ReturnToMenu.Text = "Back";
             ReturnToMenu.Click += new System.EventHandler(ReturnToMenu_Click);
             Controls.Add(ReturnToMenu);
 
@@ -672,7 +672,7 @@ namespace ClientGUI
             this.Invalidate();
 
             Button ReturnToMenu = new Button();
-            ReturnToMenu.Size = new Size(55, 22);
+            ReturnToMenu.Size = new Size(100, 22);
             ReturnToMenu.FlatStyle = FlatStyle.Flat;
             ReturnToMenu.FlatAppearance.BorderSize = 0;
             ReturnToMenu.FlatAppearance.MouseDownBackColor = Color.Transparent;
@@ -681,8 +681,8 @@ namespace ClientGUI
             ReturnToMenu.BackColor = Color.Transparent;
             ReturnToMenu.Font = new Font("Segoe UI", 9);
             ReturnToMenu.Location = new Point(20, Height - 75);
-            ReturnToMenu.Text = "back";
-            ReturnToMenu.Click += new System.EventHandler(ReturnToMenu_Click);
+            ReturnToMenu.Text = "Cash Out";
+            ReturnToMenu.Click += new System.EventHandler(Cashout_Click);
             Controls.Add(ReturnToMenu);
 
             PictureBox butt1 = new PictureBox();

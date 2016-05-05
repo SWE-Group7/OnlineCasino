@@ -34,6 +34,7 @@ namespace ServerLogic
                 _ActivePlayers = value;
             }
         }
+        protected List<int> RoundQuitters;
         protected List<GameEvent> RoundEvents;
         protected GameStates GameState;
 
@@ -57,6 +58,7 @@ namespace ServerLogic
             OpenSeats = new ConcurrentDictionary<int, bool>();
             SubscribedPlayers = new List<Player>();
             RoundEvents = new List<GameEvent>();
+            RoundQuitters = new List<int>();
             
             for (int i = 1; i <= MaxSeats; i++)
                 OpenSeats.TryAdd(i, true);
@@ -98,11 +100,17 @@ namespace ServerLogic
         {
             lock (ListLock)
             {
+                Player p;
+
+                RoundQuitters.Add(player.Seat);
                 SubscribedPlayers.Remove(player);
                 ActivePlayers.Remove(player);
-                Players.TryRemove(player.Seat, out player);
+                while (!Players.TryRemove(player.Seat, out p)) ;
+
+
                 ReleaseSeat(player.Seat);
                 GameEvent gameEvent = BlackjackEvent.PlayerQuit(player.Seat);
+                Broadcast(gameEvent);
             }
         }
         protected abstract SMG.Game GetSharedModel();
@@ -110,6 +118,10 @@ namespace ServerLogic
         {
             lock (ListLock)
             {
+                //Dont broadcast anything after the player's quit event
+                if (RoundQuitters.Contains(gameEvent.Seat))
+                    return;
+
                 ServerMain.WriteEvent(gameEvent);
                 RoundEvents.Add(gameEvent);
                 foreach (var player in SubscribedPlayers)
@@ -152,6 +164,7 @@ namespace ServerLogic
                     Thread.Sleep(5);
                 }
 
+                RoundQuitters.Clear();
                 PurgeQuitters();
                 RoundEvents.Clear();
                 ActivePlayers = Players.Select(p => p.Value).ToList();
@@ -162,17 +175,26 @@ namespace ServerLogic
 
         protected void PurgeQuitters()
         {
-            List<int> seats = Players.AsEnumerable()
+            var quitters = Players.AsEnumerable()
                                      .Where(p => p.Value.GetState() == SMP.PlayerStates.Quitting)
-                                     .Select(p => p.Key)
+                                     .Select(p => p.Value)
                                      .ToList();
 
-            foreach(int seat in seats)
+            foreach(Player quitter in quitters)
             {
-                Player player;
-                Players.TryRemove(seat, out player);
-                ReleaseSeat(seat);
+                Player p;
+
+                Players.TryRemove(quitter.Seat, out p);
+                ReleaseSeat(quitter.Seat);
+
+                GameEvent gameEvent = BlackjackEvent.PlayerQuit(quitter.Seat);
+                Broadcast(gameEvent);
+
+                SubscribedPlayers.Remove(quitter);
+
+                quitter.FinalizeQuit();
                 
+
             }
         }
     }

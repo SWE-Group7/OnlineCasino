@@ -14,11 +14,13 @@ namespace SharedModels.GameComponents
         {
             int handCount = 0;
             List<int> valueList = new List<int>();
-            foreach(Card card in hand.Where(c => c.Rank != CardRank.Ace))
+            foreach(Card card in hand)
             {
                 int cardValue;
 
-                if ((int)card.Rank <= 10)
+                if (card.Rank == CardRank.Ace)
+                    cardValue = 1;
+                else if ((int)card.Rank <= 10)
                     cardValue = (int)card.Rank;
                 else
                     cardValue = 10;
@@ -28,10 +30,8 @@ namespace SharedModels.GameComponents
 
             foreach(Card card in hand.Where(c => c.Rank == CardRank.Ace))
             {
-                if (handCount + 11 > 21)
-                    handCount += 1;
-                else
-                    handCount += 11;
+                if (handCount + 10 <= 21)
+                    handCount += 10;
             }
 
             return handCount;

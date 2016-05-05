@@ -12,6 +12,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -34,14 +35,21 @@ namespace ClientGUI
         public static Font FontSmall = new Font("Segoe UI", 16);
         public static Font FontSmaller = new Font("Segoe UI", 12);
 
+        private List<Tuple<string, long>> DisplayedAlerts;
+        private static int AlertSpacerY = 100;
+        private static int AlertPositionY = 100;
+
         public int mouseX;
         public int mouseY;
 
         private bool DrawBettingScreen = true;
+        private bool DrawBackToMenu = true;
+        private bool DrawMenu = true;
 
         public ClientGUI()
         {
             InitializeComponent();
+            DisplayedAlerts = new List<Tuple<string, long>>();
             FormatCentered.Alignment = StringAlignment.Center;
             FormatCentered.LineAlignment = StringAlignment.Center;
         }
@@ -54,8 +62,11 @@ namespace ClientGUI
 
         private void ClientGUI_Paint(object sender, PaintEventArgs e)
         {
+            //Modify model based on server events before drawing anything
             ClientMain.HandleEvents();
-            
+
+           
+
             switch (ClientMain.ClientState)
             {
                 case ClientStates.Login:
@@ -71,30 +82,48 @@ namespace ClientGUI
                     }
                     break;
                 case ClientStates.Menu:
-                    {                        
+                    {        
+                        if(DrawMenu)
+                        {
+                            Menu_Draw();
+                            DrawMenu = false;
+                        }                    
+
                         e.Graphics.DrawRectangle(Pens.Black, Width / 2 - 301, Height / 2 - 201, 601, 401);
                         e.Graphics.FillRectangle(Brushes.White, new Rectangle(Width / 2 - 300, Height / 2 - 200, 600, 400));
                     }
                     break;
                 case ClientStates.Betting:
                     {
-                        if (DrawBettingScreen)
-                            BettingScreen_Draw();
-
-                        DrawBettingScreen = false;
-                        if (!ClientMain.MainPlayer.HasBet())
+                        //Make sure they've been requested to bet
+                        if (ClientMain.ServerRequests[SharedModels.Connection.ClientCommands.Blackjack_GetBet] != -1)
                         {
-                            e.Graphics.DrawRectangle(Pens.Black, Width / 2 - 301, Height / 2 - 201, 601, 401);
-                            e.Graphics.FillRectangle(Brushes.White, new Rectangle(Width / 2 - 300, Height / 2 - 200, 600, 400));
+                            if (!ClientMain.MainPlayer.HasBet())
+                            {
+                                e.Graphics.DrawRectangle(Pens.Black, Width / 2 - 301, Height / 2 - 201, 601, 401);
+                                e.Graphics.FillRectangle(Brushes.White, new Rectangle(Width / 2 - 300, Height / 2 - 200, 600, 400));
+                            }
+
+                            //Only draw once per betting session
+                            if (DrawBettingScreen)
+                            {
+                                BettingScreen_Draw();
+                                DrawBackToMenu = true;
+                                DrawBettingScreen = false;
+                            }
+                            
                         }
                     }
                     break;
                 case ClientStates.Game:
                     {
-                        if (!DrawBettingScreen)
+
+                        if (DrawBackToMenu)
                         {
+                            Game_Draw();
                             DrawBettingScreen = true;
-                            this.Controls.Clear();
+                            DrawBackToMenu = false;
+                            DrawMenu = true;
                         }
 
                         switch (ClientMain.GameType)
@@ -118,7 +147,38 @@ namespace ClientGUI
                     }
                     break;
             }
+
+            //Handle Alerts
+            HandleAlerts(sender, e);
         }
+
+        private void HandleAlerts(object sender, PaintEventArgs e)
+        {
+            //Get new alerts
+            while (ClientMain.AlertMessages.Any())
+            {
+                Tuple<string, int> alert;
+                ClientMain.AlertMessages.TryDequeue(out alert);
+                string message = alert.Item1;
+                long takeDownTime = alert.Item2 + (DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond);
+
+                DisplayedAlerts.Add(new Tuple<string, long>(message, takeDownTime));
+                
+            }
+
+            //Display alerts and remove old ones
+            for(int i = DisplayedAlerts.Count -1; i >= 0; i--)
+            {
+                string message = DisplayedAlerts[i].Item1;
+                long takeDownTime = DisplayedAlerts[i].Item2;
+
+                e.Graphics.DrawString(message, FontMediumLarge, Brushes.White, new Point(ClientSize.Width / 2, AlertPositionY + i * (AlertSpacerY)), FormatCentered);
+
+                if((DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond) > takeDownTime)
+                    DisplayedAlerts.RemoveAt(i);
+            }
+        }
+
 
         // LOGIN PAGE BUTTON EVENTS
         private void Submit_Click(object sender, EventArgs e)
@@ -197,109 +257,40 @@ namespace ClientGUI
         // IN GAME BUTTONS EVENTS
         private void ReturnToMenu_Click(object sender, EventArgs e)
         {
-            if (ClientMain.GameType == GameTypes.Blackjack)
-            {
-                if (BlackjackGUI != null && ClientMain.ClientState != ClientStates.Betting && ClientMain.MainGame.GS != SharedModels.Games.GameStates.Finializing)
-                {
-                    check = true;
-                    Game_Draw();
-                }
-                else
-                {
-                    BlackjackGUI = null;
-                    this.BackgroundImage = global::ClientGUI.Properties.Resources.Possible_Background;
-                    this.Controls.Clear();
-                    this.Invalidate();
-
-                    ClientMain.ClientState = ClientStates.Menu;
-                    Menu_Draw();
-
-                    ClientMain.GameType = GameTypes.None;
-                }
-            }
-            else if (ClientMain.GameType == GameTypes.TexasHoldEm)
-            {
-                if (TexasHoldEmGUI != null && ClientMain.ClientState != ClientStates.Betting && ClientMain.MainGame.GS != SharedModels.Games.GameStates.Finializing)
-                {
-                    check = true;
-                    Game_Draw();
-                }
-                else
-                {
-                    TexasHoldEmGUI = null;
-                    this.BackgroundImage = global::ClientGUI.Properties.Resources.Possible_Background;
-                    this.Controls.Clear();
-                    this.Invalidate();
-
-                    ClientMain.ClientState = ClientStates.Menu;
-                    Menu_Draw();
-
-                    ClientMain.GameType = GameTypes.None;
-                }
-            }
-            else if (ClientMain.GameType == GameTypes.Roulette)
-            {
-                if (RouletteGUI != null && ClientMain.ClientState != ClientStates.Betting && ClientMain.MainGame.GS != SharedModels.Games.GameStates.Finializing)
-                {
-                    check = true;
-                    Game_Draw();
-                }
-                else
-                {
-                    RouletteGUI = null;
-                    this.BackgroundImage = global::ClientGUI.Properties.Resources.Possible_Background;
-                    this.Controls.Clear();
-                    this.Invalidate();
-
-                    ClientMain.ClientState = ClientStates.Menu;
-                    Menu_Draw();
-
-                    ClientMain.GameType = GameTypes.None;
-                }
-            }
-            else
-            {
-                this.BackgroundImage = global::ClientGUI.Properties.Resources.Possible_Background;
-                this.Controls.Clear();
-                this.Invalidate();
-
-                ClientMain.ClientState = ClientStates.Menu;
-                Menu_Draw();
-
-                ClientMain.GameType = GameTypes.None;
-            }
-        }
-        private void Yes_Click(object sender, EventArgs e)
-        {
-            if (ClientMain.GameType == GameTypes.Blackjack)
-            {
-                BlackjackGUI = null;
-            }
-            else if (ClientMain.GameType == GameTypes.TexasHoldEm)
-            {
-                TexasHoldEmGUI = null;
-            }
-            else if (ClientMain.GameType == GameTypes.Roulette)
-            {
-                RouletteGUI = null;
-            }
-
             this.BackgroundImage = global::ClientGUI.Properties.Resources.Possible_Background;
-            this.Controls.Clear();
-            this.Invalidate();
-
             ClientMain.ClientState = ClientStates.Menu;
             Menu_Draw();
 
-            ClientMain.GameType = GameTypes.None;
+        }
+        private void Cashout_Click(object sender, EventArgs e)
+        {
+            check = true;
+            if (ClientMain.ClientState != ClientStates.Betting)
+                Game_Draw();
+            else
+            {
+                BettingScreen_Draw();
+            }
+        }
 
+        private void Yes_Click(object sender, EventArgs e)
+        {
             check = false;
+            ClientMain.Alert("You will be cashed out at the end of the round.", 5000);
+            ClientMain.SendCommand(SharedModels.Connection.ServerCommands.QuitGame, null);
 
+            if (ClientMain.ClientState != ClientStates.Betting)
+                Game_Draw();
+            else
+            {
+                BettingScreen_Draw();
+            }
         }
         private void No_Click(object sender, EventArgs e)
         {
             check = false;
-            if (ClientMain.ClientState != ClientStates.Betting) Game_Draw();
+            if (ClientMain.ClientState != ClientStates.Betting)
+                Game_Draw();
             else BettingScreen_Draw();
         }
 
@@ -315,7 +306,9 @@ namespace ClientGUI
 
             if (!ClientMain.TryJoinGame(ClientMain.GameType))
                 return;
-                
+
+            ClientMain.ClientState = ClientStates.Game;
+
             switch (ClientMain.GameType)
             {
                 case GameTypes.Blackjack:
@@ -359,7 +352,6 @@ namespace ClientGUI
                 this.Invalidate();
                               
                 ClientMain.MainGame.Bet(bet);
-                ClientMain.ClientState = ClientStates.Game;
                 Game_Draw();               
             }
         }
@@ -381,12 +373,16 @@ namespace ClientGUI
                     BlackjackGUI.clickX = e.X;
                     BlackjackGUI.clickY = e.Y;
 
+                    if (ClientMain.MainGame == null)
+                        return;
+
                     switch (ClientMain.MainGame.GS)
                     {
                         case SharedModels.Games.GameStates.Playing:
-                            {     
-                                if (((Blackjack)ClientMain.MainGame).BlackjackState == SharedModels.Games.BlackjackStates.Playing)
-                                {
+                            
+                            switch (((Blackjack)ClientMain.MainGame).BlackjackState)
+                            {
+                                case SharedModels.Games.BlackjackStates.Playing:
                                     if (BlackjackGUI.clickX < Width - 50 && BlackjackGUI.clickX > Width - 150)
                                     {
                                         if (BlackjackGUI.clickY < Height - 175 + 35 && BlackjackGUI.clickY > Height - 175)
@@ -403,12 +399,13 @@ namespace ClientGUI
                                             ((Blackjack)ClientMain.MainGame).Action(BlackjackEvents.PlayerStay);
                                         }
                                     }
-                                }
-                                else if (((Blackjack)ClientMain.MainGame).BlackjackState == SharedModels.Games.BlackjackStates.Betting)
-                                {
+                                    break;
+                                case SharedModels.Games.BlackjackStates.Betting:
                                     BettingScreen_Draw();
-                                }
+                                    break;
                             }
+                                   
+                            
                             break;
                         case SharedModels.Games.GameStates.Waiting:
                             {

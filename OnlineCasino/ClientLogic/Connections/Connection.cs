@@ -122,7 +122,7 @@ namespace ClientLogic.Connections
             }
         }
 
-        public void Command(ClientCommands cmd, object obj = null)
+        public void Command(ServerCommands cmd, object obj = null)
         {
             Payload payload = new Payload(CommTypes.Void, cmd, obj);
             QueueWrite(payload);

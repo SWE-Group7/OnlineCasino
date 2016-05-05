@@ -51,6 +51,7 @@ namespace ServerLogic
             this.Salt = dbUser.Salt;
             this.balance = dbUser.Balance;
             this.InGame = false;
+            this.Connected = true;
             this.Lock = new object();
             this.CurrentConnection = connection;
 
@@ -110,7 +111,7 @@ namespace ServerLogic
             lock (Lock)
             {
                 balance += value;
-                balance = Math.Max(value, 0);
+                balance = Math.Max(balance, 0);
                 value = balance;
             }
 
@@ -125,6 +126,8 @@ namespace ServerLogic
         {
             GameID = 0;
             InGame = false;
+
+            ServerMain.UserQuit(this.UserID);
         }
         public void ForceQuit()
         {

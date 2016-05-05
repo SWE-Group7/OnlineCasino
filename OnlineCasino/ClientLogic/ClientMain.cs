@@ -31,10 +31,14 @@ namespace ClientLogic
             set
             {
                 _MainPlayer = value;
-                _MainPlayer.BuyIn = BuyIn;
-                _MainPlayer.Bet = Bet;
+                if (value != null)
+                {
+                    _MainPlayer.BuyIn = BuyIn;
+                    _MainPlayer.Bet = Bet;
+                }
             }
         }
+
         public static Connection MainConnection;
         public static Game MainGame;
 
@@ -44,6 +48,7 @@ namespace ClientLogic
         public static GameTypes GameType = GameTypes.None;
         public static ClientStates ClientState = ClientStates.Login;
 
+        public static ConcurrentQueue<Tuple<string, int>> AlertMessages = new ConcurrentQueue<Tuple<string, int>>();
         public static ConcurrentQueue<GameEvent> EventQueue = new ConcurrentQueue<GameEvent>();
         public static ConcurrentDictionary<ClientCommands, int> ServerRequests;
 
@@ -108,6 +113,11 @@ namespace ClientLogic
             return LoginMessage;
         }
 
+        public static void Alert(string message, int milliseconds)
+        {
+            AlertMessages.Enqueue(new Tuple<string, int>(message, milliseconds));
+        }
+
         public static void QueueEvent(GameEvent gameEvent)
         {
             EventQueue.Enqueue(gameEvent);
@@ -121,7 +131,8 @@ namespace ClientLogic
             GameEvent gameEvent;
             while (EventQueue.TryDequeue(out gameEvent))
             {
-                MainGame.HandleEvent(gameEvent);
+                if(MainGame != null)
+                    MainGame.HandleEvent(gameEvent);
             }
         }
         public static void HandleRequests(ClientCommands cmd, object ret)
@@ -131,6 +142,19 @@ namespace ClientLogic
             {
                 MainConnection.Return(reqId, true, ret);
             }
+        }
+
+        public static void SendCommand(ServerCommands cmd, object obj)
+        {
+            MainConnection.Command(cmd, obj);
+        }
+
+        public static void QuitGame()
+        {
+            ClientMain.ClientState = ClientStates.Menu;
+            GameType = GameTypes.None;
+            ClientMain.MainGame = null;
+            ClientMain.MainPlayer = null;
         }
     }
 

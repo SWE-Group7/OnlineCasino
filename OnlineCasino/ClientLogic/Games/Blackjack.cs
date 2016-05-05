@@ -121,8 +121,14 @@ namespace ClientLogic.Games
 
             switch (state)
             {
+                case SMG.BlackjackStates.RoundStart:
+                    GS = SMG.GameStates.Playing;
+                    break;
                 case SMG.BlackjackStates.Betting:
                     ClientMain.ClientState = ClientStates.Betting;
+                    break;
+                case SMG.BlackjackStates.Dealing:
+                    ClientMain.ClientState = ClientStates.Game;
                     break;
                 case SMG.BlackjackStates.RoundFinish:
                     DealerHand.Clear();
@@ -254,6 +260,8 @@ namespace ClientLogic.Games
         {
             Player player;
             Players.TryRemove(seat, out player);
+            ClientMain.MainUser.Balance += player.GameBalance - player.BuyIn;
+            ClientMain.QuitGame();
         }
 
         public override void Bet(int bet)

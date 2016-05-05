@@ -84,19 +84,23 @@ namespace ClientGUI.Game_GUIs
 
                 if (showCards)
                 {
+                    int i = 0;
                     foreach (Card c in p.Hand) 
                     {
                         CardImage = Deck.CardImage(c.Suit, c.Rank);
 
                         if (CardImage != null)
                         {
-                            e.Graphics.DrawImage(CardImage, new Rectangle(otherPlayerCardX, otherPlayerCardY, cardWidth - 20, cardHeight - 20));
+                            e.Graphics.DrawImage(CardImage, new Rectangle(otherPlayerCardX + (i * ((leftSide) ? (cardWidth + 5) : -(cardWidth + 5))), otherPlayerCardY, cardWidth - 20, cardHeight - 20));
                         }
 
-                        if (leftSide) { otherPlayerCardX += (p.Hand.Count * (cardWidth)) / 2; }
-                        else { otherPlayerCardX -= (p.Hand.Count * (cardWidth)) / 2; }
+                        //if (leftSide) { otherPlayerCardX += (otherPlayerCardCount * (cardWidth)) / 2; }
+                        //else { otherPlayerCardX -= (otherPlayerCardCount * (cardWidth)) / 2; }
+                        otherPlayerCardCount--;
+                        i++;
                     }
                     otherPlayerCount--;
+                    
                 }
                 else
                 {

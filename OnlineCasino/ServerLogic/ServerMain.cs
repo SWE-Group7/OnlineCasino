@@ -146,6 +146,12 @@ namespace ServerLogic
 
             }
         }
+
+        internal static void UserQuit(int userID)
+        {
+           
+        }
+
         private static void HandleClientLogin(TcpClient client, ServerCommands cmd, int reqId, byte[] obj)
         {
             Connection connection = new Connection(client);

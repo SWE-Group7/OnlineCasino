@@ -174,6 +174,14 @@ namespace ServerLogic.Games
                         do
                         {
                             BlackjackEvents action = (BlackjackEvents)0;
+                            
+                            if(player.CardCount == 21)
+                            {
+                                gameEvent = BlackjackEvent.PlayerStay(player.Seat);
+                                Broadcast(gameEvent);
+                                break;
+                            }
+
 
                             //Get Action
                             player.Request(cmd);
@@ -202,14 +210,24 @@ namespace ServerLogic.Games
                             }
                             Broadcast(gameEvent);
 
-                            if (player.CardCount == 21 || player.GetCards().Count >= 5)
+                            if (player.CardCount == 21)
+                            {
                                 StayOrBust = true;
+                            }
                             else if (player.CardCount > 21)
                             {
                                 StayOrBust = true;
                                 gameEvent = BlackjackEvent.PlayerBust(player.Seat);
                                 Broadcast(gameEvent);
                             }
+
+                            if (player.GetCards().Count >= 5)
+                            {
+                                StayOrBust = true;
+                                gameEvent = BlackjackEvent.PlayerStay(player.Seat);
+                                Broadcast(gameEvent);
+                            }
+
                         } while (!StayOrBust);
 
                         Thread.Sleep(1500);
@@ -292,7 +310,13 @@ namespace ServerLogic.Games
                 Broadcast(gameEvent);
 
                 PurgeQuitters();
+
+                if (!Players.Any())
+                    EndGame = true;
+                    
             }
+
+
                        
         }
 
@@ -306,8 +330,8 @@ namespace ServerLogic.Games
 
             BlackjackPlayer player = new BlackjackPlayer(user, this, seat, buyIn);
 
-            lock (Players)
-                Players.TryAdd(seat, player);
+            while (!Players.TryAdd(seat, player)) Thread.Sleep(5);
+
 
             RoundSnapshot = GetSharedModel();
             BlackjackEvent gameEvent = BlackjackEvent.PlayerJoin(player.GetSharedModel());

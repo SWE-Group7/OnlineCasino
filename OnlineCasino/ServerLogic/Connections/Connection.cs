@@ -199,6 +199,8 @@ namespace ServerLogic.Connections
             catch (Exception ex)
             {
                 ServerMain.WriteException("Connection.ImmediateWrite(cmd, obj)", ex);
+             if (CurrentUser.InGame)
+                    CurrentUser.ClientQuitGame(true);
                 return false;
             }
         }
@@ -304,6 +306,8 @@ namespace ServerLogic.Connections
             catch (Exception ex)
             {
                 ServerMain.WriteException("Connection.StartReader()", ex);
+                if (CurrentUser.InGame)
+                    CurrentUser.ClientQuitGame(true);
                 Connected = false;
             }
         }
@@ -327,6 +331,9 @@ namespace ServerLogic.Connections
             {
                 case ServerCommands.Disconnect:
                     this.FinalDisconnect();
+                    break;
+                case ServerCommands.QuitGame:
+                    CurrentUser.ClientQuitGame(false);
                     break;
                 default:
                     break;
