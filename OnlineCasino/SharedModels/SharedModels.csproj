@@ -43,6 +43,7 @@
     <Compile Include="Connection\ConnectionStatics.cs" />
     <Compile Include="Connection\Enums\ClientCommands.cs" />
     <Compile Include="Connection\Enums\CommTypes.cs" />
+    <Compile Include="Games\GameComponents\CardHelper.cs" />
     <Compile Include="RequestBuffer.cs" />
     <Compile Include="Games\Enums\GameEvents.cs" />
     <Compile Include="Games\GameEvent.cs" />

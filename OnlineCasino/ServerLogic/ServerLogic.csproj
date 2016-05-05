@@ -74,7 +74,6 @@
     </Compile>
     <Compile Include="Games\Blackjack.cs" />
     <Compile Include="Games\Game.cs" />
-    <Compile Include="Games\GameComponents\CardHelper.cs" />
     <Compile Include="Games\GameComponents\Deck.cs" />
     <Compile Include="Games\GameComponents\RouletteWheel.cs" />
     <Compile Include="Players\BlackjackPlayer.cs" />

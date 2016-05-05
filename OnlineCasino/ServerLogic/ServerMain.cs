@@ -157,6 +157,8 @@ namespace ServerLogic
                 connection.AcceptLogin(reqId);
                 connection.Communicate();
                 ConnectedUsers[user.UserID] = user;
+
+                Console.WriteLine("User Logged In:\t" + user.Username);
             }
             else
             {

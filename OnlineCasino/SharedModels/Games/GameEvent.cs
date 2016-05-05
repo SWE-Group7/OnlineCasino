@@ -21,9 +21,10 @@ namespace SharedModels.Games.Events
         public readonly string Text;
 
         public readonly byte[] Seats;
+        public readonly byte[] WinStates;
         public readonly int[] Winnings;
 
-        internal GameEvent(int gameEvent, int seat, int num, string text, byte[] seats, int[] winnings, Player player)
+        internal GameEvent(int gameEvent, int seat, int num, string text, byte[] seats, byte[] winStates, int[] winnings, Player player)
         {
             this.Event = (byte) gameEvent;
             this.Seat = (byte) seat;
@@ -32,6 +33,7 @@ namespace SharedModels.Games.Events
             this.Text = text;
             this.Seats = seats;
             this.Winnings = winnings;
+            this.WinStates = winStates;
         }
 
 
@@ -43,8 +45,9 @@ namespace SharedModels.Games.Events
     {
         public readonly Card[][] Cards;
 
+
         private BlackjackEvent(Builder b)
-            : base((int)b.Event, b.Seat, b.Num, b.Text, b.Seats, b.Winnings, b.Player)
+            : base((int)b.Event, b.Seat, b.Num, b.Text, b.Seats, b.WinStates, b.Winnings, b.Player)
         {
             Cards = b.Cards;
         }
@@ -82,18 +85,20 @@ namespace SharedModels.Games.Events
 
             return new BlackjackEvent(b);
         }
-        public static BlackjackEvent Payout(Dictionary<int, int> seatToWinnings)
+        public static BlackjackEvent Payout(Dictionary<int, Tuple<int, WinLossStates>> seatToWinnings)
         {
             Builder b = new Builder();
             b.Event = BlackjackEvents.Payout;
             b.Seats = new byte[seatToWinnings.Count];
             b.Winnings = new int[seatToWinnings.Count];
+            b.WinStates = new byte[seatToWinnings.Count];
 
             int i = 0;
             foreach(var pair in seatToWinnings)
             {
                 b.Seats[i] = (byte) pair.Key;
-                b.Winnings[i] = pair.Value;
+                b.Winnings[i] = pair.Value.Item1;
+                b.WinStates[i] = (byte)pair.Value.Item2;
                 i++;
             }
 
@@ -183,6 +188,7 @@ namespace SharedModels.Games.Events
             public string Text;
             public Card[][] Cards;
             public byte[] Seats;
+            public byte[] WinStates;
             public int[] Winnings;
 
         }
