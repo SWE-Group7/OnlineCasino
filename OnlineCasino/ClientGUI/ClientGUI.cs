@@ -25,6 +25,8 @@ namespace ClientGUI
         public int mouseX;
         public int mouseY;
 
+        private bool DrawBettingScreen = true;
+
         public ClientGUI()
         {
             
@@ -39,6 +41,8 @@ namespace ClientGUI
 
         private void ClientGUI_Paint(object sender, PaintEventArgs e)
         {
+            ClientMain.HandleEvents();
+            
             switch (ClientMain.ClientState)
             {
                 case ClientStates.Login:
@@ -61,13 +65,22 @@ namespace ClientGUI
                     break;
                 case ClientStates.Betting:
                     {
-                        BettingScreen_Draw();
+                        if (DrawBettingScreen)
+                            BettingScreen_Draw();
+
+                        DrawBettingScreen = false;
                         e.Graphics.DrawRectangle(Pens.Black, Width / 2 - 301, Height / 2 - 201, 601, 401);
                         e.Graphics.FillRectangle(Brushes.White, new Rectangle(Width / 2 - 300, Height / 2 - 200, 600, 400));
                     }
                     break;
                 case ClientStates.Game:
                     {
+                        if (!DrawBettingScreen)
+                        {
+                            DrawBettingScreen = true;
+                            this.Controls.Clear();
+                        }
+
                         switch (ClientMain.GameType)
                         {
                             case GameTypes.Blackjack:
@@ -326,7 +339,6 @@ namespace ClientGUI
                 this.Controls.Clear();
                 this.Invalidate();
                               
-                ClientMain.MainPlayer.Bet = bet;
                 ClientMain.MainGame.Bet(bet);
                 ClientMain.ClientState = ClientStates.Game;
                 Game_Draw();               

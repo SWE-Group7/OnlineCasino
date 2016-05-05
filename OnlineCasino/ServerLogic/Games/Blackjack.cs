@@ -98,6 +98,9 @@ namespace ServerLogic.Games
                             Broadcast(gameEvent);
                             NoResponse.RemoveAll(p => p.Seat == player.Seat);
 
+                            if (!NoResponse.Any())
+                                break;
+
                         }
 
                         Thread.Sleep(10);
@@ -172,7 +175,7 @@ namespace ServerLogic.Games
                             //Get Action
                             player.Request(cmd);
                             sw.Restart();
-                            while(true)
+                            while(sw.ElapsedMilliseconds < player.TimeLimit)
                             {
                                 if (player.TryGetResult(cmd, out action))
                                     break;
@@ -286,6 +289,7 @@ namespace ServerLogic.Games
             lock (Players)
                 Players.TryAdd(seat, player);
 
+            RoundSnapshot = GetSharedModel();
             BlackjackEvent gameEvent = BlackjackEvent.PlayerJoin(player.GetSharedModel());
             Broadcast(gameEvent);
             return player;

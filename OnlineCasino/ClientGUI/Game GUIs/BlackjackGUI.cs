@@ -12,8 +12,6 @@ namespace ClientGUI.Game_GUIs
 {
     public class BlackjackGUI : CardGameGUI
     {
-
-
         public new Blackjack CurrentGame
         {
             get { return (Blackjack)base.CurrentGame; }
@@ -26,17 +24,26 @@ namespace ClientGUI.Game_GUIs
             }
         }
 
-        public List<Card> DealerHand = new List<Card>();
+        public List<Card> DealerHand {
+            get
+            {
+                return CurrentGame.DealerHand;
+            }
+        }
 
         protected int dealerCardX;
-        protected int dealerCardY = 10;
-        protected int dealerCardsCount = 0;
+        protected int dealerCardY;
+        protected int dealerCardsCount;
         protected int dealerCardOffset;
 
         public BlackjackGUI(int h, int w)
         {
             clientHeight = h;
             clientWidth = w;
+
+            dealerCardX = clientWidth / 2 - (cardWidth - 20) / 2;
+            dealerCardY = 20;
+            dealerCardOffset = (DealerHand.Count * (cardWidth + 20)) / 2;
         }
 
         public void BlackjackGUI_Paint(object sender, PaintEventArgs e)
@@ -53,18 +60,26 @@ namespace ClientGUI.Game_GUIs
                         YourHand_Paint(sender, e);
                         OtherPlayerHands_Paint(sender, e, CurrentGame.OtherPlayers, true);
 
+                        dealerCardsCount = DealerHand.Count;
                         e.Graphics.DrawString("Dealer", new Font("Segoe UI", 20), Brushes.White, new Point(clientWidth / 2 - 60, cardHeight + 10));
                         dealerCardOffset = (DealerHand.Count * (cardWidth + 20)) / 2;
                         foreach (Card c in DealerHand)
                         {
-                            dealerCardX += (dealerCardsCount * cardWidth + dealerCardsCount * 20);
-
+                            dealerCardX = clientWidth / 2 - (cardWidth - 20) / 2;
                             if (dealerCardsCount == 1)
                             {
-                                e.Graphics.DrawImage(global::ClientGUI.Properties.Resources.Back, new Rectangle(dealerCardX, dealerCardY, cardWidth - 20, cardHeight - 20));
+                                CardImage = Deck.CardImage(c.Suit, c.Rank);
+
+                                if (CardImage != null)
+                                {
+                                    e.Graphics.DrawImage(CardImage, new Rectangle(dealerCardX - cardWidth / 2, dealerCardY, cardWidth - 20, cardHeight - 20));
+                                }
+
+                                e.Graphics.DrawImage(global::ClientGUI.Properties.Resources.Back, new Rectangle(dealerCardX + cardWidth /2, dealerCardY, cardWidth - 20, cardHeight - 20));
                             }
                             else
                             {
+                                dealerCardX += (dealerCardsCount * cardWidth + dealerCardsCount * 20);
                                 CardImage = Deck.CardImage(c.Suit, c.Rank);
                                 
                                 if (CardImage != null)
@@ -177,16 +192,6 @@ namespace ClientGUI.Game_GUIs
                                     }
                                 }
                                 break;
-                            
-                        }
-                    }
-                    break;
-                case SMG.GameStates.Finializing:
-                    {
-                        
-
-                        switch (CurrentGame.BlackjackState)
-                        {
                             case SMG.BlackjackStates.Payout:
                                 {
                                     switch (You.WinLossState)
@@ -211,7 +216,7 @@ namespace ClientGUI.Game_GUIs
                                             }
                                             break;
                                     }
-                                    
+
                                 }
                                 break;
                             case SMG.BlackjackStates.RoundFinish:
@@ -234,9 +239,13 @@ namespace ClientGUI.Game_GUIs
                                     //}
                                 }
                                 break;
-                        }
 
-                         
+                        }
+                    }
+                    break;
+                case SMG.GameStates.Finializing:
+                    {
+                        
                     }
                     break;
             }

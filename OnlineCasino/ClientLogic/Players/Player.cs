@@ -21,6 +21,7 @@ namespace ClientLogic.Players
         public int Gains;
         public readonly int Seat;
         public WinLossStates WinLossState;
+        private bool hasBet;
 
         public Player(SMP.Player player)
         {
@@ -28,6 +29,24 @@ namespace ClientLogic.Players
             this.GameBalance = player.GameBalance;
             this.Seat = player.Seat;
             this.Gains = 0;
+        }
+
+        public void SetBet(int bet)
+        {
+            Bet = bet;
+            hasBet = true;
+        }
+
+        public bool HasBet()
+        {
+            return hasBet;
+        }
+
+        public virtual void RoundReset()
+        {
+            hasBet = false;
+            Bet = 0;
+            Gains = 0;
         }
 
         

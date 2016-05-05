@@ -33,7 +33,7 @@ namespace ClientLogic.Connections
         private Queue<Payload> WriteQueue;
         private volatile bool WriteQueueEmpty;
         private Dictionary<int, RequestResult> RequestedByClient;
-        private Dictionary<int, RequestResult> RequestedByServer;
+        private List<int> RequestedByServer;
 
         private Stopwatch Timer = new Stopwatch();
 
@@ -45,7 +45,7 @@ namespace ClientLogic.Connections
 
             WriteQueue = new Queue<Payload>();
             RequestedByClient = new Dictionary<int, RequestResult>();
-            RequestedByServer = new Dictionary<int, RequestResult>();
+            RequestedByServer = new List<int>();
 
             Reader = Thread.CurrentThread;
             Reader = new Thread(() => StartReader());
@@ -111,10 +111,13 @@ namespace ClientLogic.Connections
             return ret;
         }
 
-        private void Return(int reqId, bool success, object obj)
+        public void Return(int reqId, bool success, object obj)
         {
-            Payload payload = new Payload(CommTypes.Return, reqId, success, obj);
-            QueueWrite(payload);
+            if (RequestedByServer.Contains(reqId))
+            {
+                Payload payload = new Payload(CommTypes.Return, reqId, success, obj);
+                QueueWrite(payload);
+            }
         }
 
         public void Command(ClientCommands cmd, object obj = null)
@@ -311,9 +314,9 @@ namespace ClientLogic.Connections
 
             RequestResult request = new RequestResult();
             lock (RequestedByServer)
-                RequestedByServer[reqId] = request;
+                RequestedByServer.Add(reqId);
 
-            ClientMain.QueueRequest(cmd, request);
+            ClientMain.QueueRequest(cmd, reqId);
 
 
         }

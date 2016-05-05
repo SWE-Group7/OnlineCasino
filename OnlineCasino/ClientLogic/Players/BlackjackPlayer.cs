@@ -14,5 +14,12 @@ namespace ClientLogic.Players
             :base(player)
         {
         }
+
+        public override void RoundReset()
+        {
+            base.RoundReset();
+            this.RefreshHand();
+        }
+
     }
 }

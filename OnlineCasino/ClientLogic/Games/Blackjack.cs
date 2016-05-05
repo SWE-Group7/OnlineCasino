@@ -105,25 +105,27 @@ namespace ClientLogic.Games
         {
             BlackjackState = state;
 
-            if (BlackjackState == SMG.BlackjackStates.RoundFinish)
+            switch (state)
             {
-                DealerHand.Clear();
+                case SMG.BlackjackStates.Betting:
+                    ClientMain.ClientState = ClientStates.Betting;
+                    break;
+                case SMG.BlackjackStates.RoundFinish:
+                    DealerHand.Clear();
 
-                foreach(var pair in Players.ToList())
-                {
-                    var player = (BlackjackPlayer)pair.Value;
-                    player.RefreshHand();
-                    player.Bet = 0;
-                    player.Gains = 0;
+                    foreach (var pair in Players.ToList())
+                    {
+                        var player = (BlackjackPlayer)pair.Value;
+                        player.RoundReset();
+                    }
+                    break;
+                case SMG.BlackjackStates.Playing:
+                    GS = SMG.GameStates.Playing;
+                    break;
+                default:
+                    break;
 
-                }
-                    
-            }
-
-            if(BlackjackState == SMG.BlackjackStates.Playing)
-            {
-                GS = SMG.GameStates.Playing;
-            }       
+            }   
         }
 
         private void Payout(byte[] seats, int[] winnings)
@@ -174,12 +176,15 @@ namespace ClientLogic.Games
 
         private void PlayerBet(BlackjackEvent gameEvent)
         {
-            ((BlackjackPlayer)Players[gameEvent.Seat]).Bet = gameEvent.Num;
+            ((BlackjackPlayer)Players[gameEvent.Seat]).SetBet(gameEvent.Num);
+            if (gameEvent.Seat == MainPlayer.Seat)
+                ClientMain.ClientState = ClientStates.Game;
         }
 
         public void PlayerJoin(SMP.Player smPlayer)
         {
-            Players[smPlayer.Seat] = new BlackjackPlayer(smPlayer);
+            if(smPlayer.Seat != MainPlayer.Seat)
+                Players[smPlayer.Seat] = new BlackjackPlayer(smPlayer);
         }
 
         public void PlayerQuit(int seat)

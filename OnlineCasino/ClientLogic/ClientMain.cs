@@ -44,8 +44,8 @@ namespace ClientLogic
         public static GameTypes GameType = GameTypes.None;
         public static ClientStates ClientState = ClientStates.Login;
 
-        public static ConcurrentQueue<GameEvent> EventQueue;
-        public static ConcurrentDictionary<ClientCommands, RequestResult> RequestQueue;
+        public static ConcurrentQueue<GameEvent> EventQueue = new ConcurrentQueue<GameEvent>();
+        public static ConcurrentDictionary<ClientCommands, int> ServerRequests;
 
         private static object Lock = new object();
 
@@ -66,8 +66,11 @@ namespace ClientLogic
 
         public static bool TryJoinGame(GameTypes gameType)
          {
-            EventQueue = new ConcurrentQueue<GameEvent>();
-            RequestQueue = new ConcurrentDictionary<ClientCommands, RequestResult>();
+            ServerRequests = new ConcurrentDictionary<ClientCommands, int>();
+            foreach(ClientCommands command in Enum.GetValues(typeof(ClientCommands)).Cast<ClientCommands>())
+            {
+                ServerRequests.TryAdd(command, -1);
+            }
             MainGame = null;
 
             lock (Lock)
@@ -109,9 +112,9 @@ namespace ClientLogic
         {
             EventQueue.Enqueue(gameEvent);
         }
-        public static void QueueRequest(ClientCommands cmd, RequestResult request)
+        public static void QueueRequest(ClientCommands cmd, int reqId)
         {
-            RequestQueue[cmd] = request;
+            ServerRequests[cmd] = reqId;
         }
         public static void HandleEvents()
         {
@@ -123,10 +126,10 @@ namespace ClientLogic
         }
         public static void HandleRequests(ClientCommands cmd, object ret)
         {
-            RequestResult result;
-            if(RequestQueue.TryGetValue(cmd , out result))
+            int reqId;
+            if(ServerRequests.TryGetValue(cmd , out reqId))
             {
-                result.SetValue(true, ret);
+                MainConnection.Return(reqId, true, ret);
             }
         }
     }

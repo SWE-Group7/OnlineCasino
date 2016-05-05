@@ -19,6 +19,7 @@ namespace ServerLogic.Players
     public abstract class Player
     {
         public readonly int Seat;
+        public int TimeLimit = 7500;
         protected readonly Game CurrentGame;
         protected readonly User CurrentUser;
         protected readonly int BuyIn;

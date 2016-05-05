@@ -30,13 +30,17 @@ namespace ClientGUI.Game_GUIs
         protected int cardWidth = 120;
 
         protected void YourHand_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
-        {
+        {           
             e.Graphics.DrawLine(Pens.Black, new Point(0, clientHeight - cardHeight - 60), new Point(1500, clientHeight - cardHeight - 60));
 
             e.Graphics.DrawString("Buy In: $" + You.BuyIn, new Font("Segoe UI", 12), Brushes.White, new Point(100, clientHeight - cardHeight));
             e.Graphics.DrawString("   Bet: $" + You.Bet, new Font("Segoe UI", 12), Brushes.White, new Point(106, clientHeight - cardHeight + 20));
+           
+            yourCardY = clientHeight - cardHeight - 50;
+            yourCardsCount = ((CardPlayer)You).Hand.Count - 1;
+            yourCardOffset = (((CardPlayer)You).Hand.Count * (cardWidth + 10)) / 2;
+            yourCardX = clientWidth / 2 - yourCardOffset;
 
-            yourCardOffset = (((CardPlayer)You).Hand.Count * (cardWidth + 20)) / 2;
             foreach (Card c in ((CardPlayer)You).Hand)
             {
                 CardImage = Deck.CardImage(c.Suit, c.Rank);
@@ -55,6 +59,9 @@ namespace ClientGUI.Game_GUIs
 
         protected void OtherPlayerHands_Paint(object sender, System.Windows.Forms.PaintEventArgs e, List<CardPlayer> OtherPlayers, bool showCards)
         {
+            otherPlayerCardX = (cardWidth - 20) + 50;
+            otherPlayerCardY = 100;
+
             otherPlayerCount = OtherPlayers.Count;
             bool leftSide = true;
             foreach (CardPlayer p in OtherPlayers)

@@ -9,7 +9,6 @@ namespace ClientGUI.Game_GUIs
 {
     public abstract class GameGUI
     {
-
         protected System.Diagnostics.Stopwatch Stopwatch = new System.Diagnostics.Stopwatch();
 
         protected int clientHeight;
