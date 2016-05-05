@@ -46,7 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BlackjackGUI.cs" />
+    <Compile Include="Game GUIs\BlackjackGUI.cs" />
     <Compile Include="Deck.cs" />
     <Compile Include="ClientGUI.cs">
       <SubType>Form</SubType>
@@ -54,9 +54,13 @@
     <Compile Include="ClientGUI.Designer.cs">
       <DependentUpon>ClientGUI.cs</DependentUpon>
     </Compile>
+    <Compile Include="Game GUIs\CardGameGUI.cs" />
+    <Compile Include="Game GUIs\GameGUI.cs" />
+    <Compile Include="Game GUIs\RouletteGUI.cs" />
+    <Compile Include="Game GUIs\TexasHoldEmGUI.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="BlackjackGUI.resx">
+    <EmbeddedResource Include="Game GUIs\BlackjackGUI.resx">
       <DependentUpon>BlackjackGUI.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ClientGUI.resx">
@@ -90,6 +94,9 @@
     <None Include="Images\CardsBackground.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Roulette_table.jpg" />
+    <None Include="Images\Menu_Roulette.jpg" />
+    <None Include="Images\Menu_TexasHoldEm.jpg" />
     <None Include="Images\BlackjackBackground.jpg" />
     <None Include="Images\cards\queen_of_spades.png" />
     <None Include="Images\cards\queen_of_hearts.png" />
@@ -143,6 +150,18 @@
     <None Include="Images\cards\2_of_hearts.png" />
     <None Include="Images\cards\2_of_diamonds.png" />
     <None Include="Images\cards\2_of_clubs.png" />
+    <None Include="Images\cards\Back.png" />
+    <None Include="Images\roulette_numbers.png" />
+    <None Include="Images\roulette_wheel.gif" />
+    <None Include="Images\RouletteBackground.jpg" />
+    <None Include="Images\Risiko.png" />
+    <None Include="Images\Possible_Background.jpg" />
+    <None Include="Images\textbox.png" />
+    <None Include="Images\textbox2.png" />
+    <None Include="Images\button.png" />
+    <None Include="Images\DownButton.png" />
+    <None Include="Images\UpButton.png" />
+    <Content Include="Resources\change_bet_Roulette.jpg" />
     <Content Include="Images\Menu_Header.jpg" />
   </ItemGroup>
   <ItemGroup>

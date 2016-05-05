@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Connections\Connection.cs" />
+    <Compile Include="Connections\CommandHandlers\Client.cs" />
     <Compile Include="EntityFrameworks\CasinoDB.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -75,6 +76,7 @@
     <Compile Include="Games\Game.cs" />
     <Compile Include="Games\GameComponents\CardHelper.cs" />
     <Compile Include="Games\GameComponents\Deck.cs" />
+    <Compile Include="Games\GameComponents\RouletteWheel.cs" />
     <Compile Include="Players\BlackjackPlayer.cs" />
     <Compile Include="Players\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -88,10 +90,6 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\ConsoleApplication1\Intermediate.csproj">
-      <Project>{9bc55116-f1b3-4aee-ab44-28d63bebae37}</Project>
-      <Name>Intermediate</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SharedModels\SharedModels.csproj">
       <Project>{7fdae663-98d2-4e4f-bfe6-670b29b24af4}</Project>
       <Name>SharedModels</Name>

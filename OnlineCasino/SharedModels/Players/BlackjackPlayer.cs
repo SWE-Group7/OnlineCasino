@@ -7,22 +7,20 @@ using System.Threading.Tasks;
 
 namespace SharedModels.Players
 {
-    public class BlackjackPlayer
+    public class BlackjackPlayer : Player
     {
         public List<Card> Hand;
         public int UserBuyIn;
-        public decimal UserBet;
+        public int UserBet;
 
-        public BlackjackPlayer(int buy, decimal bet)
+        public BlackjackPlayer(User u, int seat, int gameBalance, int buy, int bet):
+            base(u, seat, gameBalance)
         {
             Hand = new List<Card>();
             UserBuyIn = buy;
             UserBet = bet;
         }
-
-        public void UpdateHand(Card c)
-        {
-            Hand.Add(c);
-        }
     }
+
+   
 }

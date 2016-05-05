@@ -14,19 +14,36 @@ namespace SharedModels.Connection
 
         public static byte[] Serialize(object obj)
         {
-            using (var memStream = new MemoryStream())
+            if (obj != null)
             {
-                formatter.Serialize(memStream, obj);
-                return memStream.ToArray();
+                using (var memStream = new MemoryStream())
+                {
+                    formatter.Serialize(memStream, obj);
+                    return memStream.ToArray();
+                }
             }
+            else
+            {
+                return new byte[0];
+            }
+            
+            
         }
 
         public static object Deserialize(byte[] bytes)
         {
-            using (var memStream = new MemoryStream(bytes))
+            if(bytes.Length != 0)
             {
-                return formatter.Deserialize(memStream);
+                using (var memStream = new MemoryStream(bytes))
+                {
+                    return formatter.Deserialize(memStream);
+                }
             }
+            else
+            {
+                return null;
+            }
+            
         }
     }
 }

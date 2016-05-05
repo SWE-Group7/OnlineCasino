@@ -16,3 +16,17 @@ C:\Users\Nadine\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\obj\Release
 C:\Users\Nadine\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\obj\Release\ClientGUI.ClientGUI.resources
 C:\Users\Nadine\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\obj\Release\ClientGUI.Properties.Resources.resources
 C:\Users\Nadine\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\obj\Release\ClientGUI.csproj.GenerateResource.Cache
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\obj\Release\ClientGUI.csprojResolveAssemblyReference.cache
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\obj\Release\ClientGUI.BlackjackGUI.resources
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\obj\Release\ClientGUI.ClientGUI.resources
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\obj\Release\ClientGUI.Properties.Resources.resources
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\obj\Release\ClientGUI.csproj.GenerateResource.Cache
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\obj\Release\ClientGUI.exe
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\obj\Release\ClientGUI.pdb
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\bin\Release\ClientGUI.exe.config
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\bin\Release\ClientGUI.exe
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\bin\Release\ClientGUI.pdb
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\bin\Release\ClientLogic.dll
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\bin\Release\SharedModels.dll
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\bin\Release\ClientLogic.pdb
+C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\bin\Release\SharedModels.pdb

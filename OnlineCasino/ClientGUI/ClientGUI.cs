@@ -1,4 +1,11 @@
-﻿using System;
+﻿using ClientGUI.Game_GUIs;
+using ClientLogic;
+using ClientLogic.Games;
+using ClientLogic.Players;
+using SharedModels.Connection.Enums;
+using SharedModels.GameComponents;
+using SharedModels.Games.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,75 +20,98 @@ namespace ClientGUI
     public partial class ClientGUI : Form
     {
         BlackjackGUI BlackjackGUI;
+        TexasHoldEmGUI TexasHoldEmGUI;
+        Game_GUIs.RouletteGUI RouletteGUI;
+
+        public static SolidBrush HoverBrush = new SolidBrush(Color.FromArgb(Convert.ToInt32("FFAAAAAA", 16)));
+        public static SolidBrush DisabledBrush = new SolidBrush(Color.FromArgb(Convert.ToInt32("FF555555", 16)));
+
+        public static StringFormat FormatCentered = new StringFormat();
+
+        public static Font FontLarge = new Font("Segoe UI", 38);
+        public static Font FontMediumLarge = new Font("Segoe UI", 30);
+        public static Font FontMedium = new Font("Segoe UI", 20);
+        public static Font FontSmall = new Font("Segoe UI", 16);
+        public static Font FontSmaller = new Font("Segoe UI", 12);
 
         public int mouseX;
         public int mouseY;
 
-        enum State
-        {
-            Login = 0,
-            Register,
-            Menu,
-            Betting,
-            Game
-        }
-
-        enum Game
-        {
-            None = 0,
-            Blackjack,
-        }
-
-        State ClientState = State.Login;
-        Game GameChoice = Game.None;
+        private bool DrawBettingScreen = true;
 
         public ClientGUI()
         {
             InitializeComponent();
+            FormatCentered.Alignment = StringAlignment.Center;
+            FormatCentered.LineAlignment = StringAlignment.Center;
         }
 
         private void ClientGUI_Load(object sender, EventArgs e)
         {
-            this.BackgroundImage = global::ClientGUI.Properties.Resources.CardsBackground;
+            this.BackgroundImage = global::ClientGUI.Properties.Resources.Possible_Background;
             Login_Draw();
         }
 
         private void ClientGUI_Paint(object sender, PaintEventArgs e)
         {
-            switch (ClientState)
+            ClientMain.HandleEvents();
+            
+            switch (ClientMain.ClientState)
             {
-                case State.Login:
+                case ClientStates.Login:
                     {
-                        e.Graphics.DrawRectangle(Pens.Black, Width / 2 - 226, Height / 2 - 126, 451, 251);
-                        e.Graphics.FillRectangle(Brushes.White, new Rectangle(Width / 2 - 225, Height / 2 - 125, 450, 250));
+                        e.Graphics.DrawRectangle(Pens.Black, Width / 2 - 276, Height / 2 - 176, 551, 351);
+                        e.Graphics.FillRectangle(Brushes.White, new Rectangle(Width / 2 - 275, Height / 2 - 175, 550, 350));
                     }
                     break;
-                case State.Register:
+                case ClientStates.Register:
                     {
-                        e.Graphics.DrawRectangle(Pens.Black, Width / 2 - 226, Height / 2 - 126, 451, 251);
-                        e.Graphics.FillRectangle(Brushes.White, new Rectangle(Width / 2 - 225, Height / 2 - 125, 450, 250));
+                        e.Graphics.DrawRectangle(Pens.Black, Width / 2 - 276, Height / 2 - 176, 551, 351);
+                        e.Graphics.FillRectangle(Brushes.White, new Rectangle(Width / 2 - 275, Height / 2 - 175, 550, 350));
                     }
                     break;
-                case State.Menu:
-                    {
-                        // add welcome text with name and balance
+                case ClientStates.Menu:
+                    {                        
                         e.Graphics.DrawRectangle(Pens.Black, Width / 2 - 301, Height / 2 - 201, 601, 401);
                         e.Graphics.FillRectangle(Brushes.White, new Rectangle(Width / 2 - 300, Height / 2 - 200, 600, 400));
                     }
                     break;
-                case State.Betting:
+                case ClientStates.Betting:
                     {
-                        
+                        if (DrawBettingScreen)
+                            BettingScreen_Draw();
 
+                        DrawBettingScreen = false;
+                        if (!ClientMain.MainPlayer.HasBet())
+                        {
+                            e.Graphics.DrawRectangle(Pens.Black, Width / 2 - 301, Height / 2 - 201, 601, 401);
+                            e.Graphics.FillRectangle(Brushes.White, new Rectangle(Width / 2 - 300, Height / 2 - 200, 600, 400));
+                        }
                     }
                     break;
-                case State.Game:
+                case ClientStates.Game:
                     {
-                        switch (GameChoice)
+                        if (!DrawBettingScreen)
                         {
-                            case Game.Blackjack:
+                            DrawBettingScreen = true;
+                            this.Controls.Clear();
+                        }
+
+                        switch (ClientMain.GameType)
+                        {
+                            case GameTypes.Blackjack:
                                 {
                                     BlackjackGUI.BlackjackGUI_Paint(sender, e);
+                                }
+                                break;
+                            case GameTypes.TexasHoldEm:
+                                {
+                                    //TexasHoldEmGUI.TexasHoldEmGUI_Paint(sender, e);
+                                }
+                                break;
+                            case GameTypes.Roulette:
+                                {
+                                    RouletteGUI.RouletteGUI_Paint(sender, e);
                                 }
                                 break;
                         }
@@ -96,12 +126,20 @@ namespace ClientGUI
             Username = UsernameTextBox.Text;
             Password = PasswordTextBox.Text;
 
-            ClientState = State.Menu;
-            Menu_Draw();
+            if (ClientMain.TrySyncLogin(Username, Password))
+            {
+                ClientMain.ClientState = ClientStates.Menu;
+                Menu_Draw();
+            }
+            else
+            {
+                ErrorLogin_Draw();
+            }
+
         }
         private void NewUser_Click(object sender, EventArgs e)
         {
-            ClientState = State.Register;
+            ClientMain.ClientState = ClientStates.Register;
             Register_Draw();
         }
 
@@ -113,12 +151,19 @@ namespace ClientGUI
             EmailAddress = EmailTextBox.Text;
             FullName = FullNameTextBox.Text;
 
-            ClientState = State.Menu;
-            Menu_Draw();
+            if (ClientMain.TrySyncRegister(Username, Password, FullName, EmailAddress))
+            {
+                ClientMain.ClientState = ClientStates.Menu;
+                Menu_Draw();
+            }
+            else
+            {
+                RegisterError_Draw();
+            }
         }
         private void ReturnToLogin_Click(object sender, EventArgs e)
         {
-            ClientState = State.Login;
+            ClientMain.ClientState = ClientStates.Login;
             Login_Draw();
         }
 
@@ -126,61 +171,196 @@ namespace ClientGUI
         private void LogOut_Click(object sender, EventArgs e)
         {
             // Add account log out funcationality
-
-            ClientState = State.Login;
+            ClientMain.ClientState = ClientStates.Login;
             Login_Draw();
         }
         private void Blackjack_Click(object sender, EventArgs e)
         {
-            BettingScreen_Draw();
+            ClientMain.GameType = GameTypes.Blackjack;
+            BuyInScreen_Draw();
+        }
+        private void TexasHoldEm_Click(object sender, EventArgs e)
+        {
+            ClientMain.GameType = GameTypes.TexasHoldEm;
+            BuyInScreen_Draw();
+        }
+        private void Roulette_Click(object sender, EventArgs e)
+        {
+            ClientMain.GameType = GameTypes.Roulette;
+            BuyInScreen_Draw();
         }
         private void AccountInfo_Click(object sender, EventArgs e)
         {
-            // Create account information page
-
+            AccountInfo_Draw();
         }
 
         // IN GAME BUTTONS EVENTS
         private void ReturnToMenu_Click(object sender, EventArgs e)
         {
-            this.BackgroundImage = global::ClientGUI.Properties.Resources.CardsBackground;
-            this.Controls.Clear();
-            this.Invalidate();
-
-            ClientState = State.Menu;
-            Menu_Draw();
-
-            GameChoice = Game.None;
-        }
-
-        private void SubmitBet_Click(object sender, EventArgs e)
-        {
-            buyInString = BuyInTextBox.Text;
-            betString = BetTextBox.Text;
-            if (!decimal.TryParse(buyInString, out buyIn) || !decimal.TryParse(betString, out bet))
+            if (ClientMain.GameType == GameTypes.Blackjack)
             {
-                // try again
+                if (BlackjackGUI != null && ClientMain.ClientState != ClientStates.Betting && ClientMain.MainGame.GS != SharedModels.Games.GameStates.Finializing)
+                {
+                    check = true;
+                    Game_Draw();
+                }
+                else
+                {
+                    BlackjackGUI = null;
+                    this.BackgroundImage = global::ClientGUI.Properties.Resources.Possible_Background;
+                    this.Controls.Clear();
+                    this.Invalidate();
 
+                    ClientMain.ClientState = ClientStates.Menu;
+                    Menu_Draw();
+
+                    ClientMain.GameType = GameTypes.None;
+                }
             }
-            else if (bet > buyIn)
+            else if (ClientMain.GameType == GameTypes.TexasHoldEm)
             {
-                // try again
+                if (TexasHoldEmGUI != null && ClientMain.ClientState != ClientStates.Betting && ClientMain.MainGame.GS != SharedModels.Games.GameStates.Finializing)
+                {
+                    check = true;
+                    Game_Draw();
+                }
+                else
+                {
+                    TexasHoldEmGUI = null;
+                    this.BackgroundImage = global::ClientGUI.Properties.Resources.Possible_Background;
+                    this.Controls.Clear();
+                    this.Invalidate();
+
+                    ClientMain.ClientState = ClientStates.Menu;
+                    Menu_Draw();
+
+                    ClientMain.GameType = GameTypes.None;
+                }
+            }
+            else if (ClientMain.GameType == GameTypes.Roulette)
+            {
+                if (RouletteGUI != null && ClientMain.ClientState != ClientStates.Betting && ClientMain.MainGame.GS != SharedModels.Games.GameStates.Finializing)
+                {
+                    check = true;
+                    Game_Draw();
+                }
+                else
+                {
+                    RouletteGUI = null;
+                    this.BackgroundImage = global::ClientGUI.Properties.Resources.Possible_Background;
+                    this.Controls.Clear();
+                    this.Invalidate();
+
+                    ClientMain.ClientState = ClientStates.Menu;
+                    Menu_Draw();
+
+                    ClientMain.GameType = GameTypes.None;
+                }
             }
             else
             {
-                BlackjackGUI = new BlackjackGUI(Height, Width);
-
-                BlackjackGUI.bet = bet;
-                BlackjackGUI.buyIn = buyIn;
-
+                this.BackgroundImage = global::ClientGUI.Properties.Resources.Possible_Background;
                 this.Controls.Clear();
                 this.Invalidate();
-                this.BackgroundImage = global::ClientGUI.Properties.Resources.BlackjackBackground;
 
-                ClientState = State.Game;
-                GameChoice = Game.Blackjack;
+                ClientMain.ClientState = ClientStates.Menu;
+                Menu_Draw();
 
-                Game_Draw();
+                ClientMain.GameType = GameTypes.None;
+            }
+        }
+        private void Yes_Click(object sender, EventArgs e)
+        {
+            if (ClientMain.GameType == GameTypes.Blackjack)
+            {
+                BlackjackGUI = null;
+            }
+            else if (ClientMain.GameType == GameTypes.TexasHoldEm)
+            {
+                TexasHoldEmGUI = null;
+            }
+            else if (ClientMain.GameType == GameTypes.Roulette)
+            {
+                RouletteGUI = null;
+            }
+
+            this.BackgroundImage = global::ClientGUI.Properties.Resources.Possible_Background;
+            this.Controls.Clear();
+            this.Invalidate();
+
+            ClientMain.ClientState = ClientStates.Menu;
+            Menu_Draw();
+
+            ClientMain.GameType = GameTypes.None;
+
+            check = false;
+
+        }
+        private void No_Click(object sender, EventArgs e)
+        {
+            check = false;
+            if (ClientMain.ClientState != ClientStates.Betting) Game_Draw();
+            else BettingScreen_Draw();
+        }
+
+        private void SubmitBuyIn_Click(object sender, EventArgs e)
+        {
+            buyInString = BuyInTextBox.Text;
+             
+            //Invalid buyIn
+            if (!int.TryParse(buyInString, out buyIn) || buyIn > ClientMain.MainUser.Balance)
+                return;
+            
+            ClientMain.BuyIn = buyIn;
+
+            if (!ClientMain.TryJoinGame(ClientMain.GameType))
+                return;
+                
+            switch (ClientMain.GameType)
+            {
+                case GameTypes.Blackjack:
+                    BlackjackGUI = new BlackjackGUI(Height, Width);
+                    this.BackgroundImage = global::ClientGUI.Properties.Resources.BlackjackBackground;
+                    break;
+                case GameTypes.TexasHoldEm:
+                    TexasHoldEmGUI = new TexasHoldEmGUI(Height, Width);
+                    this.BackgroundImage = global::ClientGUI.Properties.Resources.BlackjackBackground;
+                    break;
+                case GameTypes.Roulette:
+                    RouletteGUI = new RouletteGUI(Height, Width);
+                    this.BackgroundImage = global::ClientGUI.Properties.Resources.RouletteBackground;
+                    break;
+                default:
+                    break;
+
+            }
+
+            this.Controls.Clear();
+            this.Invalidate();
+                   
+        }
+        private void SubmitBet_Click(object sender, EventArgs e)
+        {
+            betString = BetTextBox.Text;
+            if (!int.TryParse(betString, out bet))
+            {
+                ErrorLabel.Text = "Invalid Input";
+                ErrorLabel.Refresh();
+            }
+            else if (bet > ClientMain.MainPlayer.GameBalance)
+            {
+                ErrorLabel.Text = "Invalid Amount";
+                ErrorLabel.Refresh();
+            }
+            else
+            {
+                ErrorLabel.Text = "";
+                this.Controls.Clear();
+                this.Invalidate();
+                              
+                ClientMain.MainGame.Bet(bet);
+                ClientMain.ClientState = ClientStates.Game;
+                Game_Draw();               
             }
         }
 
@@ -194,23 +374,197 @@ namespace ClientGUI
             mouseX = e.X;
             mouseY = e.Y;
 
-            if (BlackjackGUI != null)
+            if (ClientMain.GameType == GameTypes.Blackjack)
             {
-                BlackjackGUI.clickX = e.X;
-                BlackjackGUI.clickY = e.Y;
-
-                if (BlackjackGUI.clickX < Width - 50 && BlackjackGUI.clickX > Width - 150)
+                if (BlackjackGUI != null)
                 {
-                    if (BlackjackGUI.clickY < Height - 175 + 35 && BlackjackGUI.clickY > Height - 175)
+                    BlackjackGUI.clickX = e.X;
+                    BlackjackGUI.clickY = e.Y;
+
+                    switch (ClientMain.MainGame.GS)
                     {
-                        if (BlackjackGUI.You.Hand.Count < 5)
-                        {
-                            BlackjackGUI.You.Hand.Add(new SharedModels.GameComponents.Card(SharedModels.GameComponents.CardSuit.Clubs, SharedModels.GameComponents.CardRank.Five)); 
-                        }
+                        case SharedModels.Games.GameStates.Playing:
+                            {     
+                                if (((Blackjack)ClientMain.MainGame).BlackjackState == SharedModels.Games.BlackjackStates.Playing)
+                                {
+                                    if (BlackjackGUI.clickX < Width - 50 && BlackjackGUI.clickX > Width - 150)
+                                    {
+                                        if (BlackjackGUI.clickY < Height - 175 + 35 && BlackjackGUI.clickY > Height - 175)
+                                        {
+                                            if (BlackjackGUI.You.Hand.Count < 5)
+                                            {
+                                                //Clicked Hit
+                                                ((Blackjack)ClientMain.MainGame).Action(BlackjackEvents.PlayerHit);
+                                            }
+                                        }
+                                        else if ((BlackjackGUI.clickY < Height - 120 + 35 && BlackjackGUI.clickY > Height - 120))
+                                        {
+                                            //Clicked Stay
+                                            ((Blackjack)ClientMain.MainGame).Action(BlackjackEvents.PlayerStay);
+                                        }
+                                    }
+                                }
+                                else if (((Blackjack)ClientMain.MainGame).BlackjackState == SharedModels.Games.BlackjackStates.Betting)
+                                {
+                                    BettingScreen_Draw();
+                                }
+                            }
+                            break;
+                        case SharedModels.Games.GameStates.Waiting:
+                            {
+                                
+                            }
+                            break;
+                        case SharedModels.Games.GameStates.Finializing:
+                            {
+                                
+                            }
+                            break;
                     }
-                    else if ((BlackjackGUI.clickY < Height - 120 + 35 && BlackjackGUI.clickY > Height - 120))
+                }
+            }
+            else if (ClientMain.GameType == GameTypes.TexasHoldEm)
+            {
+                if (TexasHoldEmGUI != null)
+                {
+                    TexasHoldEmGUI.clickX = e.X;
+                    TexasHoldEmGUI.clickY = e.Y;
+
+                    switch (ClientMain.MainGame.GS)
                     {
-                        BlackjackGUI.PlayStatus = BlackjackGUI.GameState.Waiting;
+                        case SharedModels.Games.GameStates.Playing:
+                            {
+                                if (TexasHoldEmGUI.clickX < Width - 50 && TexasHoldEmGUI.clickX > Width - 150)
+                                {
+                                    if (TexasHoldEmGUI.clickY < Height - 175 + 35 && TexasHoldEmGUI.clickY > Height - 175)
+                                    {
+                                        // call
+                                    }
+                                    else if ((TexasHoldEmGUI.clickY < Height - 120 + 35 && TexasHoldEmGUI.clickY > Height - 120))
+                                    {
+                                        // raise
+                                    }
+                                }
+                                if (TexasHoldEmGUI.clickX < Width - 160 && TexasHoldEmGUI.clickX > Width - 260)
+                                {
+                                    if (TexasHoldEmGUI.clickY < Height - 175 + 35 && TexasHoldEmGUI.clickY > Height - 175)
+                                    {
+                                        // fold
+                                    }
+                                    else if ((TexasHoldEmGUI.clickY < Height - 120 + 35 && TexasHoldEmGUI.clickY > Height - 120))
+                                    {
+                                        // check
+                                    }
+                                }
+                            }
+                            break;
+                        case SharedModels.Games.GameStates.Waiting:
+                            break;
+                        case SharedModels.Games.GameStates.Finializing:
+                            {
+                                if (TexasHoldEmGUI.clickX > Width / 2 - 65 && TexasHoldEmGUI.clickX < Width / 2 - 65 + 130)
+                                {
+                                    if (TexasHoldEmGUI.clickY > Height / 2 + 60 && TexasHoldEmGUI.clickY < Height / 2 + 60 + 40)
+                                    {
+                                        TexasHoldEmGUI.You.RefreshHand();
+                                        BettingScreen_Draw();
+                                    }
+                                }
+                                break;
+                            }
+                    }
+                }
+            }
+            else if (ClientMain.GameType == GameTypes.Roulette)
+            {
+                if (RouletteGUI != null)
+                {
+                    RouletteGUI.clickX = e.X;
+                    RouletteGUI.clickY = e.Y;
+
+                    int gridX = 0;
+                    int gridY = 0;
+
+                    int startX = 473;
+                    int startY = 305;
+
+                    int Chosen = 0;
+                    switch (ClientMain.MainGame.GS)
+                    {
+                        case SharedModels.Games.GameStates.Playing:
+                            {                                
+                                if (RouletteGUI.clickX >= startX - 36 && RouletteGUI.clickX <= startX) { gridX = 1; }
+                                else if (RouletteGUI.clickX > startX && RouletteGUI.clickX <= startX + 49) { gridX = 2; }
+                                else if (RouletteGUI.clickX > startX + 49 && RouletteGUI.clickX <= startX + 49 * 2) { gridX = 3; }
+                                else if (RouletteGUI.clickX > startX + 49 * 2 && RouletteGUI.clickX <= startX + 49 * 3) { gridX = 4; }
+                                else if (RouletteGUI.clickX > startX + 49 * 3 && RouletteGUI.clickX <= startX + 49 * 4) { gridX = 5; }
+                                else if (RouletteGUI.clickX > startX + 49 * 4 && RouletteGUI.clickX <= startX + 49 * 5) { gridX = 6; }
+                                else if (RouletteGUI.clickX > startX + 49 * 5 && RouletteGUI.clickX <= startX + 49 * 6) { gridX = 7; }
+                                else if (RouletteGUI.clickX > startX + 49 * 6 && RouletteGUI.clickX <= startX + 49 * 7) { gridX = 8; }
+                                else if (RouletteGUI.clickX > startX + 49 * 7 && RouletteGUI.clickX <= startX + 49 * 8) { gridX = 9; }
+                                else if (RouletteGUI.clickX > startX + 49 * 8 && RouletteGUI.clickX <= startX + 49 * 9) { gridX = 10; }
+                                else if (RouletteGUI.clickX > startX + 49 * 9 && RouletteGUI.clickX <= startX + 49 * 10) { gridX = 11; }
+                                else if (RouletteGUI.clickX > startX + 49 * 10 && RouletteGUI.clickX <= startX + 49 * 11) { gridX = 12; }
+                                else if (RouletteGUI.clickX > startX + 49 * 11 && RouletteGUI.clickX <= startX + 49 * 12) { gridX = 13; }
+                                else if (RouletteGUI.clickX > startX + 49 * 12 && RouletteGUI.clickX <= startX + 49 * 13) { gridX = 14; }
+
+                                if (gridX != 1)
+                                {
+                                    if (RouletteGUI.clickY >= startY && RouletteGUI.clickY <= startY + 58)
+                                    {
+                                        gridY = 1;
+                                    }
+                                    else if (RouletteGUI.clickY >= startY + 58 && RouletteGUI.clickY < startY + 58 * 2)
+                                    {
+                                        gridY = 2;
+                                    }
+                                    else if (RouletteGUI.clickY >= startY + 58 * 2 && RouletteGUI.clickY < startY + 58 * 3)
+                                    {
+                                        gridY = 3;
+                                    }
+                                    else if (RouletteGUI.clickY >= startY + 58 * 3 + 36 && RouletteGUI.clickY < startY + 58 * 3 + 36 * 2)
+                                    {
+                                        gridY = 4;
+                                    }
+                                    else if (RouletteGUI.clickY >= startY + 58 * 3 + 36 * 2 && RouletteGUI.clickY < startY + 58 * 3 + 36 * 3)
+                                    {
+                                        gridY = 5;
+                                    }
+
+                                    Chosen = RouletteGUI.ChosenNumber(gridX, gridY);
+
+                                }
+                                else
+                                {
+                                    if (RouletteGUI.clickY >= startY && RouletteGUI.clickY <= startY + 88)
+                                    {
+                                        Chosen = -1;
+                                        RouletteGUI.Choice = RouletteGUI.Choices.DoubleZero;
+                                    }
+                                    else if (RouletteGUI.clickY >= startY + 88 && RouletteGUI.clickY <= startY + 88 * 2)
+                                    {
+                                        Chosen = 0;
+                                        RouletteGUI.NumberChosen = 0;
+                                    }
+                                }                                                                                                        
+                            }
+                            break;
+                        case SharedModels.Games.GameStates.Waiting:
+                            {
+
+                            }
+                            break;
+                        case SharedModels.Games.GameStates.Finializing:
+                            {
+                                if (RouletteGUI.clickX > Width / 2 - 65 && RouletteGUI.clickX < Width / 2 - 65 + 130)
+                                {
+                                    if (RouletteGUI.clickY > Height / 2 + 60 && RouletteGUI.clickY < Height / 2 + 60 + 40)
+                                    {
+                                        
+                                    }
+                                }
+                                break;
+                            }
                     }
                 }
             }
@@ -218,10 +572,25 @@ namespace ClientGUI
 
         private void ClientGUI_MouseMove(object sender, MouseEventArgs e)
         {
-            if (BlackjackGUI != null)
+            if (ClientMain.GameType == GameTypes.Blackjack)
             {
-                BlackjackGUI.hoverX = e.X;
-                BlackjackGUI.hoverY = e.Y;
+                if (BlackjackGUI != null)
+                {
+                    BlackjackGUI.hoverX = e.X;
+                    BlackjackGUI.hoverY = e.Y;
+                }
+            }
+            else if (ClientMain.GameType == GameTypes.TexasHoldEm)
+            {
+                if (TexasHoldEmGUI != null)
+                {
+                    TexasHoldEmGUI.hoverX = e.X;
+                    TexasHoldEmGUI.hoverY = e.Y;
+                }
+            }
+            else if (ClientMain.GameType == GameTypes.Roulette)
+            {
+
             }
         }
     }

@@ -10,28 +10,46 @@ using SharedModels.Connection;
 using System.Runtime.Serialization.Formatters.Binary;
 using SharedModels;
 using ServerLogic.Connections;
+using System.Diagnostics;
+using SharedModels.Connection.Enums;
+using ServerLogic.Games;
+using System.Collections.Concurrent;
+using SMP = SharedModels.Players;
+using SharedModels.Games.Events;
+using SharedModels.Games.Enums;
 
 namespace ServerLogic
 {
-    public class ServerMain
+    public static class ServerMain
     {
-        public List<User> ConnectedUsers;
-        public List<Game> OpenTables;
-        private TcpListener Listener;
+        
 
-        public ServerMain()
+        private static ConcurrentDictionary<int, User> ConnectedUsers;
+        private static ConcurrentDictionary<GameTypes, List<Game>> AllGames;
+        private static ConcurrentDictionary<ServerCommands, string> ClientErrorMessages;
+        private static TcpListener Listener;
+        private static Stopwatch Timer = new Stopwatch();
+        private static volatile int NextGameID = 1;
+
+        public static bool GameEvents { get; private set; }
+
+        public static void Start()
         {
-            ConnectedUsers = new List<User>();
-            OpenTables = new List<Game>();
+            ConnectedUsers = new ConcurrentDictionary<int, User>();
+            AllGames = new ConcurrentDictionary<GameTypes, List<Game>>();
+            ClientErrorMessages = new ConcurrentDictionary<ServerCommands, string>();
+
+            //Initialize list of game for each GameType 
+            GameTypes[] gameTypes = (GameTypes[]) Enum.GetValues(typeof(GameTypes));
+            gameTypes = gameTypes.Where(i => (int)i != 0).ToArray();
+            foreach (GameTypes game in gameTypes)
+                AllGames.TryAdd(game, new List<Game>());
+            
             Listener = new TcpListener(IPAddress.Any, 47689);
-        }
-
-        public void Start()
-        {
             ListenForClients();
         }
 
-        private void ListenForClients()
+        private static void ListenForClients()
         {
             const int bufferSize = 4096;
             byte[] buffer = new byte[bufferSize];
@@ -42,63 +60,175 @@ namespace ServerLogic
 
             Listener.Start();
 
-            ServerCommand cmd;
+            CommTypes commType;
+            ServerCommands cmd;
+            int reqId;
             while (true)
             {
                 TcpClient client = Listener.AcceptTcpClient();
-                bytesRead = client.GetStream().Read(buffer, 0, sizeof(int));
-                cmd = (ServerCommand) BitConverter.ToInt32(buffer, 0);
 
-                if (!(cmd == ServerCommand.Login || cmd == ServerCommand.Login))
+                //Ensure not stuck
+                if (!client.GetStream().DataAvailable && ReaderStuck(client))
+                    continue;
+
+                //Ensure Command Start
+                bytesRead = client.GetStream().Read(buffer, 0, sizeof(int));
+                commType = (CommTypes)BitConverter.ToInt32(buffer, 0);
+                if (commType != CommTypes.Start)
+                    continue;
+
+                if (!client.GetStream().DataAvailable && ReaderStuck(client))
+                    continue;
+                    
+                //Get CommType
+                bytesRead = client.GetStream().Read(buffer, 0, sizeof(int));
+                commType = (CommTypes) BitConverter.ToInt32(buffer, 0);
+
+                //If not Request, Close
+                if(commType != CommTypes.Request)
                 {
+                    client.GetStream().Dispose();
                     client.Close();
                     continue;
                 }
 
+                if (!client.GetStream().DataAvailable && ReaderStuck(client))
+                    continue;
+
+                //Get Command
+                bytesRead = client.GetStream().Read(buffer, 0, sizeof(int));
+                cmd = (ServerCommands) BitConverter.ToInt32(buffer, 0);
+
+                //If not Login or Register, Close
+                if (!(cmd == ServerCommands.Login || cmd == ServerCommands.Register))
+                {
+                    client.GetStream().Dispose();
+                    client.Close();
+                    continue;
+                }
+
+                if (!client.GetStream().DataAvailable && ReaderStuck(client))
+                    continue;
+
+                //Get Request ID and Object Length
+                bytesRead = client.GetStream().Read(buffer, 0, sizeof(int));
+                reqId = BitConverter.ToInt32(buffer, 0);
+
+                if (!client.GetStream().DataAvailable && ReaderStuck(client))
+                    continue;
+
                 bytesRead = client.GetStream().Read(buffer, 0, sizeof(int));
                 bytesToRead = BitConverter.ToInt32(buffer, 0);
 
+                //Get Object
                 obj = new byte[bytesToRead];
                 index = 0;
+                bool stuck = false;
                 while (bytesToRead > 0)
-                {   
+                {
+                    if (!client.GetStream().DataAvailable && ReaderStuck(client))
+                    {
+                        stuck = true;
+                        break;
+                    }
+
                     bytesRead = client.GetStream().Read(buffer, 0, Math.Min(bufferSize, bytesToRead));
                     Array.ConstrainedCopy(buffer, 0, obj, index, bytesRead);
                     index += bytesRead;
                     bytesToRead -= bytesRead;
                 }
 
-                Thread thread = new Thread(() => Login(client, cmd, obj));
+                if (stuck)
+                    continue;
+
+                Thread thread = new Thread(() => HandleClientLogin(client, cmd, reqId, obj));
                 thread.Start();
 
             }
         }
-
-        private void Login(TcpClient client, ServerCommand cmd, byte[] obj)
+        private static void HandleClientLogin(TcpClient client, ServerCommands cmd, int reqId, byte[] obj)
         {
             Connection connection = new Connection(client);
-            User user = connection.TryLogin(cmd, obj);
+            User user;
+            bool success = connection.TryLogin(cmd, obj, out user);
 
-            if(user == null)
+            if(success)
             {
-                connection.RejectLogin();
+                connection.AcceptLogin(reqId);
+                connection.Communicate();
+                ConnectedUsers[user.UserID] = user;
             }
             else
             {
-                lock(ConnectedUsers)
-                    ConnectedUsers.Add(user);
-
-                connection.AcceptLogin();
-                connection.Communicate();
+                connection.RejectLogin(reqId, ClientErrorMessages[cmd]);
             }
-            
+        }
+        private static bool ReaderStuck(TcpClient client)
+        {
+            Timer.Restart();
+
+            while (Timer.ElapsedMilliseconds < ConnectionStatics.InbetweenReadTimeout)
+            {
+                Thread.Sleep(5);
+                if (client.GetStream().DataAvailable)
+                    return false;
+            }
+
+            client.GetStream().Dispose();
+            client.Close();
+            return true;
         }
 
-        static public void  WriteException(string throwingMethod, Exception ex)
+        public static Game GetGameForUser(GameTypes gameType)
+        {
+            Game game;
+            List<Game> specificGames = AllGames[gameType];
+
+            lock (specificGames)
+            {
+                game = specificGames.AsEnumerable()
+                                    .FirstOrDefault(g => g.HasOpenSeat());
+                if (game == null)
+                {
+                    switch (gameType)
+                    {
+                        case GameTypes.Blackjack:
+                            game = new Blackjack(NextGameID++);
+                            break;
+                        case GameTypes.Roulette:
+                            //game = new Roulette(NextGameID++);
+                            break;
+                        case GameTypes.TexasHoldEm:
+                            //game = new TexasHoldEm(NextGameID++);
+                            break;
+                    }
+                    game.Start();
+                    specificGames.Add(game);
+                }
+            }
+            return game;
+
+        }
+        public static SMP.User GetUserInfo(int id)
+        {
+            if (ConnectedUsers.ContainsKey(id))
+                return ConnectedUsers[id].GetSharedModelPublic();
+
+            return null;
+        }
+
+        public static void WriteEvent(GameEvent gameEvent)
+        {
+            Console.WriteLine(Enum.GetName(typeof(BlackjackEvents), (BlackjackEvents)gameEvent.Event));
+        }
+        public static void WriteException(string throwingMethod, Exception ex)
         {
             Console.WriteLine(String.Format("{0} threw an Exception : {1}", throwingMethod, ex.Message));
         }
-
-
+        public static void QueueClientError(ServerCommands cmd, string message)
+        {
+            ClientErrorMessages[cmd] = message;
+        }
+        
     }
 }

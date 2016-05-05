@@ -6,15 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using ServerLogic.Games.GameComponents;
 using System.Threading;
+using SharedModels.Connection.Enums;
 
 namespace ServerLogic.Games
 {
-    public enum RouletteStates
-    {
-        Betting,
-        Spinning,
-        GainsOrLoses
-    }
+    
     public class Roulette : Game
     {
         public RouletteStates rouletteState;
@@ -104,18 +100,20 @@ namespace ServerLogic.Games
                             player.ForceNoBet();
                         }
                     }
-                    while ((!int.TryParse(output, out betNum)) || ((output != "red") && (output != "black")));
+                    while ((int.TryParse(output1, out betNum) == false) && (output1 != "red") && (output1 != "black"));
 
-                    bool isNumber = int.TryParse(output, out betNum);
+                    bool isNumber = int.TryParse(output1, out betNum);
 
-                    if (!isNumber)
+                    if (isNumber == false)
                     {
-                        betColor = output;
+                        betColor = output1;
+                        Console.WriteLine("You bet " + betColor + "!\n");
                         player.SetUserBet(bet, betColor);
                     }
 
                     else
                     {
+                        Console.WriteLine("You bet " + betNum + "!\n");
                         player.SetUserBet(bet, betNum);
                     }
                 }
@@ -136,13 +134,13 @@ namespace ServerLogic.Games
                 {
                     Console.Out.Write("\n-------" + player.GetFullName() + "Conclusion------- \n");
 
-                    if (player.getBetColor() == chosenColor && player.hasBetColor)
+                    if ((player.getBetColor() == chosenColor) && (player.hasBetColor))
                     {
                         Console.WriteLine("The color you chose was correct, you win!\n");
                         player.UpdateGameBalance(true);
                     }
 
-                    else if (player.getBetNum() == chosenNum && !player.hasBetColor)
+                    else if ((player.getBetNum() == chosenNum) && (!player.hasBetColor))
                     {
                         Console.WriteLine("The number you chose was correct, you win!\n");
                         player.UpdateGameBalance(true);
@@ -159,7 +157,7 @@ namespace ServerLogic.Games
                     player.ClearBets();
                     player.UpdateUserBalance();
 
-                    if (player.GetBalance() <= 0)
+                    if (player.GetGameBalance() <= 0)
                     {
                         Console.WriteLine(player.GetFullName() + "'s total balance is now 0. Adding $10..");
                         player.GiftMoney(10);
@@ -230,4 +228,3 @@ namespace ServerLogic.Games
         }
     }
 }
-

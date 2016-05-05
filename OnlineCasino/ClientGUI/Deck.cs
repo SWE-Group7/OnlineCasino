@@ -13,7 +13,7 @@ namespace ClientGUI
 {
     public class Deck
     {
-        public Dictionary<CardSuit, Dictionary<CardRank, Bitmap>> CardImageMap = new Dictionary<CardSuit, Dictionary<CardRank, Bitmap>>
+        public static Dictionary<CardSuit, Dictionary<CardRank, Bitmap>> CardImageMap = new Dictionary<CardSuit, Dictionary<CardRank, Bitmap>>
         {
             { 
                 CardSuit.Clubs, new Dictionary<CardRank, Bitmap>
@@ -87,10 +87,9 @@ namespace ClientGUI
                     { CardRank.King, Properties.Resources.king_of_hearts   }
                 }
             }
-
         };
 
-        public Bitmap CardImage(CardSuit s, CardRank r)
+        public static Bitmap CardImage(CardSuit s, CardRank r)
         {
             Bitmap b;
             Dictionary<CardRank, Bitmap> d = new Dictionary<CardRank, Bitmap>();

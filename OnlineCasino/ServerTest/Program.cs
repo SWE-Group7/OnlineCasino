@@ -43,7 +43,7 @@ namespace ServerTest
                         fullName = Prompt("Full Name");
                         email = Prompt("Email Address");
 
-                        user = User.Register(username, password, email, fullName);
+                        user = User.Register(username, password, email, fullName, null);
                         if (user == null) Console.WriteLine("Username taken. Try Again:");
                         else users.Add(user);
                         break;
@@ -51,7 +51,7 @@ namespace ServerTest
                         username = Prompt("User Name");
                         password = Prompt("Password");
 
-                        user = User.Login(username, password);
+                        user = User.Login(username, password, null);
                         if (user == null) Console.WriteLine("Username/Password combination does not match. Try Again:");
                         else users.Add(user);
                         break;
@@ -67,6 +67,8 @@ namespace ServerTest
                     Console.WriteLine("Do you want to..");
                     Console.WriteLine("\t 1: Add Another User");
                     Console.WriteLine("\t 2: Play Blackjack");
+                    Console.WriteLine("\t 3: Play Roulette");
+                    Console.WriteLine("\t 4: Play Texas Hold'Em");
                     input2 = Console.ReadLine();
                     Console.WriteLine();
 
@@ -75,11 +77,21 @@ namespace ServerTest
                         case "1":
                             addAnotherUser = true;
                             break;
-                        case "2":
-                            Blackjack bjack = new Blackjack(users);
-                            bjack.Start();
-                            Console.Read();
-                            break;
+                        //case "2":
+                        //    Blackjack bjack = new Blackjack();
+                        //    bjack.Start();
+                        //    Console.Read();
+                        //    break;
+                        //case "3":
+                        //    Roulette roulette = new Roulette(users);
+                        //    roulette.Start();
+                        //    Console.Read();
+                        //    break;
+                        //case "4":
+                        //    TexasHoldEm texasHoldem = new TexasHoldEm(users);
+                        //    texasHoldem.Start();
+                        //    Console.Read();
+                        //    break;
                         default:
                             Console.WriteLine("Error - Invalid Input");
                             break;

@@ -1,7 +1,9 @@
-﻿using ServerLogic;
+﻿//using ServerLogic;
+using ServerLogic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,10 +13,7 @@ namespace ServerConsole //print statements & request
     {
         static void Main(string[] args)
         {
-            ServerMain Server = new ServerMain();
-            Server.Start();
-            
-            
+            ServerMain.Start();
         }
     }
 }

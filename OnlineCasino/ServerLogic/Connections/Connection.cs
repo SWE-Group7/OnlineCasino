@@ -1,4 +1,5 @@
-﻿using SM = SharedModels;
+﻿using SharedModels;
+using SM = SharedModels.Players;
 using SharedModels.Connection;
 using System;
 using System.Collections.Generic;
@@ -7,184 +8,189 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-
+using System.Diagnostics;
+using System.Collections.Concurrent;
+using SharedModels.Connection.Enums;
 
 namespace ServerLogic.Connections
 {
+    
     public class Connection
     {
 
         public bool Connected;
-        public long LastComm;
-        private ulong PayloadId = 2;
+        public long LastRead;
+        public long LastWrite;
+        private int RequestId = 1;
 
         private Thread Reader;
         private Thread Writer;
 
-        private Queue<Tuple<ClientCommand, object>> WriteQueue;
-        private Queue<Tuple<ServerCommand, object>> ReadQueue;
-        
-        
+        private Queue<Payload> WriteQueue;
+        private volatile bool WriteQueueEmpty;
+
+        private Queue<Payload> ReadQueue;
+        private ConcurrentDictionary<int, RequestResult> RequestedByServer;
+
+        private Stopwatch Timer = new Stopwatch();
+
         private TcpClient Client;
         private User CurrentUser;
-        private bool Disconnect;
 
         public Connection(TcpClient client)
         {
             this.Client = client;
-            Disconnect = false;
             Connected = false;
-
-            WriteQueue = new Queue<Tuple<ClientCommand, object>>();
-            ReadQueue = new Queue<Tuple<ServerCommand, object>>();
+            RequestedByServer = new ConcurrentDictionary<int, RequestResult>();
+            WriteQueue = new Queue<Payload>();
+            ReadQueue = new Queue<Payload>();
+            WriteQueueEmpty = true;
         }
 
-        public User TryLogin(ServerCommand cmd, byte[] obj)
+        public bool TryLogin(ServerCommands cmd, byte[] obj, out User userOut)
         {
             try
             {
-                SM.Security security = (SM.Security)Serializer.Deserialize(obj);
+                Security security = (Security)Serializer.Deserialize(obj);
 
-                if (cmd == ServerCommand.Login)
-                    CurrentUser = User.Login(security.Username, security.Password);
-                else if (cmd == ServerCommand.Register)
-                    CurrentUser = User.Register(security.Username, security.Password, security.EmailAddress, security.FullName);
+                if (cmd == ServerCommands.Login)
+                    CurrentUser = User.Login(security.Username, security.Password, this);
+                else if (cmd == ServerCommands.Register)
+                    CurrentUser = User.Register(security.Username, security.Password, security.EmailAddress, security.FullName, this);
 
-                return CurrentUser;
+                userOut = CurrentUser;
+                return (CurrentUser != null);
+               
             }
             catch (Exception ex)
             {
                 ServerMain.WriteException("Connection.TryLogin(cmd, obj)", ex);
-                return null;
+                userOut = null;
+                return false;
             }
         }
-
-        public void AcceptLogin()
+        public void AcceptLogin(int reqId)
         {
-            SM.Players.User smUser;
+            SM.User smUser;
+            lock (CurrentUser)
+                smUser = CurrentUser.GetSharedModelPrivate();
 
-            lock(CurrentUser)
-                smUser = CurrentUser.GetSharedModel();
-
-            ImmediateWrite(ClientCommand.LoginSuccess, smUser);
-
+            Connected = true;
+            ImmediateWrite(new Payload(CommTypes.Return, reqId, true, smUser));
         }
-
-        public void RejectLogin()
+        public void RejectLogin(int reqId, string errorMessage)
         {
-          //  ImmediateWrite(ClientCommand.RejectLogin);
+            ImmediateWrite(new Payload(CommTypes.Return, reqId, false, errorMessage));
+            Client.GetStream().Dispose();
+            Client.Close();
+            
         }
 
         public void Communicate()
         {
-            Reader = Thread.CurrentThread;
+            string username = CurrentUser.Username;
+            Reader = new Thread(() => StartReader());
+            Reader.Name = String.Format("{0}_Reader", username);
+
             Writer = new Thread(() => StartWriter());
+            Writer.Name = String.Format("{0}_Writer", username);
+            Reader.Start();
             Writer.Start();
-            StartReader();
         }
 
-        public void Write(ClientCommand cmd, object obj)
+        private void FinalDisconnect()
         {
-            lock(WriteQueue)
-                WriteQueue.Enqueue(new Tuple<ClientCommand, object>(cmd, obj));
+            Connected = false;
+            Reader.Join();
+            Writer.Join();
+            Client.GetStream().Close();
+            Client.Close();
+
+            CurrentUser.Connected = false;
         }
 
-        private void StartReader()
+        #region Write
+
+        public RequestResult Request(ClientCommands cmd, object obj = null)
         {
-            const int bufferSize = 4096;
-            byte[] buffer = new byte[bufferSize];
+            RequestResult result = new RequestResult();
+            int reqId = Interlocked.Increment(ref RequestId);
 
-            while (!Disconnect)
+            RequestedByServer[reqId] = result;
+            Payload payload = new Payload(CommTypes.Request, cmd, reqId, obj);
+            QueueWrite(payload);
+
+            return result;
+        }
+
+        public void Return(int reqId, bool success, object obj)
+        {
+            Payload payload = new Payload(CommTypes.Return, reqId, success, obj);
+            QueueWrite(payload);   
+        }
+
+        public void Command(ClientCommands cmd, object obj = null)
+        {
+            Payload payload = new Payload(CommTypes.Void, cmd, obj);
+            QueueWrite(payload);
+        }
+
+        private void QueueWrite(Payload payload)
+        {
+            lock (WriteQueue)
             {
-                ServerCommand cmd;
-                byte[] obj;
-                int index;
-                int bytesRead;
-                int bytesToRead;
-
-                //Get Command and Object Size
-                bytesRead = Client.GetStream().Read(buffer, 0, sizeof(int));
-                cmd = (ServerCommand)BitConverter.ToInt32(buffer, 0);
-                Client.GetStream().Read(buffer, 0, sizeof(int));
-                bytesToRead = BitConverter.ToInt32(buffer, 0);
-
-                //Get object bytes
-                obj = new byte[bytesToRead];
-                index = 0;
-                while (bytesToRead > 0)
-                {
-                    bytesRead = Client.GetStream().Read(buffer, 0,  Math.Min(bufferSize, bytesToRead));
-                    Array.ConstrainedCopy(buffer, 0, obj, index, bytesRead);
-                    index += bytesRead;
-                    bytesToRead -= bytesRead;
-                }
-
-                switch (cmd)
-                {
-                    case ServerCommand.Disconnect:
-                        this.Disconnect = true;
-                        break;
-                    case ServerCommand.GetUser:
-                        this.Write(ClientCommand.ReturnUser, CurrentUser.GetSharedModel());
-                        break;
-
-
-                }
+                WriteQueue.Enqueue(payload);
+                WriteQueueEmpty = false;
             }
 
-            
-            if (Connected)
-            {
-                Connected = false;
-                
-
-                ImmediateWrite(ClientCommand.Disconnect);
-            }
         }
 
         private void StartWriter()
         {
             while (Connected)
             {
-                //Wait until there is something in queue
-                while (!WriteQueue.Any())
-                    Thread.Sleep(1);
-
-                var next = WriteQueue.Dequeue();
-                ClientCommand cmd = (ClientCommand)next.Item1;
-                object obj = next.Item2;
-
-                ImmediateWrite(cmd, obj);
-
+                if (!WriteQueueEmpty)
+                {
+                    Payload next;
+                    lock (WriteQueue)
+                    {
+                        next = WriteQueue.Dequeue();
+                        WriteQueueEmpty = !WriteQueue.Any();
+                    }
+                    ImmediateWrite(next);
+                }
+                Thread.Sleep(1);
             }
         }
 
-        private bool ImmediateWrite(ClientCommand cmd)
+        private bool ImmediateWrite(Payload payload)
         {
+            CommTypes type = payload.Type;
+            ClientCommands cmd = (ClientCommands) payload.Command;
+            int reqId = payload.RequestId;
+            object obj = payload.Object;
+
             try
             {
+                //Write Command Start
+                byte[] byteStart = BitConverter.GetBytes((int)CommTypes.Start);
+                Client.GetStream().Write(byteStart, 0, sizeof(int));
+
+                //Write CommTypes
+                byte[] byteType = BitConverter.GetBytes((int)type);
+                Client.GetStream().Write(byteType, 0, sizeof(int));
+
+                //Write Command or 0/1 for return
                 byte[] byteCmd = BitConverter.GetBytes((int)cmd);
                 Client.GetStream().Write(byteCmd, 0, sizeof(int));
-                Client.GetStream().Write(BitConverter.GetBytes(0), 0, sizeof(int));
-                return true;
-            }
-            catch (Exception ex)
-            {
-                ServerMain.WriteException("Connection.ImmediateWrite(cmd)", ex);
-                return false;
-            }
-        }
-
-        private bool ImmediateWrite(ClientCommand cmd, object obj)
-        {
-            try
-            {                
-                byte[] byteCmd = BitConverter.GetBytes((int) cmd);
-                Client.GetStream().Write(byteCmd, 0, sizeof(int));
-
+                
+                //Write RequestId or 0 for void commands
+                byte[] byteId = BitConverter.GetBytes(reqId);
+                Client.GetStream().Write(byteId, 0, sizeof(int));
+                
+                //Write object length and object
                 byte[] byteData = Serializer.Serialize(obj);
                 byte[] length = BitConverter.GetBytes(byteData.Length);
-
                 Client.GetStream().Write(length, 0, sizeof(int));
                 Client.GetStream().Write(byteData, 0, byteData.Length);
                 
@@ -196,6 +202,168 @@ namespace ServerLogic.Connections
                 return false;
             }
         }
+
+        #endregion
+
+        #region Read
+        private void StartReader()
+        {
+            Stopwatch sw = new Stopwatch();
+            const int bufferSize = 4096;
+            byte[] buffer = new byte[bufferSize];
+            CommTypes commType;
+            ServerCommands cmd = 0;
+            int reqId = -1;
+
+            byte[] objBytes;
+            int index;
+            int bytesRead;
+            int bytesToRead;
+
+            try
+            {
+                while (Connected)
+                {
+
+                    //If no data, continue
+                    if (!Client.GetStream().DataAvailable)
+                    {
+                        Thread.Sleep(20);
+                        continue;
+                    }
+
+                    //Ensure Command Start
+                    bytesRead = Client.GetStream().Read(buffer, 0, sizeof(int));
+                    commType = (CommTypes)BitConverter.ToInt32(buffer, 0);
+                    if (commType != CommTypes.Start)
+                        continue;
+
+                    //Ensure Reader isnt stuck
+                    if (!Client.GetStream().DataAvailable && ReaderStuck())
+                        continue;
+
+                    //Get Comm Type
+                    bytesRead = Client.GetStream().Read(buffer, 0, sizeof(int));
+                    commType = (CommTypes)BitConverter.ToInt32(buffer, 0);
+
+                    if(!Client.GetStream().DataAvailable && ReaderStuck())
+                        continue;
+
+                    //Get Command or 0/1 for return
+                    bytesRead = Client.GetStream().Read(buffer, 0, sizeof(int));
+                    cmd = (ServerCommands)BitConverter.ToInt32(buffer, 0);
+
+                    if (!Client.GetStream().DataAvailable && ReaderStuck())
+                        continue;
+
+                    //Get RequestId or 0 for void commands
+                    bytesRead = Client.GetStream().Read(buffer, 0, sizeof(int));
+                    reqId = BitConverter.ToInt32(buffer, 0);
+
+                    if (!Client.GetStream().DataAvailable && ReaderStuck())
+                        continue;
+
+                    //Get Object Length
+                    Client.GetStream().Read(buffer, 0, sizeof(int));
+                    bytesToRead = BitConverter.ToInt32(buffer, 0);
+
+                    //Get object bytes
+                    objBytes = new byte[bytesToRead];
+                    index = 0;
+                    while (bytesToRead > 0)
+                    {
+                        if (!Client.GetStream().DataAvailable && ReaderStuck())
+                            continue;
+
+                        bytesRead = Client.GetStream().Read(buffer, 0, Math.Min(bufferSize, bytesToRead));
+                        Array.ConstrainedCopy(buffer, 0, objBytes, index, bytesRead);
+                        index += bytesRead;
+                        bytesToRead -= bytesRead;
+                    }
+
+                    object obj = Serializer.Deserialize(objBytes);
+
+                    //Handle
+                    switch (commType)
+                    {
+                        case CommTypes.Return:
+                            HandleReturn(reqId, ((int)cmd == 1), obj);
+                            break;
+                        case CommTypes.Request:
+                            HandleRequest(cmd, reqId, obj);
+                            break;
+                        case CommTypes.Void:
+                            HandleVoid(cmd, obj);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+            catch (Exception ex)
+            {
+                ServerMain.WriteException("Connection.StartReader()", ex);
+                Connected = false;
+            }
+        }
+
+        private bool ReaderStuck()
+        {
+            Timer.Restart();
+            while(Timer.ElapsedMilliseconds < ConnectionStatics.InbetweenReadTimeout)
+            {
+                Thread.Sleep(5);
+                if (Client.GetStream().DataAvailable)
+                    return false;
+            }
+
+            return true;
+        }
+
+        private void HandleVoid(ServerCommands cmd, object obj)
+        {
+            switch (cmd)
+            {
+                case ServerCommands.Disconnect:
+                    this.FinalDisconnect();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void HandleRequest(ServerCommands cmd, int reqId, object obj)
+        {
+            object retObject = null;
+
+            switch (cmd)
+            {
+                case ServerCommands.GetUserInfo:
+                    if ((int)obj == CurrentUser.UserID)
+                        retObject = CurrentUser.GetSharedModelPrivate();
+                    else
+                        retObject = ServerMain.GetUserInfo((int)obj);
+
+                    Return(reqId, (retObject != null), retObject);
+                    break;
+                case ServerCommands.JoinGame:
+                    int[] data = (int[])obj;
+                    CurrentUser.JoinGame((GameTypes)data[0], data[1], reqId);
+                    break;
+            }
+            
+        }
+
+        private void HandleReturn(int reqId, bool success, object obj)
+        {
+            RequestResult result;
+            if (RequestedByServer.TryRemove(reqId, out result))
+                result.SetValue(success, obj);
+            
+        }
+        #endregion
+
 
     }
 }
