@@ -26,3 +26,6 @@ C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerTest\bin\
 C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerTest\bin\Debug\EntityFramework.xml
 C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerTest\bin\Debug\EntityFramework.SqlServer.xml
 C:\Users\nadinedevich\Documents\GitHub\OnlineCasino\OnlineCasino\ServerTest\obj\Debug\ServerTest.csprojResolveAssemblyReference.cache
+C:\Users\Foster\Documents\GitHub\OnlineCasino\OnlineCasino\ServerTest\bin\Debug\ServerTest.exe.config
+C:\Users\Foster\Documents\GitHub\OnlineCasino\OnlineCasino\ServerTest\obj\Debug\ServerTest.exe
+C:\Users\Foster\Documents\GitHub\OnlineCasino\OnlineCasino\ServerTest\obj\Debug\ServerTest.pdb

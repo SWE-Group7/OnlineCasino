@@ -50,3 +50,17 @@ C:\Users\sbece\Source\Repos\OnlineCasino\OnlineCasino\ClientGUI\obj\Debug\Client
 C:\Users\sbece\Source\Repos\OnlineCasino\OnlineCasino\ClientGUI\obj\Debug\ClientGUI.Properties.Resources.resources
 C:\Users\sbece\Source\Repos\OnlineCasino\OnlineCasino\ClientGUI\obj\Debug\ClientGUI.csproj.GenerateResource.Cache
 C:\Users\sbece\Source\Repos\OnlineCasino\OnlineCasino\ClientGUI\obj\Debug\ClientLogic.RouletteGUI.resources
+C:\Users\Foster\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\bin\Debug\ClientGUI.exe.config
+C:\Users\Foster\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\obj\Debug\ClientGUI.exe
+C:\Users\Foster\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\obj\Debug\ClientGUI.pdb
+C:\Users\Foster\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\bin\Debug\ClientGUI.exe
+C:\Users\Foster\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\bin\Debug\ClientGUI.pdb
+C:\Users\Foster\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\bin\Debug\ClientLogic.dll
+C:\Users\Foster\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\bin\Debug\SharedModels.dll
+C:\Users\Foster\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\bin\Debug\ClientLogic.pdb
+C:\Users\Foster\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\bin\Debug\SharedModels.pdb
+C:\Users\Foster\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\obj\Debug\ClientGUI.csprojResolveAssemblyReference.cache
+C:\Users\Foster\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\obj\Debug\ClientGUI.Game_GUIs.BlackjackGUI.resources
+C:\Users\Foster\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\obj\Debug\ClientGUI.ClientGUI.resources
+C:\Users\Foster\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\obj\Debug\ClientGUI.Properties.Resources.resources
+C:\Users\Foster\Documents\GitHub\OnlineCasino\OnlineCasino\ClientGUI\obj\Debug\ClientGUI.csproj.GenerateResource.Cache
